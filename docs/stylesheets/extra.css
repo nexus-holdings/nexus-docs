@@ -595,10 +595,23 @@ article.md-content__inner { counter-reset: nx-section; }
   padding: var(--nx-s-4);
   transition: border-color 0.12s ease;
   box-shadow: none !important;
+  position: relative;                 /* anchor for the click-overlay pseudo */
 }
 .md-typeset .grid.cards > ul > li:hover,
 .md-typeset .grid.cards > .card:hover {
   border-color: var(--nx-border-hi);
+  cursor: pointer;
+}
+
+/* Make the entire card a click target by stretching the title link's
+   ::after pseudo over the whole <li>. The overlay sits above the card
+   contents so a click anywhere in the card routes to the title link. */
+.md-typeset .grid.cards > ul > li .card-title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--nx-r-md);
 }
 
 /* ============================================================
