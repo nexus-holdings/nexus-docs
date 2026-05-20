@@ -343,6 +343,16 @@ article.md-content__inner { counter-reset: nx-section; }
 }
 
 /* ============================================================
+   Layout — widen the grid so sidebars sit at the page margins
+   ============================================================
+   Material's default .md-grid caps at 61rem, which squeezes the
+   content column on pages with sidebars (TOC + nav). Bumping the
+   grid to 84rem lets the content keep roughly the same width as
+   the sidebar-less pages (index, FAQ), with the sidebars pushed
+   out into the page margins instead. */
+.md-grid { max-width: 84rem; }
+
+/* ============================================================
    Sidebar — the signature 1px brass hairline left active state
    ============================================================ */
 .md-sidebar { background-color: var(--nx-bg); }
