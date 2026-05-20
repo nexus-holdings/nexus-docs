@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Aurelius Flywheel  structural diagram
+  ============================================================
+
+  CONVENTIONS
+    1. Every arrow enters / leaves a node perpendicular to the
+       node's edge (90 deg).
+    2. Every 90 deg corner is rounded (quadratic-Bezier quarter
+       arc, radius R=10) so the route reads as a continuous flow.
+    3. No arrow segment runs parallel to a perimeter line  arrows
+       only CROSS perimeters at right angles. Arrow routes that need
+       to travel alongside a container do so in the dedicated gaps
+       between containers, not on the container edge itself.
+    4. Generous gaps between containers (60-80px) so routes have
+       room to turn.
+
+  LAYOUT (L-shape, mirroring the reference PDF)
+    Top row    : empty top-left, Training Pipeline top-right
+    Middle row : Arm 1 (left)  || gap ||  Arm 2 (right)
+    Bottom row : Arm 3 spanning the full width
+    Top margin : 60px above TP, used by two horizontal flows
+                 (unlocked-data above, deploys-to below) and their
+                 labels.
+
+  COORDINATE SYSTEM
+    viewBox = 0 -60 1000 1020
+    All coordinates in viewBox units.
+
+  STYLE TOKENS
+    Brass accent   #D4A574   (Training Pipeline border)
+    Neutral stroke #6F7177   (arm borders, node borders, arrows)
+    Surface deep   #0D0F11   (deepest node fill)
+    Surface raised #14171A   (container fill, lifted nodes)
+    Text primary   #E6E3DC
+    Text muted     #A8AAB0
+    Font           Geist (with system-ui fallback)
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -60 1000 1020"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <!-- ============================================================ -->
+  <!-- DESIGN TOKENS & MARKER                                       -->
+  <!-- ============================================================ -->
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass-box { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .arm-box   { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .node      { fill: #0D0F11; stroke: #6F7177; stroke-width: 1; }
+
+      .title {
+        fill: #E6E3DC;
+        font-family: Geist, system-ui, -apple-system, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+      .text {
+        fill: #E6E3DC;
+        font-family: Geist, system-ui, -apple-system, sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .text-sub {
+        fill: #A8AAB0;
+        font-family: Geist, system-ui, -apple-system, sans-serif;
+        font-size: 11px;
+        font-style: italic;
+      }
+      .edge        { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-dashed { stroke: #A8AAB0; stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+      .edge-label {
+        fill: #E6E3DC;
+        font-family: Geist, system-ui, -apple-system, sans-serif;
+        font-size: 11px;
+        font-style: italic;
+      }
+    </style>
+  </defs>
+
+
+  <!-- ============================================================ -->
+  <!-- CONTAINERS                                                   -->
+  <!--                                                              -->
+  <!-- TP:    x=520-960, y=30-220                                   -->
+  <!-- Arm 1: x=20-440,  y=290-660                                  -->
+  <!-- Arm 2: x=520-960, y=290-660                                  -->
+  <!-- Arm 3: x=20-960,  y=730-940                                  -->
+  <!--                                                              -->
+  <!-- Gaps:                                                        -->
+  <!--   A1 - A2 horizontal  : 80px (x=440-520)                      -->
+  <!--   TP - Arms vertical  : 70px (y=220-290)                      -->
+  <!--   Arms - A3 vertical  : 70px (y=660-730)                      -->
+  <!--   top margin          : 90px (y=-60 to y=30)                  -->
+  <!-- ============================================================ -->
+
+  <!-- TRAINING PIPELINE -->
+  <g id="tp">
+    <rect class="brass-box" x="520" y="30" width="440" height="190" rx="6" />
+    <text class="title" x="540" y="60">Training Pipeline</text>
+
+    <g id="tp-cc">
+      <rect class="node" x="550" y="110" width="100" height="70" rx="4" />
+      <text class="text" x="600" y="151" text-anchor="middle">Combined Corpus</text>
+    </g>
+
+    <g id="tp-grpo">
+      <rect class="node" x="680" y="110" width="120" height="70" rx="4" />
+      <text class="text" x="740" y="151" text-anchor="middle">GRPO + Curriculum</text>
+    </g>
+
+    <g id="tp-ba">
+      <rect class="node" x="830" y="110" width="100" height="70" rx="4" />
+      <text class="text" x="880" y="151" text-anchor="middle">Better Agents</text>
+    </g>
+  </g>
+
+
+  <!-- ARM 1 -->
+  <g id="arm1">
+    <rect class="arm-box" x="20" y="290" width="420" height="370" rx="6" />
+    <text class="title" x="50" y="320">Arm 1 - Production Integration</text>
+
+    <g id="arm1-nc">
+      <rect class="node" x="80" y="360" width="280" height="80" rx="4" />
+      <text class="text" x="220" y="392" text-anchor="middle">Nexus Contract</text>
+      <text class="text-sub" x="220" y="415" text-anchor="middle">craft - customer</text>
+    </g>
+
+    <g id="arm1-na">
+      <rect class="node" x="80" y="510" width="280" height="80" rx="4" />
+      <text class="text" x="220" y="542" text-anchor="middle">Aurelius API</text>
+      <text class="text-sub" x="220" y="565" text-anchor="middle">rounds, redlines, ACR</text>
+    </g>
+  </g>
+
+
+  <!-- ARM 2 -->
+  <g id="arm2">
+    <rect class="arm-box" x="520" y="290" width="440" height="370" rx="6" />
+    <text class="title" x="740" y="320" text-anchor="middle">Arm 2 - Multi-Company Simulator</text>
+
+    <g id="arm2-coa">
+      <rect class="node" x="610" y="360" width="260" height="60" rx="4" />
+      <text class="text" x="740" y="385" text-anchor="middle">Synthetic Co A</text>
+      <text class="text-sub" x="740" y="405" text-anchor="middle">aggressive pharma</text>
+    </g>
+
+    <g id="arm2-neg">
+      <rect class="node" x="610" y="460" width="260" height="60" rx="4" />
+      <text class="text" x="740" y="485" text-anchor="middle">Aurelius</text>
+      <text class="text-sub" x="740" y="505" text-anchor="middle">self-play engine</text>
+    </g>
+
+    <g id="arm2-cob">
+      <rect class="node" x="610" y="560" width="260" height="60" rx="4" />
+      <text class="text" x="740" y="585" text-anchor="middle">Synthetic Co B</text>
+      <text class="text-sub" x="740" y="605" text-anchor="middle">patient SaaS</text>
+    </g>
+  </g>
+
+
+  <!-- ARM 3 -->
+  <g id="arm3">
+    <rect class="arm-box" x="20" y="730" width="940" height="210" rx="6" />
+    <text class="title" x="50" y="760">Arm 3 - Counterparty Reconstruction</text>
+
+    <g id="arm3-s3">
+      <rect class="node" x="70" y="800" width="220" height="100" rx="4" />
+      <text class="text" x="180" y="837" text-anchor="middle">S3 Corpus</text>
+      <text class="text-sub" x="180" y="857" text-anchor="middle">1000s of contracts</text>
+      <text class="text-sub" x="180" y="872" text-anchor="middle">our side only</text>
+    </g>
+
+    <g id="arm3-bi">
+      <rect class="node" x="380" y="800" width="220" height="100" rx="4" />
+      <text class="text" x="490" y="845" text-anchor="middle">Bayesian Inference</text>
+      <text class="text-sub" x="490" y="865" text-anchor="middle">4-stage pipeline</text>
+    </g>
+
+    <g id="arm3-pd">
+      <rect class="node" x="690" y="800" width="220" height="100" rx="4" />
+      <text class="text" x="800" y="845" text-anchor="middle">Paired Data</text>
+      <text class="text-sub" x="800" y="865" text-anchor="middle">both sides + confidence</text>
+    </g>
+  </g>
+
+
+  <!-- ============================================================ -->
+  <!-- INTERNAL ARROWS                                              -->
+  <!-- All straight perpendicular segments  no corners needed.      -->
+  <!-- ============================================================ -->
+  <g id="internal-arrows">
+
+    <!-- TP: CC -> GRPO -> BA -->
+    <path class="edge" d="M 650 145 H 680" marker-end="url(#arrow)" />
+    <path class="edge" d="M 800 145 H 830" marker-end="url(#arrow)" />
+
+    <!-- Arm 1: NC <-> NA bidirectional -->
+    <path class="edge" d="M 180 440 V 510" marker-end="url(#arrow)" />
+    <text class="edge-label" x="170" y="478" text-anchor="end">POST /negotiations</text>
+    <path class="edge" d="M 260 510 V 440" marker-end="url(#arrow)" />
+    <text class="edge-label" x="270" y="478" text-anchor="start">webhook events</text>
+
+    <!-- Arm 2: COA <-> NEG <-> COB (bidirectional - self-play means -->
+    <!-- both counterparties negotiate WITH the engine, not just at  -->
+    <!-- it). Single line per pair with arrowheads on both ends.     -->
+    <path class="edge" d="M 740 420 V 460"
+          marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <text class="edge-label" x="750" y="445" text-anchor="start">negotiate</text>
+    <path class="edge" d="M 740 520 V 560"
+          marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <text class="edge-label" x="750" y="545" text-anchor="start">negotiate</text>
+
+    <!-- Arm 3: S3 -> BI -> PD -->
+    <path class="edge" d="M 290 850 H 380" marker-end="url(#arrow)" />
+    <path class="edge" d="M 600 850 H 690" marker-end="url(#arrow)" />
+
+  </g>
+
+
+  <!-- ============================================================ -->
+  <!-- INTER-ARM ARROWS                                             -->
+  <!--                                                              -->
+  <!-- Routing notes:                                               -->
+  <!--   * Each path enters / exits a box perpendicular to the box  -->
+  <!--     edge (start direction matches the edge normal; the path  -->
+  <!--     end ditto).                                              -->
+  <!--   * Every right-angle corner is rounded with a Q (quadratic) -->
+  <!--     quarter-arc, radius R=10. The L segment between corners  -->
+  <!--     stops 10 units short, the Q control point sits AT the    -->
+  <!--     mathematical corner, and the next segment resumes 10     -->
+  <!--     units past the corner along the new direction.           -->
+  <!--   * Vertical / horizontal travel happens inside the dedicated -->
+  <!--     gaps between containers, never on a perimeter line.       -->
+  <!-- ============================================================ -->
+  <g id="inter-arm-arrows">
+
+    <!-- 1. "promotes best" - TP left edge -> NC right edge          -->
+    <!--    Originates from the LEFT side of the Training Pipeline   -->
+    <!--    container (at y=125, the vertical centre of the nodes).  -->
+    <!--    Workflow: Better Agents are first deployed to the        -->
+    <!--    Simulator (see arrow 2); the BEST-performing models from -->
+    <!--    that evaluation are then promoted to Production.         -->
+    <!--    LEFT from TP left edge, DOWN through the A1-A2 gap       -->
+    <!--    (descent column x=467, equidistant in 80px gap), LEFT    -->
+    <!--    into NC right edge.                                      -->
+    <path class="edge"
+          d="M 520 125
+             L 477 125 Q 467 125 467 135
+             L 467 390 Q 467 400 457 400
+             L 360 400"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="457" y="250" text-anchor="end">promotes best</text>
+
+
+    <!-- 2. "deploys to" - BA bottom -> Synthetic Co A AND Synthetic -->
+    <!--    Co B (the COMPANY MODELS, not the self-play engine).     -->
+    <!--                                                              -->
+    <!--    Architectural note: the "Aurelius (self-play engine)" -->
+    <!--    node is an MCP server in front of the engine being       -->
+    <!--    tested - it's the harness, not the model. The actual     -->
+    <!--    test subjects are the synthetic companies, which use     -->
+    <!--    Better Agents weights to play their counterparty roles.  -->
+    <!--    The self-play engine itself updates on a separate cycle  -->
+    <!--    when the application improves.                           -->
+    <!--                                                              -->
+    <!--    Routing: shared trunk descends from BA bottom at x=910   -->
+    <!--    through Arm 2's right padding. T-junction branch off at  -->
+    <!--    y=390 goes LEFT into COA right edge. Trunk continues     -->
+    <!--    down past NEG to y=580, curves LEFT, ends at COB right   -->
+    <!--    edge. Both branches carry arrowheads; the shared trunk   -->
+    <!--    visually shows "one deployment, two targets".            -->
+    <path class="edge"
+          d="M 910 180
+             L 910 580 Q 910 590 900 590
+             L 870 590"
+          marker-end="url(#arrow)" />
+    <path class="edge"
+          d="M 910 390 H 870"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="920" y="275" text-anchor="start">deploys to</text>
+
+
+    <!-- 3. "ground truth"  NEG left side -> CC bottom (centre)      -->
+    <!--    LEFT from NEG left edge, through Arm 2 left padding to   -->
+    <!--    the SAME column as "validates" (x=493 - equidistant      -->
+    <!--    placement in the 80px A1-A2 gap), UP through the TP-Arms -->
+    <!--    gap (y=255 - centred in 70px gap), RIGHT under CC        -->
+    <!--    (x=600), UP into CC bottom.                              -->
+    <path class="edge"
+          d="M 610 490
+             L 503 490 Q 493 490 493 480
+             L 493 265 Q 493 255 503 255
+             L 590 255 Q 600 255 600 245
+             L 600 180"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="550" y="250" text-anchor="middle">ground truth</text>
+
+
+    <!-- 4. "validates"  NEG left side (lower) -> BI top              -->
+    <!--    LEFT from NEG, DOWN through the A1-A2 gap (descent column -->
+    <!--    x=493, aligned with "ground truth" - the two read as one  -->
+    <!--    vertical line with a break where each exits NEG).         -->
+    <!--    Continues DOWN past the Arms-A3 gap into BI top.          -->
+    <path class="edge"
+          d="M 610 510
+             L 503 510 Q 493 510 493 520
+             L 493 800"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="503" y="700" text-anchor="start">validates</text>
+
+
+    <!-- 5. "novel negotiations"  NA bottom -> S3 top (DASHED)       -->
+    <!--    Straight DOWN from NA bottom-centre to S3 top.            -->
+    <path class="edge-dashed"
+          d="M 220 590 V 800"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="230" y="700" text-anchor="start">novel negotiations</text>
+
+
+    <!-- 6. "unlocked data"  PD right edge -> CC top (centre)        -->
+    <!--    RIGHT from PD right, UP the far-right margin (x=980),    -->
+    <!--    LEFT across the top margin (y=-30, above the             -->
+    <!--    "deploys to" route at y=0), DOWN into CC top centre.     -->
+    <path class="edge"
+          d="M 910 850
+             L 980 850 Q 990 850 990 840
+             L 990 10 Q 990 0 980 0
+             L 610 0 Q 600 0 600 10
+             L 600 110"
+          marker-end="url(#arrow)" />
+    <text class="edge-label" x="790" y="-12" text-anchor="middle">unlocked data</text>
+
+  </g>
+
+</svg>

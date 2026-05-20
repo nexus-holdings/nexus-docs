@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Two-class companies  the ticket interface
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Linear left-to-right flow:
+      Domain company => Ticket (brass, the interface) =>
+      Craft company => Output
+    Dotted flow-back arrow returns from Output to Domain.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 320"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state     { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-dot  { stroke: #A8AAB0; stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+    </style>
+  </defs>
+
+
+  <!-- ==== 4 nodes in a row ==== -->
+
+  <g id="domain">
+    <rect class="state" x="40" y="90" width="180" height="90" rx="8" />
+    <text class="text"     x="130" y="125" text-anchor="middle">Domain company</text>
+    <text class="text-sub" x="130" y="148" text-anchor="middle">e.g. Lighthouse</text>
+    <text class="text-sub" x="130" y="165" text-anchor="middle">owns the problem space</text>
+  </g>
+
+  <g id="ticket">
+    <rect class="brass" x="290" y="90" width="220" height="90" rx="8" />
+    <text class="text"     x="400" y="125" text-anchor="middle">Well-formed ticket</text>
+    <text class="text-sub" x="400" y="148" text-anchor="middle">title + spec + AC + repo</text>
+    <text class="text-sub" x="400" y="165" text-anchor="middle">schema-enforced interface</text>
+  </g>
+
+  <g id="craft">
+    <rect class="state" x="580" y="90" width="180" height="90" rx="8" />
+    <text class="text"     x="670" y="125" text-anchor="middle">Craft company</text>
+    <text class="text-sub" x="670" y="148" text-anchor="middle">e.g. Nexus Engineering</text>
+    <text class="text-sub" x="670" y="165" text-anchor="middle">single execution craft</text>
+  </g>
+
+  <g id="output">
+    <rect class="state" x="830" y="90" width="150" height="90" rx="8" />
+    <text class="text"     x="905" y="125" text-anchor="middle">Output</text>
+    <text class="text-sub" x="905" y="148" text-anchor="middle">code / brief /</text>
+    <text class="text-sub" x="905" y="165" text-anchor="middle">instrumentation</text>
+  </g>
+
+
+  <!-- ==== ARROWS  linear ==== -->
+
+  <path class="edge" d="M 220 135 H 290" marker-end="url(#arrow)" />
+  <text class="text-edge" x="255" y="125" text-anchor="middle">decompose</text>
+
+  <path class="edge" d="M 510 135 H 580" marker-end="url(#arrow)" />
+  <text class="text-edge" x="545" y="125" text-anchor="middle">dispatched</text>
+
+  <path class="edge" d="M 760 135 H 830" marker-end="url(#arrow)" />
+  <text class="text-edge" x="795" y="125" text-anchor="middle">execute</text>
+
+
+  <!-- ==== DOTTED FLOW-BACK  output => domain (route below) ==== -->
+
+  <path class="edge-dot" d="M 905 180 V 230 Q 905 245 890 245 H 145 Q 130 245 130 230 V 180"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="500" y="270" text-anchor="middle">flow-back  domain learns from outcome, files next ticket</text>
+
+</svg>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Index lede  substrate + three flywheels
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Bottom : Nexus substrate (brass), full-width foundation.
+    Top    : three flywheel columns rising above the substrate
+             (Aurelius  the canonical example  plus Lighthouse
+             and Ledgerly as further verticals).
+
+  ARROWS
+    Each flywheel has a single bidirectional channel to the
+    substrate: substrate provides services up, outcomes flow
+    back down. Implemented as one path per flywheel with markers
+    at both ends (aligned co-linear pattern).
+
+  SPACING
+    Inter-flywheel gap = 160 px.
+    Flywheel-to-substrate gap = 130 px (room for the arrow + label).
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 490"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass-box { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .fly-live  { fill: #14171A; stroke: #D4A574; stroke-width: 1.5; }
+      .fly-box   { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .title     { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== THREE FLYWHEEL COLUMNS ==== -->
+
+  <g id="flywheel-1">
+    <rect class="fly-live" x="130" y="50" width="140" height="160" rx="6" />
+    <text class="text"     x="200" y="125" text-anchor="middle">Aurelius</text>
+    <text class="text-sub" x="200" y="148" text-anchor="middle">canonical flywheel</text>
+  </g>
+
+  <g id="flywheel-2">
+    <rect class="fly-box" x="430" y="50" width="140" height="160" rx="6" />
+    <text class="text"     x="500" y="125" text-anchor="middle">Lighthouse</text>
+    <text class="text-sub" x="500" y="148" text-anchor="middle">vertical product</text>
+  </g>
+
+  <g id="flywheel-3">
+    <rect class="fly-box" x="730" y="50" width="140" height="160" rx="6" />
+    <text class="text"     x="800" y="125" text-anchor="middle">Ledgerly</text>
+    <text class="text-sub" x="800" y="148" text-anchor="middle">vertical product</text>
+  </g>
+
+
+  <!-- ==== BIDIRECTIONAL ARROWS  one per flywheel, in the gap ==== -->
+
+  <path class="edge" d="M 200 210 V 330"
+        marker-start="url(#arrow)" marker-end="url(#arrow)" />
+  <path class="edge" d="M 500 210 V 330"
+        marker-start="url(#arrow)" marker-end="url(#arrow)" />
+  <path class="edge" d="M 800 210 V 330"
+        marker-start="url(#arrow)" marker-end="url(#arrow)" />
+
+
+  <!-- ==== SUBSTRATE  brass-bordered, full-width foundation ==== -->
+
+  <g id="substrate">
+    <rect class="brass-box" x="50" y="330" width="900" height="140" rx="8" />
+    <text class="title"    x="500" y="380" text-anchor="middle">Nexus substrate</text>
+    <text class="text-sub" x="500" y="405" text-anchor="middle">platform  ·  execution  ·  memory  ·  governance</text>
+    <text class="text-sub" x="500" y="432" text-anchor="middle">persistent  ·  shared  ·  gets stronger with use</text>
+  </g>
+
+</svg>

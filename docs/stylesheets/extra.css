@@ -1,0 +1,619 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=JetBrains+Mono:ital,wght@0,400;0,500;1,400&display=swap");
+
+/* ============================================================
+   Nexus Docs — design system
+   Source: design_handoff_nexus_docs/ (Claude Design, 2026-05-19)
+   Adapted to Material for MkDocs by overriding --md-* variables
+   and Material-specific selectors. Where Material defaults conflict,
+   we override them; otherwise tokens cascade naturally.
+   ============================================================ */
+
+/* ---------- Design tokens (lifted verbatim from handoff) ---------- */
+:root {
+  /* Surfaces & ink */
+  --nx-bg:           #0D0F11;   /* page background — warm charcoal */
+  --nx-surface:      #14171A;   /* cards, sidebar, callouts */
+  --nx-surface-2:    #181C20;   /* raised — code body, hover fills */
+  --nx-border:       #23282D;   /* default 1px hairline */
+  --nx-border-soft:  #1B1F23;   /* sub-dividers, table rows */
+  --nx-border-hi:    #2F3439;   /* hover/focus border */
+  --nx-text:         #E6E3DC;   /* primary — warm off-white */
+  --nx-text-2:       #A3A39C;   /* secondary, captions, callout body */
+  --nx-text-3:       #6F7177;   /* tertiary, meta, CODE COMMENTS */
+  --nx-text-code:    #D2CEC5;   /* base code colour */
+
+  /* Accent — the only one */
+  --nx-accent:       #D4A574;
+  --nx-accent-dim:   #8A6B4A;
+  --nx-accent-glow:  rgba(212, 165, 116, 0.10);
+
+  /* Semantic hues — border-left + icon only, never fills */
+  --nx-hue-note:       #6B8CAF;
+  --nx-hue-tip:        #88A892;
+  --nx-hue-warn:       #C7A76A;
+  --nx-hue-danger:     #B27A72;
+  --nx-hue-deprecated: #7A7A7A;
+
+  /* Syntax */
+  --nx-tk-c: #6F7177;   /* comment — italic, RECEDES */
+  --nx-tk-k: #C8A4A4;   /* keyword */
+  --nx-tk-s: #A8B89C;   /* string */
+  --nx-tk-n: #C8B88C;   /* number */
+  --nx-tk-f: #E6E3DC;   /* function name */
+  --nx-tk-p: #6F7177;   /* punctuation */
+  --nx-tk-t: #9EB2C0;   /* type */
+
+  /* Type scale */
+  --nx-t-36: 36px;
+  --nx-t-28: 28px;
+  --nx-t-22: 22px;
+  --nx-t-18: 18px;
+  --nx-t-15: 15px;
+  --nx-t-14: 14px;
+  --nx-t-13: 13px;
+  --nx-t-12: 12px;
+
+  /* Spacing — 4/8/16/24/40/64 */
+  --nx-s-1: 4px;
+  --nx-s-2: 8px;
+  --nx-s-3: 16px;
+  --nx-s-4: 24px;
+  --nx-s-5: 40px;
+  --nx-s-6: 64px;
+
+  /* Radii */
+  --nx-r-sm: 4px;
+  --nx-r-md: 6px;
+  --nx-r-lg: 8px;
+}
+
+/* ---------- Map design tokens onto Material's CSS vars ---------- */
+[data-md-color-scheme="slate"] {
+  /* Backgrounds */
+  --md-default-bg-color:           var(--nx-bg);
+  --md-default-bg-color--light:    var(--nx-surface);
+  --md-default-bg-color--lighter:  var(--nx-surface-2);
+  --md-default-bg-color--lightest: var(--nx-surface-2);
+
+  /* Header / primary surface */
+  --md-primary-fg-color:           var(--nx-bg);
+  --md-primary-fg-color--light:    var(--nx-surface);
+  --md-primary-fg-color--dark:     var(--nx-bg);
+  --md-primary-bg-color:           var(--nx-text);
+  --md-primary-bg-color--light:    var(--nx-text-2);
+
+  /* Text */
+  --md-default-fg-color:           var(--nx-text);
+  --md-default-fg-color--light:    var(--nx-text-2);
+  --md-default-fg-color--lighter:  var(--nx-text-3);
+  --md-default-fg-color--lightest: var(--nx-text-3);
+
+  /* Accent (links, active states) */
+  --md-accent-fg-color:             var(--nx-accent);
+  --md-accent-fg-color--transparent: var(--nx-accent-glow);
+  --md-accent-bg-color:             var(--nx-bg);
+  --md-accent-bg-color--light:      var(--nx-surface);
+
+  /* Code */
+  --md-code-bg-color:               var(--nx-surface-2);
+  --md-code-fg-color:               var(--nx-text-code);
+  --md-code-hl-color:                var(--nx-accent-glow);
+
+  /* Typesetting */
+  --md-typeset-a-color:             var(--nx-accent);
+  --md-typeset-mark-color:          var(--nx-accent-glow);
+  --md-typeset-color:               var(--nx-text);
+  --md-typeset-table-color:         var(--nx-border);
+}
+
+/* ============================================================
+   Header — flat, hairline-bottom, no shadow
+   ============================================================ */
+.md-header,
+.md-header[data-md-state="shadow"] {
+  background-color: var(--nx-bg) !important;
+  border-bottom: 1px solid var(--nx-border);
+  box-shadow: none !important;
+}
+.md-header__title { color: var(--nx-text); font-weight: 500; }
+.md-tabs {
+  background-color: var(--nx-bg) !important;
+  border-bottom: 1px solid var(--nx-border-soft);
+}
+.md-tabs__link {
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-2);
+  opacity: 1;
+}
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: var(--nx-text);
+}
+
+/* Search bar — flat, no glow */
+.md-search__form {
+  background-color: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-r-sm);
+}
+.md-search__form:hover,
+.md-search__input:focus + .md-search__form,
+.md-search__input:active + .md-search__form { background-color: var(--nx-surface-2); }
+
+/* ============================================================
+   Typography — Geist + JetBrains Mono, the handoff scale
+   ============================================================ */
+body, .md-typeset {
+  font-family: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-feature-settings: "ss01", "cv11";
+  font-size: var(--nx-t-15);
+  line-height: 1.65;
+  color: var(--nx-text);
+}
+
+.md-typeset h1 {
+  font-size: var(--nx-t-36);
+  font-weight: 500;
+  letter-spacing: -0.022em;
+  line-height: 1.15;
+  margin: 0 0 var(--nx-s-3);
+  color: var(--nx-text);
+}
+.md-typeset h2 {
+  font-size: var(--nx-t-22);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.25;
+  margin: var(--nx-s-5) 0 var(--nx-s-3);
+  color: var(--nx-text);
+  position: relative;
+}
+.md-typeset h3 {
+  font-size: var(--nx-t-15);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--nx-text);
+  margin: var(--nx-s-4) 0 var(--nx-s-2);
+}
+.md-typeset h4, .md-typeset h5, .md-typeset h6 {
+  font-size: var(--nx-t-13);
+  font-weight: 500;
+  color: var(--nx-text);
+  letter-spacing: 0;
+}
+
+/* Section number markers — faint mono "01" "02" before h2s.
+   Note: .md-content__inner IS .md-typeset (same element), so a descendant
+   combinator between them never matches. Match the element directly. */
+article.md-content__inner > h2 {
+  counter-increment: nx-section;
+  padding-left: 2.6em;
+  position: relative;
+}
+article.md-content__inner > h2::before {
+  content: counter(nx-section, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-size: var(--nx-t-13);
+  font-weight: 400;
+  color: var(--nx-text-3);
+  letter-spacing: 0;
+}
+article.md-content__inner { counter-reset: nx-section; }
+
+/* Lede paragraph — first paragraph after H1 (when manually marked) */
+.md-typeset .lede,
+.md-typeset h1 + p {
+  font-size: var(--nx-t-18);
+  font-weight: 300;
+  color: var(--nx-text-2);
+  line-height: 1.55;
+  max-width: 60ch;
+  margin-bottom: var(--nx-s-4);
+}
+
+/* Anchor permalinks on headings — subtler */
+.md-typeset .headerlink {
+  color: var(--nx-text-3);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.md-typeset :hover > .headerlink { opacity: 1; }
+
+/* ============================================================
+   Breadcrumb (navigation.path) — mono, above page title.
+   Material's class is .md-path (NOT .md-nav--path).
+   ============================================================ */
+.md-path {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-3);
+  margin: 0 0 var(--nx-s-3);
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+.md-path__list {
+  display: inline !important;        /* defeat Material's flex direction */
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+  white-space: nowrap;
+}
+.md-path__item {
+  display: inline !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.md-path__item:not(:last-child)::after {
+  content: " / ";
+  color: var(--nx-border-hi);
+  padding: 0 6px;
+  display: inline;
+}
+/* Kill Material's default chevron separator (it inserts a ›) */
+.md-path__item::before { display: none !important; content: none !important; }
+.md-path__link { display: inline !important; }
+.md-path__link {
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-3);
+  padding: 0;
+  border: none;
+  text-transform: lowercase;
+  text-decoration: none;
+}
+.md-path__link:hover { color: var(--nx-text-2); }
+.md-path__item:last-child .md-path__link { color: var(--nx-text-2); }
+.md-path .md-ellipsis { font-family: inherit; }
+
+/* ============================================================
+   Page meta row — "living document · Updated YYYY-MM-DD · Owner"
+   Use convention: a div.page-meta following the H1 + lede
+   ============================================================ */
+.md-typeset .page-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--nx-s-3);
+  align-items: center;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-3);
+  margin: var(--nx-s-3) 0 var(--nx-s-5);
+  padding: var(--nx-s-3) 0 0;
+  border-top: 1px solid var(--nx-border-soft);
+}
+.md-typeset .page-meta .badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border: 1px solid var(--nx-border);
+  border-radius: 999px;
+  font-size: 11px;
+  text-transform: lowercase;
+  color: var(--nx-text-2);
+}
+.md-typeset .page-meta .badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--nx-accent);
+  display: inline-block;
+}
+
+/* ============================================================
+   Landing card kicker — "01 · START" style on the index grid
+   Used via a span.kicker inside each card
+   ============================================================ */
+.md-typeset .grid.cards .kicker {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-size: var(--nx-t-12);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nx-text-3);
+  margin-bottom: var(--nx-s-3);
+}
+.md-typeset .grid.cards .kicker::after {
+  content: "→";
+  color: var(--nx-text-3);
+  font-size: 14px;
+  letter-spacing: 0;
+}
+.md-typeset .grid.cards .card-title {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--nx-text);
+  margin-bottom: var(--nx-s-2);
+  display: block;
+}
+.md-typeset .grid.cards .card-title a {
+  color: inherit;
+  border-bottom: none;
+}
+.md-typeset .grid.cards .card-title a:hover {
+  color: var(--nx-accent);
+}
+
+/* ============================================================
+   Sidebar — the signature 1px brass hairline left active state
+   ============================================================ */
+.md-sidebar { background-color: var(--nx-bg); }
+.md-sidebar--primary { border-right: 1px solid var(--nx-border-soft); }
+.md-sidebar--secondary { border-left: 1px solid var(--nx-border-soft); }
+
+.md-nav__title {
+  font-size: var(--nx-t-12);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nx-text-3);
+  padding: var(--nx-s-3) var(--nx-s-3) var(--nx-s-2);
+  background: var(--nx-bg);
+}
+
+.md-nav__link {
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-2);
+  padding: 5px 10px 5px 10px;
+  border-left: 1px solid transparent;   /* placeholder for the signature gesture */
+  margin: 1px 0;
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.md-nav__link:focus,
+.md-nav__link:hover { color: var(--nx-text); }
+.md-nav__link--active {
+  color: var(--nx-text);
+  border-left-color: var(--nx-accent);   /* THE signature gesture */
+}
+
+/* TOC right rail — same active gesture */
+.md-nav--secondary .md-nav__title {
+  font-size: var(--nx-t-12);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nx-text-3);
+}
+.md-nav--secondary .md-nav__link {
+  font-size: var(--nx-t-13);
+  color: var(--nx-text-3);
+  padding: 4px 10px;
+  border-left: 1px solid transparent;
+}
+.md-nav--secondary .md-nav__link:hover { color: var(--nx-text-2); }
+.md-nav--secondary .md-nav__link--active {
+  color: var(--nx-text);
+  border-left-color: var(--nx-accent);
+}
+
+/* ============================================================
+   Links — accent + subtle hover only (no underline by default)
+   ============================================================ */
+.md-typeset a {
+  color: var(--nx-accent);
+  text-decoration: none;
+  border-bottom: 1px solid var(--nx-accent-dim);
+  transition: color 0.12s ease, border-color 0.12s ease;
+}
+.md-typeset a:hover {
+  color: var(--nx-text);
+  border-bottom-color: var(--nx-accent);
+}
+
+/* ============================================================
+   Code — block chrome, syntax tokens, inline
+   ============================================================ */
+.md-typeset code,
+.md-typeset pre code {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  font-feature-settings: normal;
+}
+
+/* Inline code — accent colour, light bg */
+.md-typeset :not(pre) > code {
+  background-color: transparent;
+  color: var(--nx-accent);
+  border: 1px solid var(--nx-border-soft);
+  padding: 1px 6px;
+  border-radius: var(--nx-r-sm);
+  font-size: 0.88em;
+}
+
+/* Code block body */
+.md-typeset pre > code,
+.md-typeset .highlight pre {
+  background-color: var(--nx-surface-2);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-r-md);
+  font-size: var(--nx-t-13);
+  line-height: 1.6;
+  padding: var(--nx-s-3);
+}
+
+/* Code-block "header" (filename / language label) — when present */
+.md-typeset .highlight .filename {
+  background-color: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-bottom: none;
+  border-top-left-radius: var(--nx-r-md);
+  border-top-right-radius: var(--nx-r-md);
+  color: var(--nx-text-3);
+  font-family: "JetBrains Mono", monospace;
+  font-size: var(--nx-t-12);
+  letter-spacing: 0.04em;
+  padding: 6px var(--nx-s-3);
+  text-transform: lowercase;
+}
+
+/* Syntax tokens — from the handoff palette */
+.highlight .c, .highlight .c1, .highlight .cm { color: var(--nx-tk-c); font-style: italic; }   /* comments */
+.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: var(--nx-tk-k); }   /* keywords */
+.highlight .s, .highlight .s1, .highlight .s2, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .ss { color: var(--nx-tk-s); }   /* strings */
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .il { color: var(--nx-tk-n); }   /* numbers */
+.highlight .nf, .highlight .nc { color: var(--nx-tk-f); }   /* function / class names */
+.highlight .p { color: var(--nx-tk-p); }   /* punctuation */
+.highlight .nb, .highlight .bp { color: var(--nx-tk-t); }   /* built-in types */
+.highlight .o, .highlight .ow { color: var(--nx-text-2); }   /* operators */
+.highlight .n, .highlight .na, .highlight .no { color: var(--nx-text-code); }   /* names */
+
+/* Copy button — flat */
+.md-clipboard {
+  color: var(--nx-text-3);
+}
+.md-clipboard:hover { color: var(--nx-accent); }
+
+/* ============================================================
+   Callouts (admonitions) — border-left only, no fills
+   ============================================================ */
+.md-typeset .admonition,
+.md-typeset details {
+  background-color: transparent;
+  border: 1px solid var(--nx-border);
+  border-left-width: 3px;
+  border-radius: var(--nx-r-md);
+  box-shadow: none;
+  padding: var(--nx-s-3) var(--nx-s-4);
+  font-size: var(--nx-t-14);
+  color: var(--nx-text-2);
+  margin: var(--nx-s-4) 0;
+}
+.md-typeset .admonition-title,
+.md-typeset summary {
+  background: transparent !important;
+  color: var(--nx-text);
+  font-weight: 500;
+  font-size: var(--nx-t-14);
+  padding-left: 0;
+  margin: 0 0 var(--nx-s-2);
+}
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  background-color: currentColor;
+}
+
+.md-typeset .admonition.note,    .md-typeset details.note    { border-left-color: var(--nx-hue-note); }
+.md-typeset .admonition.note > .admonition-title,
+.md-typeset details.note  > summary { color: var(--nx-hue-note); }
+
+.md-typeset .admonition.tip,     .md-typeset details.tip,
+.md-typeset .admonition.hint,    .md-typeset details.hint    { border-left-color: var(--nx-hue-tip); }
+.md-typeset .admonition.tip   > .admonition-title,
+.md-typeset details.tip   > summary,
+.md-typeset .admonition.hint  > .admonition-title,
+.md-typeset details.hint  > summary { color: var(--nx-hue-tip); }
+
+.md-typeset .admonition.warning, .md-typeset details.warning { border-left-color: var(--nx-hue-warn); }
+.md-typeset .admonition.warning > .admonition-title,
+.md-typeset details.warning > summary { color: var(--nx-hue-warn); }
+
+.md-typeset .admonition.danger,  .md-typeset details.danger,
+.md-typeset .admonition.failure, .md-typeset details.failure { border-left-color: var(--nx-hue-danger); }
+.md-typeset .admonition.danger  > .admonition-title,
+.md-typeset details.danger  > summary,
+.md-typeset .admonition.failure > .admonition-title,
+.md-typeset details.failure > summary { color: var(--nx-hue-danger); }
+
+.md-typeset .admonition.info,    .md-typeset details.info    { border-left-color: var(--nx-hue-note); }
+.md-typeset .admonition.info > .admonition-title,
+.md-typeset details.info > summary { color: var(--nx-hue-note); }
+
+/* Deprecated — dashed left border, graphite */
+.md-typeset .admonition.deprecated,
+.md-typeset details.deprecated {
+  border-left-color: var(--nx-hue-deprecated);
+  border-left-style: dashed;
+}
+.md-typeset .admonition.deprecated > .admonition-title,
+.md-typeset details.deprecated > summary { color: var(--nx-hue-deprecated); }
+
+/* ============================================================
+   Tables — hairline rows, no fills
+   ============================================================ */
+.md-typeset table:not([class]) {
+  background-color: transparent;
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-r-md);
+  font-size: var(--nx-t-14);
+  overflow: hidden;
+}
+.md-typeset table:not([class]) th {
+  background-color: var(--nx-surface);
+  color: var(--nx-text);
+  font-weight: 500;
+  font-size: var(--nx-t-13);
+  letter-spacing: 0.02em;
+  border-bottom: 1px solid var(--nx-border);
+}
+.md-typeset table:not([class]) td {
+  background-color: transparent;
+  border-top: 1px solid var(--nx-border-soft);
+  color: var(--nx-text-2);
+}
+.md-typeset table:not([class]) tr:hover td { background-color: var(--nx-surface); }
+
+/* ============================================================
+   Landing-page cards — numbered kicker style
+   The "grid cards" extension renders a <ul> with .grid.cards class
+   ============================================================ */
+.md-typeset .grid.cards {
+  gap: var(--nx-s-3);
+}
+.md-typeset .grid.cards > ul > li,
+.md-typeset .grid.cards > .card {
+  background-color: var(--nx-surface);
+  border: 1px solid var(--nx-border);
+  border-radius: var(--nx-r-md);
+  padding: var(--nx-s-4);
+  transition: border-color 0.12s ease;
+  box-shadow: none !important;
+}
+.md-typeset .grid.cards > ul > li:hover,
+.md-typeset .grid.cards > .card:hover {
+  border-color: var(--nx-border-hi);
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.md-footer,
+.md-footer-meta {
+  background-color: var(--nx-bg);
+  border-top: 1px solid var(--nx-border-soft);
+  color: var(--nx-text-3);
+  box-shadow: none !important;
+}
+.md-footer__title,
+.md-footer__direction { color: var(--nx-text-2); }
+
+/* ============================================================
+   Hairlines, separators — no horizontal rules elsewhere
+   ============================================================ */
+.md-typeset hr {
+  border: none;
+  border-top: 1px solid var(--nx-border-soft);
+  margin: var(--nx-s-5) 0;
+}
+
+/* Selection */
+::selection {
+  background: var(--nx-accent-glow);
+  color: var(--nx-text);
+}
+
+/* ============================================================
+   Kill remaining shadows globally — the design says no shadows
+   ============================================================ */
+.md-header,
+.md-tabs,
+.md-search__form,
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset .highlight pre,
+.md-footer { box-shadow: none !important; }

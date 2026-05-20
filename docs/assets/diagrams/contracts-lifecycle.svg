@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Contracts  lifecycle state machine
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Happy path (top row left-to-right):
+      [start] => draft => active => fulfilled
+    Negotiating branch (external contracts, between draft and active):
+      draft => negotiating => active (label: finalize)
+    Terminate is reachable from any non-terminal state:
+      draft / negotiating / active / fulfilled => terminated
+    Accept states (brass): fulfilled.
+    Terminal: terminated.
+
+  LAYOUT
+    Top row at y=120  draft, negotiating, active, fulfilled (4 nodes)
+    Bottom row at y=320  terminated (centered)
+    Each non-terminal state has its own arrow down to terminated.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 470"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .accept    { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state     { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .terminal  { fill: #14171A; stroke: #B27A72; stroke-width: 1.5; }
+      .start     { fill: #6F7177; stroke: #6F7177; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== HAPPY-PATH ROW  4 nodes ==== -->
+
+  <circle class="start" cx="50" cy="160" r="8" />
+
+  <g id="draft">
+    <rect class="state" x="110" y="130" width="160" height="60" rx="8" />
+    <text class="text" x="190" y="165" text-anchor="middle">draft</text>
+  </g>
+
+  <g id="negotiating">
+    <rect class="state" x="350" y="130" width="180" height="60" rx="8" />
+    <text class="text" x="440" y="165" text-anchor="middle">negotiating</text>
+  </g>
+
+  <g id="active">
+    <rect class="state" x="610" y="130" width="160" height="60" rx="8" />
+    <text class="text" x="690" y="165" text-anchor="middle">active</text>
+  </g>
+
+  <g id="fulfilled">
+    <rect class="accept" x="850" y="130" width="130" height="60" rx="8" />
+    <text class="text" x="915" y="165" text-anchor="middle">fulfilled</text>
+  </g>
+
+
+  <!-- ==== TERMINATED  bottom centered ==== -->
+
+  <g id="terminated">
+    <rect class="terminal" x="420" y="370" width="200" height="60" rx="8" />
+    <text class="text" x="520" y="405" text-anchor="middle">terminated</text>
+  </g>
+
+
+  <!-- ==== HAPPY-PATH ARROWS ==== -->
+
+  <!-- start => draft -->
+  <path class="edge" d="M 58 160 H 110" marker-end="url(#arrow)" />
+
+  <!-- draft => active (internal: route ABOVE negotiating) -->
+  <path class="edge" d="M 270 130 V 100 Q 270 90 280 90 H 600 Q 610 90 610 100 V 130"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="440" y="80" text-anchor="middle">internal (skip negotiating)</text>
+
+  <!-- draft => negotiating -->
+  <path class="edge" d="M 270 160 H 350" marker-end="url(#arrow)" />
+  <text class="text-edge" x="310" y="153" text-anchor="middle">external</text>
+
+  <!-- negotiating => active -->
+  <path class="edge" d="M 530 160 H 610" marker-end="url(#arrow)" />
+  <text class="text-edge" x="570" y="153" text-anchor="middle">finalize</text>
+
+  <!-- active => fulfilled -->
+  <path class="edge" d="M 770 160 H 850" marker-end="url(#arrow)" />
+  <text class="text-edge" x="810" y="153" text-anchor="middle">last AC verified</text>
+
+
+  <!-- ==== TERMINATED ARROWS  one from each non-terminal state ==== -->
+
+  <!-- draft => terminated (curves down and right) -->
+  <path class="edge" d="M 190 190 V 350 Q 190 370 210 370 H 420"
+        marker-end="url(#arrow)" />
+
+  <!-- negotiating => terminated (drops straight down then curves) -->
+  <path class="edge" d="M 440 190 V 350 Q 440 370 450 370 H 420"
+        marker-end="url(#arrow)" />
+
+  <!-- active => terminated (curves down and left) -->
+  <path class="edge" d="M 690 190 V 350 Q 690 370 670 370 H 620"
+        marker-end="url(#arrow)" />
+
+  <!-- fulfilled => terminated (curves down and far left) -->
+  <path class="edge" d="M 915 190 V 350 Q 915 370 895 370 H 620"
+        marker-end="url(#arrow)" />
+
+  <text class="text-edge" x="520" y="450" text-anchor="middle">any non-terminal state can terminate</text>
+
+</svg>

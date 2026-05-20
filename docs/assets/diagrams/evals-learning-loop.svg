@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Evals  learning loop (failure to new eval)
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    A 5-node cycle that closes back on itself:
+      Failure happens => Postmortem record => Gap-scan against
+      registry => New eval component (brass) => Next failure
+      caught early => (dotted return) Failure happens
+
+    Linear left-to-right at the top, dotted closing return loops
+    underneath.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 360"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+    <marker id="arrow-brass"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4A574" />
+    </marker>
+
+    <style>
+      .brass     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state     { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 12px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-brass { stroke: #D4A574; stroke-width: 1.8; fill: none; stroke-dasharray: 6 4; }
+    </style>
+  </defs>
+
+
+  <!-- ==== 5 nodes in a row, y around 110 ==== -->
+
+  <g id="fail">
+    <rect class="state" x="30" y="80" width="150" height="60" rx="8" />
+    <text class="text" x="105" y="115" text-anchor="middle">Failure happens</text>
+  </g>
+
+  <g id="pm">
+    <rect class="state" x="230" y="80" width="170" height="60" rx="8" />
+    <text class="text" x="315" y="115" text-anchor="middle">Postmortem record</text>
+  </g>
+
+  <g id="gap">
+    <rect class="state" x="450" y="80" width="170" height="60" rx="8" />
+    <text class="text" x="535" y="108" text-anchor="middle">Gap-scan against</text>
+    <text class="text" x="535" y="126" text-anchor="middle">registry</text>
+  </g>
+
+  <g id="new">
+    <rect class="brass" x="670" y="80" width="160" height="60" rx="8" />
+    <text class="text" x="750" y="115" text-anchor="middle">New eval component</text>
+  </g>
+
+  <g id="caught">
+    <rect class="state" x="870" y="80" width="120" height="60" rx="8" />
+    <text class="text" x="930" y="108" text-anchor="middle">Next failure</text>
+    <text class="text" x="930" y="126" text-anchor="middle">caught early</text>
+  </g>
+
+
+  <!-- ==== ARROWS  top row linear ==== -->
+
+  <path class="edge" d="M 180 110 H 230" marker-end="url(#arrow)" />
+  <path class="edge" d="M 400 110 H 450" marker-end="url(#arrow)" />
+  <path class="edge" d="M 620 110 H 670" marker-end="url(#arrow)" />
+  <path class="edge" d="M 830 110 H 870" marker-end="url(#arrow)" />
+
+
+  <!-- ==== DOTTED BRASS LOOP BACK  caught => fail (under the row) ==== -->
+
+  <path class="edge-brass" d="M 930 140 V 230 Q 930 245 915 245 H 120 Q 105 245 105 230 V 140"
+        marker-end="url(#arrow-brass)" />
+  <text class="text-edge" x="500" y="270" text-anchor="middle">the learning loop  each new eval catches the next class of failure proactively</text>
+
+</svg>

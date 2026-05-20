@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Sessions vs Tickets  dual state machine
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Two side-by-side containers:
+      LEFT  : Ticket (DFA 1)   the unit-of-work state machine
+      RIGHT : Session (DFA 4)  the agent-run state machine
+
+    Ticket flow:
+       backlog => todo => in_progress => in_review => done
+                                |
+                                v
+                              blocked
+       (with reject arrow from in_review back to todo)
+
+    Session flow:
+       init => spawning => idle => processing
+                            ^         |
+                            |=========|  (turn_complete loop)
+       idle => closing => closed
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 700"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .container  { fill: none; stroke: #6F7177; stroke-width: 1; stroke-dasharray: 5 4; }
+      .accept     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state      { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .blocked    { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .start      { fill: #6F7177; stroke: #6F7177; }
+      .title      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .title-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text       { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-edge  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 10px; font-style: italic; }
+      .edge       { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== TICKET CONTAINER  top ==== -->
+
+  <rect class="container" x="40" y="30" width="920" height="290" rx="10" />
+  <text class="title"     x="60" y="60">Ticket (DFA 1)</text>
+  <text class="title-sub" x="60" y="80">unit of work  lives in Paperclip</text>
+
+
+  <!-- Ticket states, row at y around 170 -->
+
+  <g id="t-backlog">
+    <rect class="state" x="80"  y="140" width="130" height="55" rx="8" />
+    <text class="text" x="145" y="173" text-anchor="middle">backlog</text>
+  </g>
+
+  <g id="t-todo">
+    <rect class="state" x="265" y="140" width="130" height="55" rx="8" />
+    <text class="text" x="330" y="173" text-anchor="middle">todo</text>
+  </g>
+
+  <g id="t-in-progress">
+    <rect class="state" x="450" y="140" width="130" height="55" rx="8" />
+    <text class="text" x="515" y="173" text-anchor="middle">in_progress</text>
+  </g>
+
+  <g id="t-in-review">
+    <rect class="state" x="635" y="140" width="130" height="55" rx="8" />
+    <text class="text" x="700" y="173" text-anchor="middle">in_review</text>
+  </g>
+
+  <g id="t-done">
+    <rect class="accept" x="820" y="140" width="120" height="55" rx="8" />
+    <text class="text" x="880" y="173" text-anchor="middle">done</text>
+  </g>
+
+
+  <!-- Blocked  below in_progress -->
+
+  <g id="t-blocked">
+    <rect class="blocked" x="450" y="240" width="130" height="55" rx="8" />
+    <text class="text" x="515" y="273" text-anchor="middle">blocked</text>
+  </g>
+
+
+  <!-- Ticket happy-path arrows -->
+
+  <path class="edge" d="M 210 167 H 265" marker-end="url(#arrow)" />
+  <path class="edge" d="M 395 167 H 450" marker-end="url(#arrow)" />
+  <path class="edge" d="M 580 167 H 635" marker-end="url(#arrow)" />
+  <path class="edge" d="M 765 167 H 820" marker-end="url(#arrow)" />
+
+
+  <!-- in_progress -> blocked (drop) -->
+  <path class="edge" d="M 515 195 V 240" marker-end="url(#arrow)" />
+  <text class="text-edge" x="525" y="220" text-anchor="start">block</text>
+
+
+  <!-- in_review -> todo (reject, route above) -->
+  <path class="edge" d="M 700 140 V 110 Q 700 100 690 100 H 340 Q 330 100 330 110 V 140"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="515" y="92" text-anchor="middle">reject</text>
+
+
+  <!-- ==== SESSION CONTAINER  bottom ==== -->
+
+  <rect class="container" x="40" y="370" width="920" height="290" rx="10" />
+  <text class="title"     x="60" y="400">Session (DFA 4)</text>
+  <text class="title-sub" x="60" y="420">agent run  lives in the ACP plugin</text>
+
+
+  <!-- Session states, row at y around 510 -->
+
+  <circle class="start" cx="80" cy="510" r="8" />
+
+  <g id="s-spawning">
+    <rect class="state" x="130" y="482" width="130" height="55" rx="8" />
+    <text class="text" x="195" y="515" text-anchor="middle">spawning</text>
+  </g>
+
+  <g id="s-idle">
+    <rect class="state" x="315" y="482" width="130" height="55" rx="8" />
+    <text class="text" x="380" y="515" text-anchor="middle">idle</text>
+  </g>
+
+  <g id="s-processing">
+    <rect class="state" x="500" y="482" width="130" height="55" rx="8" />
+    <text class="text" x="565" y="515" text-anchor="middle">processing</text>
+  </g>
+
+  <g id="s-closing">
+    <rect class="state" x="685" y="482" width="130" height="55" rx="8" />
+    <text class="text" x="750" y="515" text-anchor="middle">closing</text>
+  </g>
+
+  <g id="s-closed">
+    <rect class="accept" x="850" y="482" width="100" height="55" rx="8" />
+    <text class="text" x="900" y="515" text-anchor="middle">closed</text>
+  </g>
+
+
+  <!-- Session happy-path arrows -->
+
+  <path class="edge" d="M 88 510 H 130" marker-end="url(#arrow)" />
+  <path class="edge" d="M 260 510 H 315" marker-end="url(#arrow)" />
+  <path class="edge" d="M 445 510 H 500" marker-end="url(#arrow)" />
+  <path class="edge" d="M 630 510 H 685" marker-end="url(#arrow)" />
+  <path class="edge" d="M 815 510 H 850" marker-end="url(#arrow)" />
+
+
+  <!-- processing -> idle (turn_complete loop, routed below) -->
+  <path class="edge" d="M 565 537 V 570 Q 565 580 555 580 H 390 Q 380 580 380 570 V 537"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="475" y="600" text-anchor="middle">turn_complete</text>
+
+</svg>

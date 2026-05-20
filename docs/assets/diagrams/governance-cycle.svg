@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Governance  the learning cycle
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Pentagon-style cycle (5 nodes) read left-to-right then back:
+      WORK  ====>  EVAL  ====>  ADR  ====>  GATE
+                       on failure: PM (below) feeds into ADR too
+      A dotted "improves" arrow returns from GATE back to WORK
+      (routed below the row).
+
+  LAYOUT (top row left-to-right):
+      WORK   EVAL   ADR   GATE   (4 nodes evenly spaced)
+      PM sits centered below, between EVAL and ADR.
+  Brass on the GATE node + WORK node to mark the learning loop
+  endpoints.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 460"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+    <marker id="arrow-brass"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4A574" />
+    </marker>
+
+    <style>
+      .endpoint   { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .node       { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .text       { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub   { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-edge  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge       { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-dashed { stroke: #A8AAB0; stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+      .edge-brass { stroke: #D4A574; stroke-width: 1.8; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== TOP ROW  the linear part of the cycle ==== -->
+
+  <g id="work">
+    <rect class="endpoint" x="60" y="100" width="180" height="90" rx="8" />
+    <text class="text"     x="150" y="135" text-anchor="middle">Work happens</text>
+    <text class="text-sub" x="150" y="160" text-anchor="middle">ticket runs</text>
+    <text class="text-sub" x="150" y="176" text-anchor="middle">session ends</text>
+  </g>
+
+  <g id="eval">
+    <rect class="node" x="320" y="100" width="180" height="90" rx="8" />
+    <text class="text" x="410" y="135" text-anchor="middle">Eval scores it</text>
+    <text class="text-sub" x="410" y="160" text-anchor="middle">code-quality, run-quality,</text>
+    <text class="text-sub" x="410" y="176" text-anchor="middle">security-scan, etc.</text>
+  </g>
+
+  <g id="adr">
+    <rect class="node" x="580" y="100" width="180" height="90" rx="8" />
+    <text class="text" x="670" y="135" text-anchor="middle">ADR codifies</text>
+    <text class="text" x="670" y="153" text-anchor="middle">the decision</text>
+    <text class="text-sub" x="670" y="176" text-anchor="middle">numbered, never deleted</text>
+  </g>
+
+  <g id="gate">
+    <rect class="endpoint" x="820" y="100" width="160" height="90" rx="8" />
+    <text class="text"     x="900" y="135" text-anchor="middle">Future work</text>
+    <text class="text"     x="900" y="153" text-anchor="middle">is gated</text>
+    <text class="text-sub" x="900" y="176" text-anchor="middle">or routed differently</text>
+  </g>
+
+
+  <!-- ==== POSTMORTEM  below row, between eval and ADR ==== -->
+
+  <g id="pm">
+    <rect class="node" x="320" y="290" width="280" height="80" rx="8" />
+    <text class="text" x="460" y="325" text-anchor="middle">Postmortem (on failure)</text>
+    <text class="text-sub" x="460" y="350" text-anchor="middle">what failed, root cause, eval gap</text>
+  </g>
+
+
+  <!-- ==== EDGES  top-row linear ==== -->
+
+  <path class="edge" d="M 240 145 H 320" marker-end="url(#arrow)" />
+  <path class="edge" d="M 500 145 H 580" marker-end="url(#arrow)" />
+  <path class="edge" d="M 760 145 H 820" marker-end="url(#arrow)" />
+
+
+  <!-- ==== EDGES  work -> postmortem (failure) ==== -->
+
+  <path class="edge" d="M 150 190 V 250 Q 150 290 200 290 H 320"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="170" y="240" text-anchor="start">fails</text>
+
+
+  <!-- ==== EDGES  postmortem -> ADR ==== -->
+
+  <path class="edge" d="M 600 330 Q 670 330 670 280 V 190"
+        marker-end="url(#arrow)" />
+
+
+  <!-- ==== EDGES  improves loop (gate back to work) ==== -->
+
+  <path class="edge-brass" d="M 900 190 V 410 Q 900 420 890 420 H 160 Q 150 420 150 410 V 190"
+        marker-end="url(#arrow-brass)" />
+  <text class="text-edge" x="500" y="402" text-anchor="middle">future work improves</text>
+
+</svg>

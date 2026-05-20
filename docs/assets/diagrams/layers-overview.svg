@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Layers Overview  structural diagram
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  LAYOUT
+    Top                : Memory (full-width bar)
+    Below (full width) : Governance container (large), holding
+                          Execution (left) and Platform (right,
+                          brass) side-by-side
+    Three arrows go UP from Gov / Execution / Platform to
+    Memory, each in its own x column so they never cross.
+
+  CONVENTIONS
+    Solid arrow  = active write
+    Dotted arrow = passive read
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -20 1000 750"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass-box { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .arm-box   { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .node      { fill: #0D0F11; stroke: #6F7177; stroke-width: 1; }
+      .title     { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge        { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-dashed { stroke: #A8AAB0; stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+      .edge-label  { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+    </style>
+  </defs>
+
+
+  <!-- ==== MEMORY  top, full width ==== -->
+  <g id="memory">
+    <rect class="arm-box" x="80" y="30" width="840" height="130" rx="6" />
+    <text class="title"    x="500" y="65"  text-anchor="middle">Memory</text>
+    <text class="text-sub" x="500" y="92"  text-anchor="middle">wings  rooms  drawers  embeddings</text>
+    <text class="text-sub" x="500" y="112" text-anchor="middle">stores everything that should survive a session</text>
+  </g>
+
+
+  <!-- ==== GOVERNANCE  large outer container, holds Execution + Platform ==== -->
+  <g id="governance">
+    <rect class="arm-box" x="80" y="260" width="840" height="460" rx="6" />
+    <text class="title"    x="110" y="290">Governance</text>
+    <text class="text-sub" x="110" y="312">evals  postmortems  ADRs  contracts</text>
+
+    <!-- == Execution  inside Gov, left side == -->
+    <g id="execution">
+      <rect class="arm-box" x="130" y="380" width="340" height="250" rx="6" />
+      <text class="title"    x="300" y="420" text-anchor="middle">Execution</text>
+      <text class="text-sub" x="300" y="450" text-anchor="middle">heartbeat  dispatch</text>
+      <text class="text-sub" x="300" y="468" text-anchor="middle">sessions  merge</text>
+    </g>
+
+    <!-- == Platform  inside Gov, right side, BRASS (the foundational layer) == -->
+    <g id="platform">
+      <rect class="brass-box" x="530" y="380" width="340" height="250" rx="6" />
+      <text class="title"    x="700" y="420" text-anchor="middle">Platform</text>
+      <text class="text-sub" x="700" y="450" text-anchor="middle">companies  tickets  agents</text>
+      <text class="text-sub" x="700" y="468" text-anchor="middle">plugins  routines  contracts</text>
+    </g>
+  </g>
+
+
+  <!-- ============================================================ -->
+  <!-- ARROWS  three vertical lines to Memory, no crossings.        -->
+  <!-- ============================================================ -->
+
+  <!-- 1. Governance -> Memory  "writes judgments"  SOLID            -->
+  <!--    Exits Gov top edge at x=180 (left side of Gov), UP to      -->
+  <!--    Memory bottom.                                             -->
+  <path class="edge" d="M 180 260 V 160" marker-end="url(#arrow)" />
+  <text class="edge-label" x="195" y="218" text-anchor="start">writes judgments</text>
+
+  <!-- 2. Execution -> Memory  "writes transcripts"  SOLID            -->
+  <!--    Exits Execution top at x=300, UP through Gov interior      -->
+  <!--    (perpendicular crossing of Gov top edge), continues to     -->
+  <!--    Memory bottom.                                              -->
+  <path class="edge" d="M 300 380 V 160" marker-end="url(#arrow)" />
+  <text class="edge-label" x="315" y="218" text-anchor="start">writes transcripts</text>
+
+  <!-- 3. Platform -> Memory  "read by"  DOTTED                      -->
+  <!--    Exits Platform top at x=700, UP through Gov interior,      -->
+  <!--    continues to Memory bottom.                                 -->
+  <path class="edge-dashed" d="M 700 380 V 160" marker-end="url(#arrow)" />
+  <text class="edge-label" x="715" y="218" text-anchor="start">read by</text>
+
+  <!-- 4. Execution -> Platform  "claims"  SOLID (internal to Gov)   -->
+  <!--    Horizontal arrow across the gap between Execution and      -->
+  <!--    Platform inside Gov.                                       -->
+  <path class="edge" d="M 470 505 H 530" marker-end="url(#arrow)" />
+  <text class="edge-label" x="500" y="497" text-anchor="middle">claims</text>
+
+</svg>

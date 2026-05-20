@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Ticket Lifecycle  state diagram
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STATES
+    backlog       starting state
+    todo          queued for dispatch
+    in_progress   implementer agent is working on it
+    in_review     reviewer is evaluating
+    done          terminal accept state (brass)
+    blocked       alternative branch (off the happy path)
+
+  ARROWS
+    Solid  : forward transitions (the happy path)
+    Dotted : backward / exception transitions (reject, unblock)
+
+  NOTE
+    The "escalate" self-loop on in_review is intentionally
+    omitted - per the prose, escalate is a manual convention
+    (reviewer leaves ticket in_review and tags a human), not
+    a first-class state-machine transition.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 420"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass-box { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .node      { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .edge        { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-dashed { stroke: #A8AAB0; stroke-width: 1.5; fill: none; stroke-dasharray: 6 4; }
+      .edge-label  { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+    </style>
+  </defs>
+
+
+  <!-- ==== STATES  happy-path row ==== -->
+
+  <g id="state-backlog">
+    <rect class="node" x="60" y="120" width="120" height="80" rx="6" />
+    <text class="text" x="120" y="165" text-anchor="middle">backlog</text>
+  </g>
+
+  <g id="state-todo">
+    <rect class="node" x="240" y="120" width="120" height="80" rx="6" />
+    <text class="text" x="300" y="165" text-anchor="middle">todo</text>
+  </g>
+
+  <g id="state-in_progress">
+    <rect class="node" x="420" y="120" width="120" height="80" rx="6" />
+    <text class="text" x="480" y="165" text-anchor="middle">in_progress</text>
+  </g>
+
+  <g id="state-in_review">
+    <rect class="node" x="600" y="120" width="120" height="80" rx="6" />
+    <text class="text" x="660" y="165" text-anchor="middle">in_review</text>
+  </g>
+
+  <g id="state-done">
+    <rect class="brass-box" x="780" y="120" width="120" height="80" rx="6" />
+    <text class="text" x="840" y="165" text-anchor="middle">done</text>
+  </g>
+
+
+  <!-- ==== STATE  exception branch (below in_progress) ==== -->
+
+  <g id="state-blocked">
+    <rect class="node" x="420" y="300" width="120" height="80" rx="6" />
+    <text class="text" x="480" y="345" text-anchor="middle">blocked</text>
+  </g>
+
+
+  <!-- ==== FORWARD ARROWS  solid (happy path) ==== -->
+
+  <path class="edge" d="M 180 160 H 240" marker-end="url(#arrow)" />
+  <text class="edge-label" x="210" y="152" text-anchor="middle">prioritize</text>
+
+  <path class="edge" d="M 360 160 H 420" marker-end="url(#arrow)" />
+  <text class="edge-label" x="390" y="152" text-anchor="middle">dispatch</text>
+
+  <path class="edge" d="M 540 160 H 600" marker-end="url(#arrow)" />
+  <text class="edge-label" x="570" y="152" text-anchor="middle">complete</text>
+
+  <path class="edge" d="M 720 160 H 780" marker-end="url(#arrow)" />
+  <text class="edge-label" x="750" y="152" text-anchor="middle">approve</text>
+
+  <!-- in_progress -> blocked  solid (treating "block" as an active -->
+  <!-- transition the agent takes, not a passive return).             -->
+  <path class="edge" d="M 480 200 V 300" marker-end="url(#arrow)" />
+  <text class="edge-label" x="490" y="252" text-anchor="start">block</text>
+
+
+  <!-- ==== BACKWARD ARROWS  dotted (exception flows) ==== -->
+
+  <!-- blocked -> todo  "unblock". Route LEFT from blocked's left      -->
+  <!-- edge, UP through the column at x=300, into todo's bottom.       -->
+  <path class="edge-dashed"
+        d="M 420 340
+           L 310 340 Q 300 340 300 330
+           L 300 200"
+        marker-end="url(#arrow)" />
+  <text class="edge-label" x="370" y="332" text-anchor="middle">unblock</text>
+
+  <!-- in_review -> todo  "reject". Route UP from in_review (offset    -->
+  <!-- left of centre), LEFT across the top margin at y=60, DOWN into  -->
+  <!-- todo top.                                                       -->
+  <path class="edge-dashed"
+        d="M 660 120
+           L 660 70 Q 660 60 650 60
+           L 310 60 Q 300 60 300 70
+           L 300 120"
+        marker-end="url(#arrow)" />
+  <text class="edge-label" x="480" y="52" text-anchor="middle">reject</text>
+
+</svg>

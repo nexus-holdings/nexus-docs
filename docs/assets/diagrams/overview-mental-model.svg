@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Mental Model  substrate + flywheels
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Bottom : brass substrate.
+       Inside it, two peer containers at the same level:
+         - Governance (left)  holds Platform + Execution
+         - Memory     (right) single box, peer to Governance
+       This mirrors the layers-overview architecture: Governance
+       wraps the layers that DO work (Platform + Execution);
+       Memory sits beside Governance as a sibling concern.
+
+    Top    : flywheel columns rising out of the substrate
+             (placeholders Vertical N + N+1 - any AI product
+             could ride here).
+
+    Middle : bidirectional arrows between each flywheel and
+             the substrate. Substrate provides services down;
+             outcomes feed back up.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 720"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass-box { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .arm-box   { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .node      { fill: #0D0F11; stroke: #6F7177; stroke-width: 1; }
+      .title     { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== FLYWHEEL TOWERS  two placeholder columns rising above ==== -->
+
+  <g id="flywheel-n">
+    <rect class="arm-box" x="250" y="70" width="160" height="190" rx="6" />
+    <text class="text"     x="330" y="160" text-anchor="middle">Vertical N</text>
+    <text class="text-sub" x="330" y="183" text-anchor="middle">future product</text>
+  </g>
+
+  <g id="flywheel-n1">
+    <rect class="arm-box" x="680" y="70" width="160" height="190" rx="6" />
+    <text class="text"     x="760" y="160" text-anchor="middle">Vertical N+1</text>
+    <text class="text-sub" x="760" y="183" text-anchor="middle">future product</text>
+  </g>
+
+
+  <!-- ==== ARROWS  bidirectional, one per flywheel ==== -->
+
+  <path class="edge" d="M 330 260 V 360"
+        marker-start="url(#arrow)" marker-end="url(#arrow)" />
+  <path class="edge" d="M 760 260 V 360"
+        marker-start="url(#arrow)" marker-end="url(#arrow)" />
+
+
+  <!-- ==== NEXUS SUBSTRATE  brass-bordered, full-width foundation ==== -->
+
+  <g id="substrate">
+    <rect class="brass-box" x="60" y="360" width="880" height="320" rx="8" />
+    <text class="title"    x="90" y="395">Nexus substrate</text>
+    <text class="text-sub" x="90" y="415">persistent  shared  gets stronger with use</text>
+
+    <!-- == GOVERNANCE container  left half. Holds Platform + Execution. == -->
+    <g id="container-governance">
+      <rect class="arm-box" x="80" y="460" width="500" height="200" rx="6" />
+      <text class="title"    x="100" y="488">Governance</text>
+      <text class="text-sub" x="100" y="508">evals  postmortems  ADRs  contracts</text>
+
+      <!-- Platform  inner node -->
+      <g id="layer-platform">
+        <rect class="node" x="100" y="525" width="220" height="115" rx="4" />
+        <text class="text"     x="210" y="575" text-anchor="middle">Platform</text>
+        <text class="text-sub" x="210" y="600" text-anchor="middle">companies, tickets,</text>
+        <text class="text-sub" x="210" y="616" text-anchor="middle">agents, plugins</text>
+      </g>
+
+      <!-- Execution  inner node -->
+      <g id="layer-execution">
+        <rect class="node" x="340" y="525" width="220" height="115" rx="4" />
+        <text class="text"     x="450" y="575" text-anchor="middle">Execution</text>
+        <text class="text-sub" x="450" y="600" text-anchor="middle">heartbeat, dispatch,</text>
+        <text class="text-sub" x="450" y="616" text-anchor="middle">sessions, merge</text>
+      </g>
+    </g>
+
+    <!-- == MEMORY  right half, peer container to Governance. == -->
+    <g id="container-memory">
+      <rect class="arm-box" x="600" y="460" width="320" height="200" rx="6" />
+      <text class="title"    x="760" y="540" text-anchor="middle">Memory</text>
+      <text class="text-sub" x="760" y="568" text-anchor="middle">wings, rooms, drawers,</text>
+      <text class="text-sub" x="760" y="584" text-anchor="middle">embeddings</text>
+    </g>
+  </g>
+
+</svg>

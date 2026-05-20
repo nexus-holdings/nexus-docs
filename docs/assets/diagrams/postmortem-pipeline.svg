@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Postmortem Pipeline  DFA 20  (tightened layout)
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Linear 6-state pipeline left-to-right:
+      triggered => building_record => scanning_eval_gaps
+                => writing_adr => filing_issue => complete
+
+    Success labels above each arrow.
+    Non-fatal error labels below each arrow (muted red).
+    Subtitle anchored close to the bottom row of error labels.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 260"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .endpoint  { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state     { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 12px; font-weight: 600; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-fail { fill: #B27A72; font-family: Geist, system-ui, sans-serif; font-size: 10px; font-style: italic; }
+      .text-foot { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 12px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== 6 STATES IN A ROW (y around 110) ==== -->
+
+  <g id="triggered">
+    <rect class="endpoint" x="30" y="90" width="120" height="50" rx="8" />
+    <text class="text" x="90" y="121" text-anchor="middle">triggered</text>
+  </g>
+
+  <g id="building_record">
+    <rect class="state" x="200" y="90" width="140" height="50" rx="8" />
+    <text class="text" x="270" y="121" text-anchor="middle">building_record</text>
+  </g>
+
+  <g id="scanning_eval_gaps">
+    <rect class="state" x="380" y="90" width="160" height="50" rx="8" />
+    <text class="text" x="460" y="121" text-anchor="middle">scanning_eval_gaps</text>
+  </g>
+
+  <g id="writing_adr">
+    <rect class="state" x="580" y="90" width="120" height="50" rx="8" />
+    <text class="text" x="640" y="121" text-anchor="middle">writing_adr</text>
+  </g>
+
+  <g id="filing_issue">
+    <rect class="state" x="740" y="90" width="120" height="50" rx="8" />
+    <text class="text" x="800" y="121" text-anchor="middle">filing_issue</text>
+  </g>
+
+  <g id="complete">
+    <rect class="endpoint" x="900" y="90" width="80" height="50" rx="8" />
+    <text class="text" x="940" y="121" text-anchor="middle">complete</text>
+  </g>
+
+
+  <!-- ==== ARROWS  one per transition, with success label above + fail label below ==== -->
+
+  <!-- triggered => building_record -->
+  <path class="edge" d="M 150 115 H 200" marker-end="url(#arrow)" />
+  <text class="text-edge" x="175" y="105" text-anchor="middle">failure_detected</text>
+
+  <!-- building_record => scanning_eval_gaps -->
+  <path class="edge" d="M 340 115 H 380" marker-end="url(#arrow)" />
+  <text class="text-edge" x="360" y="105" text-anchor="middle">record_built</text>
+
+  <!-- scanning_eval_gaps => writing_adr -->
+  <path class="edge" d="M 540 115 H 580" marker-end="url(#arrow)" />
+  <text class="text-edge" x="560" y="105" text-anchor="middle">gaps_found / no_gaps</text>
+  <text class="text-fail" x="560" y="165" text-anchor="middle">gap_scan_error continues</text>
+
+  <!-- writing_adr => filing_issue -->
+  <path class="edge" d="M 700 115 H 740" marker-end="url(#arrow)" />
+  <text class="text-edge" x="720" y="105" text-anchor="middle">adr_written</text>
+  <text class="text-fail" x="720" y="165" text-anchor="middle">adr_write_error continues</text>
+
+  <!-- filing_issue => complete -->
+  <path class="edge" d="M 860 115 H 900" marker-end="url(#arrow)" />
+  <text class="text-edge" x="880" y="105" text-anchor="middle">issue_created</text>
+  <text class="text-fail" x="880" y="165" text-anchor="middle">issue_create_error continues</text>
+
+
+  <!-- Subtitle (closer to the labels above for less wasted whitespace) -->
+  <text class="text-foot" x="500" y="215" text-anchor="middle">every step is non-fatal  the pipeline always reaches complete, even with partial failures</text>
+
+</svg>

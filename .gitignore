@@ -1,0 +1,17 @@
+# MkDocs build artifacts
+/build/
+/.cache/
+
+# Python tooling
+.venv/
+__pycache__/
+*.pyc
+
+# Editor + OS
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# uv lock file is fine to commit, but the env directory isn't
+.python-version

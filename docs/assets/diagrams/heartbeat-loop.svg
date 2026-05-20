@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Heartbeat  the dispatch loop  (top-to-bottom)
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Vertical happy-path chain on the LEFT column:
+      systemd timer (brass)
+         |
+      Global cap check
+         |
+      List companies
+         |
+      Per-company filter
+         |
+      Pick top ticket
+         |
+      Spawn (brass)
+         |
+      ...then loop back UP to "List companies".
+
+    End cycle sits on the RIGHT, with three exit arrows:
+      - over cap        (from Global cap check)
+      - list exhausted  (from List companies)
+      - skip / none / next company   (also loop back to List companies)
+
+  SPACING
+    Boxes 220 wide x 70 tall, 60px vertical gaps.
+    Loop-back routes on the FAR LEFT margin (consistent outside-line distance).
+    End-cycle exit routes on the FAR RIGHT margin.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 790"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .brass     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state     { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 12px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- =================================================================
+       CENTER COLUMN  the six nodes of the happy-path chain
+       ================================================================= -->
+
+  <g id="timer">
+    <rect class="brass" x="390" y="30" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="62"  text-anchor="middle">systemd timer</text>
+    <text class="text-sub" x="500" y="83" text-anchor="middle">every 5 min</text>
+  </g>
+
+  <g id="cap">
+    <rect class="state" x="390" y="160" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="192" text-anchor="middle">Global cap check</text>
+    <text class="text-sub" x="500" y="213" text-anchor="middle">NEXUS_MAX_LIVE_WORKERS</text>
+  </g>
+
+  <g id="list">
+    <rect class="state" x="390" y="290" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="322" text-anchor="middle">List companies</text>
+    <text class="text-sub" x="500" y="343" text-anchor="middle">by priority</text>
+  </g>
+
+  <g id="filter">
+    <rect class="state" x="390" y="420" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="452" text-anchor="middle">Per-company filter</text>
+    <text class="text-sub" x="500" y="473" text-anchor="middle">paused? cap full?</text>
+  </g>
+
+  <g id="pick">
+    <rect class="state" x="390" y="550" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="582" text-anchor="middle">Pick top ticket</text>
+    <text class="text-sub" x="500" y="603" text-anchor="middle">priority + peak-hour</text>
+  </g>
+
+  <g id="spawn">
+    <rect class="brass" x="390" y="680" width="220" height="70" rx="8" />
+    <text class="text"     x="500" y="712" text-anchor="middle">Spawn</text>
+    <text class="text-sub" x="500" y="733" text-anchor="middle">atomic claim</text>
+  </g>
+
+
+  <!-- =================================================================
+       END CYCLE  far right, vertically centred near the cap check row
+       ================================================================= -->
+
+  <g id="end">
+    <rect class="state" x="810" y="160" width="150" height="70" rx="8" />
+    <text class="text" x="885" y="202" text-anchor="middle">End cycle</text>
+  </g>
+
+
+  <!-- =================================================================
+       HAPPY-PATH ARROWS  vertical chain down the centre
+       ================================================================= -->
+
+  <path class="edge" d="M 500 100 V 160" marker-end="url(#arrow)" />
+  <path class="edge" d="M 500 230 V 290" marker-end="url(#arrow)" />
+  <text class="text-edge" x="510" y="265" text-anchor="start">under cap</text>
+
+  <path class="edge" d="M 500 360 V 420" marker-end="url(#arrow)" />
+
+  <path class="edge" d="M 500 490 V 550" marker-end="url(#arrow)" />
+  <text class="text-edge" x="510" y="525" text-anchor="start">ok</text>
+
+  <path class="edge" d="M 500 620 V 680" marker-end="url(#arrow)" />
+  <text class="text-edge" x="510" y="655" text-anchor="start">chosen</text>
+
+
+  <!-- =================================================================
+       EXITS TO END CYCLE  on the right side, horizontal arrows
+       ================================================================= -->
+
+  <!-- Global cap check  over cap => End cycle -->
+  <path class="edge" d="M 610 195 H 810" marker-end="url(#arrow)" />
+  <text class="text-edge" x="710" y="185" text-anchor="middle">over cap</text>
+
+  <!-- List companies  exhausted => End cycle (routes UP and RIGHT) -->
+  <path class="edge" d="M 610 310 H 700 Q 720 310 720 290 V 250 Q 720 230 740 230 H 810"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="740" y="270" text-anchor="middle">list exhausted</text>
+
+
+  <!-- =================================================================
+       LOOP-BACK ARROWS  on the LEFT margin, returning to List companies
+       ================================================================= -->
+
+  <!-- Per-company filter  skip => List companies -->
+  <path class="edge" d="M 390 455 H 290 Q 270 455 270 435 V 345 Q 270 325 290 325 H 390"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="260" y="395" text-anchor="end">skip</text>
+
+  <!-- Pick top ticket  none => List companies -->
+  <path class="edge" d="M 390 585 H 220 Q 200 585 200 565 V 345 Q 200 325 220 325 H 390"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="190" y="460" text-anchor="end">none</text>
+
+  <!-- Spawn  next company => List companies -->
+  <path class="edge" d="M 390 715 H 150 Q 130 715 130 695 V 345 Q 130 325 150 325 H 390"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="120" y="525" text-anchor="end">next company</text>
+
+</svg>

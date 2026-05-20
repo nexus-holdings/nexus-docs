@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Execution Layer  session state machine (DFA 4)
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Horizontal flow of the canonical happy path:
+      spawning -> idle -> processing -> idle -> ... -> closed
+    With error states (error) and closing branch below.
+
+    [start] => spawning => idle => processing
+                                 ^         |
+                                 |=========|  (turn_complete loop)
+
+    spawning => error (spawn_fail)
+    idle    => closing (timeout)
+    processing/idle => closed (exit_0 / exit_nonzero)
+    error   => closed (cleanup)
+
+  LAYOUT
+    Row 1 (top)    : the happy-path nodes (left -> right)
+    Row 2 (bottom) : the failure / shutdown nodes (closing, error)
+    closed sits on the right of row 2, as the accept state (brass).
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 460"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+
+    <style>
+      .accept     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .state      { fill: #14171A; stroke: #6F7177; stroke-width: 1.2; }
+      .start      { fill: #6F7177; stroke: #6F7177; }
+      .text       { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 14px; font-weight: 600; }
+      .text-edge  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge       { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== STATES  row 1 (happy path) ==== -->
+
+  <!-- start sentinel -->
+  <circle class="start" cx="50" cy="100" r="8" />
+
+  <g id="spawning">
+    <rect class="state" x="120" y="70" width="160" height="60" rx="8" />
+    <text class="text" x="200" y="105" text-anchor="middle">spawning</text>
+  </g>
+
+  <g id="idle">
+    <rect class="state" x="380" y="70" width="160" height="60" rx="8" />
+    <text class="text" x="460" y="105" text-anchor="middle">idle</text>
+  </g>
+
+  <g id="processing">
+    <rect class="state" x="640" y="70" width="160" height="60" rx="8" />
+    <text class="text" x="720" y="105" text-anchor="middle">processing</text>
+  </g>
+
+
+  <!-- ==== STATES  row 2 (shutdown + accept) ==== -->
+
+  <g id="closing">
+    <rect class="state" x="380" y="320" width="160" height="60" rx="8" />
+    <text class="text" x="460" y="355" text-anchor="middle">closing</text>
+  </g>
+
+  <g id="error">
+    <rect class="state" x="120" y="320" width="160" height="60" rx="8" />
+    <text class="text" x="200" y="355" text-anchor="middle">error</text>
+  </g>
+
+  <g id="closed">
+    <rect class="accept" x="730" y="320" width="160" height="60" rx="8" />
+    <text class="text" x="810" y="355" text-anchor="middle">closed</text>
+    <text class="text-edge" x="810" y="395" text-anchor="middle">accept state</text>
+  </g>
+
+
+  <!-- ==== EDGES  happy path (top row left-to-right) ==== -->
+
+  <!-- start -> spawning -->
+  <path class="edge" d="M 58 100 H 120" marker-end="url(#arrow)" />
+  <text class="text-edge" x="89" y="90" text-anchor="middle">spawn_request</text>
+
+  <!-- spawning -> idle -->
+  <path class="edge" d="M 280 100 H 380" marker-end="url(#arrow)" />
+  <text class="text-edge" x="330" y="90" text-anchor="middle">process_ready</text>
+
+  <!-- idle -> processing -->
+  <path class="edge" d="M 540 100 H 640" marker-end="url(#arrow)" />
+  <text class="text-edge" x="590" y="90" text-anchor="middle">prompt_send</text>
+
+  <!-- processing -> idle (turn_complete loop, routed below the two boxes) -->
+  <path class="edge" d="M 720 130 V 165 Q 720 175 710 175 H 470 Q 460 175 460 165 V 130"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="590" y="195" text-anchor="middle">turn_complete</text>
+
+
+  <!-- ==== EDGES  failure / shutdown (vertical drops) ==== -->
+
+  <!-- spawning -> error -->
+  <path class="edge" d="M 200 130 V 320" marker-end="url(#arrow)" />
+  <text class="text-edge" x="210" y="230" text-anchor="start">spawn_fail</text>
+
+  <!-- idle -> closing -->
+  <path class="edge" d="M 460 130 V 320" marker-end="url(#arrow)" />
+  <text class="text-edge" x="470" y="230" text-anchor="start">timeout</text>
+
+  <!-- processing -> closed (exit_0 / exit_nonzero), drops diagonally avoided by routing R -->
+  <path class="edge" d="M 720 130 V 280 Q 720 290 730 290 H 800 Q 810 290 810 300 V 320"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="730" y="265" text-anchor="start">exit_0 / exit_nonzero</text>
+
+
+  <!-- ==== EDGES  bottom row left-to-right convergence on closed ==== -->
+
+  <!-- error -> closed (bottom-row horizontal, with the cleanup label) -->
+  <path class="edge" d="M 280 350 H 380" marker-end="url(#arrow)" />
+  <text class="text-edge" x="330" y="340" text-anchor="middle">cleanup</text>
+
+  <!-- closing -> closed -->
+  <path class="edge" d="M 540 350 H 730" marker-end="url(#arrow)" />
+  <text class="text-edge" x="635" y="340" text-anchor="middle">exit_0</text>
+
+</svg>

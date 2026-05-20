@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ============================================================
+  Memory Layer  write + read flow
+  ============================================================
+
+  Built with the structured-diagram skill.
+
+  STRUCTURE
+    Top    : the two stores side by side
+               MemPalace (left, brass)  : write side, JSON on disk
+               Context-1 (right, brass) : read side, embedded
+             Connected by promoter (left to right between them).
+
+    Bottom : two actors
+               Agent / hook (writes)  on the left
+               Agent (reads)          on the right
+
+    Edges  : writes go UP from "Agent / hook" to MemPalace.
+             Direct lookups go UP from "Agent reads" to MemPalace.
+             Semantic queries go UP from "Agent reads" to Context-1.
+             A horizontal promoter arrow connects MP to C1.
+
+  No arrow runs alongside any perimeter; gaps are 70+ px so
+  arrows have room to turn.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 -10 1000 510"
+     width="100%"
+     style="max-width: 1000px; height: auto; background: #0D0F11; display: block; margin: 0 auto;">
+
+  <defs>
+    <marker id="arrow"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#A8AAB0" />
+    </marker>
+    <marker id="arrow-brass"
+            viewBox="0 0 10 10"
+            refX="9" refY="5"
+            markerWidth="8" markerHeight="8"
+            orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D4A574" />
+    </marker>
+
+    <style>
+      .store     { fill: #14171A; stroke: #D4A574; stroke-width: 2; }
+      .actor     { fill: #14171A; stroke: #6F7177; stroke-width: 1; }
+      .text      { fill: #E6E3DC; font-family: Geist, system-ui, sans-serif; font-size: 13px; font-weight: 600; }
+      .text-sub  { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .text-edge { fill: #A8AAB0; font-family: Geist, system-ui, sans-serif; font-size: 11px; font-style: italic; }
+      .edge      { stroke: #A8AAB0; stroke-width: 1.5; fill: none; }
+      .edge-brass { stroke: #D4A574; stroke-width: 1.8; fill: none; }
+    </style>
+  </defs>
+
+
+  <!-- ==== STORES  top row ==== -->
+
+  <g id="mempalace">
+    <rect class="store" x="120" y="50" width="280" height="120" rx="8" />
+    <text class="text"     x="260" y="95"  text-anchor="middle">MemPalace</text>
+    <text class="text-sub" x="260" y="118" text-anchor="middle">write side</text>
+    <text class="text-sub" x="260" y="134" text-anchor="middle">JSON on disk</text>
+  </g>
+
+  <g id="context1">
+    <rect class="store" x="600" y="50" width="280" height="120" rx="8" />
+    <text class="text"     x="740" y="95"  text-anchor="middle">Context-1</text>
+    <text class="text-sub" x="740" y="118" text-anchor="middle">read side</text>
+    <text class="text-sub" x="740" y="134" text-anchor="middle">embedded vectors</text>
+  </g>
+
+
+  <!-- ==== PROMOTER ARROW  MP -> C1 ==== -->
+
+  <path class="edge-brass" d="M 400 110 H 600"
+        marker-end="url(#arrow-brass)" />
+  <text class="text-edge" x="500" y="100" text-anchor="middle">promoter</text>
+
+
+  <!-- ==== ACTORS  bottom row ==== -->
+
+  <g id="writer">
+    <rect class="actor" x="160" y="370" width="200" height="80" rx="6" />
+    <text class="text"     x="260" y="405" text-anchor="middle">Agent / hook</text>
+    <text class="text-sub" x="260" y="427" text-anchor="middle">writes</text>
+  </g>
+
+  <g id="reader">
+    <rect class="actor" x="640" y="370" width="200" height="80" rx="6" />
+    <text class="text"     x="740" y="405" text-anchor="middle">Agent</text>
+    <text class="text-sub" x="740" y="427" text-anchor="middle">reads</text>
+  </g>
+
+
+  <!-- ==== EDGES  writes (left), reads (right + diagonal-to-direct-lookup) ==== -->
+
+  <!-- writer -> MemPalace -->
+  <path class="edge" d="M 260 370 V 170"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="270" y="278" text-anchor="start">/v1/remember</text>
+
+  <!-- reader -> Context-1 (semantic) -->
+  <path class="edge" d="M 740 370 V 170"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="750" y="278" text-anchor="start">/v1/retrieve</text>
+
+  <!-- reader -> MemPalace (direct lookup; routes around C1) -->
+  <!-- Goes UP from reader-left, then LEFT across the gap below the stores, then UP to MP-right -->
+  <path class="edge" d="M 660 370 V 230 Q 660 220 650 220 H 410 Q 400 220 400 210 V 170"
+        marker-end="url(#arrow)" />
+  <text class="text-edge" x="530" y="215" text-anchor="middle">direct lookup</text>
+
+</svg>
