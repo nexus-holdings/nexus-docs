@@ -32,7 +32,6 @@ jobs:
           uv pip install \
             mkdocs \
             mkdocs-material \
-            mkdocs-d2-plugin \
             pymdown-extensions
 
       - name: Build site

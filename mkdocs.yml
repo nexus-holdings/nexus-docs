@@ -78,11 +78,6 @@ markdown_extensions:
 # ----------------------------------------------------------------------------
 plugins:
   - search
-  - d2:
-      layout: elk                     # ELK layout engine — better at minimising edge crossings than dagre
-      theme: 200                      # Dark Mauve base (we override most colours inline via classes)
-      dark_theme: 200                 # Site is dark-only; keep both themes the same
-      pad: 30                         # Tighter padding than the 100px default
 
 extra_css:
   - stylesheets/extra.css
