@@ -349,8 +349,20 @@ article.md-content__inner { counter-reset: nx-section; }
    content column on pages with sidebars (TOC + nav). Bumping the
    grid to 84rem lets the content keep roughly the same width as
    the sidebar-less pages (index, FAQ), with the sidebars pushed
-   out into the page margins instead. */
+   out into the page margins instead.
+
+   On sidebar-less pages (frontmatter `hide: [navigation, toc]`),
+   Material adds `hidden` to the sidebar elements. We mirror the
+   sidebar widths as content margins so the content column reads
+   at the same width across every page. */
 .md-grid { max-width: 84rem; }
+
+.md-main__inner:has(> .md-sidebar--primary[hidden]) > .md-content {
+  margin-left: 12.1rem;
+}
+.md-main__inner:has(> .md-sidebar--secondary[hidden]) > .md-content {
+  margin-right: 12.1rem;
+}
 
 /* ============================================================
    Sidebar — the signature 1px brass hairline left active state
