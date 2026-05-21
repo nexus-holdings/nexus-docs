@@ -2,6 +2,9 @@
 
 Nexus is a **substrate** — a platform that AI products run on top of. It provides the shared services that every long-running AI system ends up needing, so each product can focus on its domain instead of rebuilding identity, dispatch, memory, and governance from scratch.
 
+!!! note "A note on examples"
+    These docs use illustrative names — companies like `Aurelius`, `Lighthouse`, `Ledgerly`; agents like `chairman`, `coo`, `spec-writer`; wings like `aurelius` — to make commands and tables concrete. **Treat them as placeholders.** They don't exist on a fresh install; you'll create your own companies, agents, and wings as you go. The *syntax* shown around each placeholder is real — substitute your own slugs and the commands will work.
+
 ## Mental model
 
 <img src="../../assets/diagrams/overview-mental-model.svg" alt="Nexus mental model — substrate as a foundation at the bottom (brass), holding the four layers (Platform, Execution, Memory, Governance) as inner boxes, with flywheel columns (placeholder verticals) rising out of it. Bidirectional arrows between each flywheel and the substrate show services going down and outcomes coming back up.">
