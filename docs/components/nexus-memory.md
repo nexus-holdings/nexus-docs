@@ -17,7 +17,7 @@ A Python 3.11+ package with three runtime processes (REST API, ChromaDB, MCP ser
 | **Path** | `~/Projects/nexus/nexus-memory/` |
 | **REST API** | `http://127.0.0.1:8102/v1/...` (FastAPI, `api/server.py`) |
 | **ChromaDB** | `http://127.0.0.1:8101/` (vector store) |
-| **Promoter** | `mempalace-promoter.timer` (5-min cadence) |
+| **Promoter** | `mempalace-promoter.timer` (15-min cadence) |
 | **MCP servers** | Context-1 (3 tools) + MemPalace (25 tools) |
 | **Embedder** | bge-m3 on GPU (CUDA), CPU fallback |
 
@@ -25,8 +25,8 @@ A Python 3.11+ package with three runtime processes (REST API, ChromaDB, MCP ser
 
 ```mermaid
 flowchart LR
-    AGENT[Agent / hook] -->|/v1/remember| MP[MemPalace<br/><i>JSON on disk</i>]
-    MP -->|promoter, 5min| C1[Context-1<br/><i>ChromaDB</i>]
+    AGENT[Agent / hook] -->|/v1/remember| MP[MemPalace<br/><i>ChromaDB store</i>]
+    MP -->|promoter, 15min| C1[Context-1<br/><i>ChromaDB</i>]
     AGENT -->|/v1/retrieve| C1
     AGENT -->|MCP tools| MP
 
@@ -36,7 +36,7 @@ flowchart LR
     class AGENT other
 ```
 
-- **MemPalace** lives in `palace/`. Files on disk under `data/mempalace/<wing>/<room>/<drawer>.json`. Content-addressed: writing the same content twice is a no-op.
+- **MemPalace** is the write-side store at `~/.mempalace/palace/` (ChromaDB SQLite + HNSW segment dir). Content-addressed: writing the same content twice is a no-op.
 - **Context-1** lives in `context1/`. Uses ChromaDB collections (one per wing). Embeddings computed by bge-m3.
 - **The promoter** lives in `scripts/promoter.py`. Reads MemPalace's manifest, embeds drawers not yet in Context-1, upserts to ChromaDB.
 
@@ -78,7 +78,7 @@ The MCP tools are exposed through [`paperclip-plugin-memory`](plugins/memory.md)
 
 ## The promoter
 
-The promoter is a Python script that runs every 5 minutes (via `mempalace-promoter.timer`). It does one job: take any MemPalace drawers not yet in Context-1, embed them, and upsert them to the vector store.
+The promoter is a Python script that runs every 15 minutes (via `mempalace-promoter.timer`). It does one job: take any MemPalace drawers not yet in Context-1, embed them, and upsert them to the vector store.
 
 ```python
 # scripts/promoter.py - the canonical sync loop.
@@ -105,9 +105,9 @@ Important properties:
 
 | Store | Location | Format |
 |---|---|---|
-| MemPalace drawers | `data/mempalace/<wing>/<room>/<drawer-id>.json` | JSON, one file per drawer |
-| MemPalace manifest | `data/mempalace/manifest.sqlite3` | SQLite, content hashes + metadata |
-| Context-1 vectors | `data/chromadb/<wing>/` | ChromaDB persistent storage |
+| MemPalace drawers (vectors + metadata) | `~/.mempalace/palace/chroma.sqlite3` + per-collection HNSW segment dir | ChromaDB persistent client |
+| MemPalace knowledge graph | `~/.mempalace/knowledge_graph.sqlite3` | SQLite |
+| Context-1 vectors | `~/Projects/nexus/nexus-memory/data/chromadb/` | ChromaDB persistent storage |
 | Promoter cache | `/tmp/promoter-state.json` | last-run timestamps per wing |
 
 Backups: cold snapshots (`scripts/cold_snapshot.sh`) tar the entire data dir; hot snapshots (`scripts/hot_snapshot.py`) capture just SQLite manifests for fast restore.
@@ -116,21 +116,20 @@ Backups: cold snapshots (`scripts/cold_snapshot.sh`) tar the entire data dir; ho
 
 ```bash
 # Where MemPalace stores drawers on disk
-MEMPALACE_DIR=~/Projects/nexus/nexus-memory/data/mempalace
+MEMPALACE_PATH=~/.mempalace/palace
 
 # ChromaDB endpoint (Context-1's vector store)
 CHROMA_HOST=127.0.0.1
 CHROMA_PORT=8101
 
-# FastAPI bind address
-NEXUS_MEMORY_HOST=127.0.0.1
-NEXUS_MEMORY_PORT=8102
+# FastAPI bind port (server binds to 127.0.0.1 unconditionally)
+MEMORY_API_PORT=8102
 
 # Embedder device — set to "cpu" to disable GPU
 BGE_M3_DEVICE=cuda
 
 # vLLM endpoint for Context-1's agentic retrieval (optional)
-CONTEXT1_VLLM_URL=http://127.0.0.1:8003
+CONTEXT1_BASE_URL=http://127.0.0.1:8003/v1
 ```
 
 ## Running it
@@ -172,7 +171,7 @@ The 4 wings (per [Wings & Rooms](../concepts/wings-and-rooms.md)) hold different
 | `aurelius` | Aurelius project code, plan docs, configs |
 | `nexus` | Nexus platform content — code, docs, sessions, decisions |
 
-Current corpus sits around 38k drawers across all wings (snapshot 2026-05-19). The `nexus` wing is the largest; the `aurelius` wing is the experiment-scoped narrowest.
+Current corpus sits around 38k drawers across all wings (snapshot 2026-05-19). The `claude` wing is the largest (session transcripts dominate); the `aurelius` wing is the experiment-scoped narrowest.
 
 ## See also
 

@@ -16,7 +16,7 @@ A git-tracked directory of YAML files, one per routine. On startup, [Paperclip](
 |---|---|
 | **Path** | `~/Projects/nexus/routine-catalog/` |
 | **Format** | YAML (one file per routine at `routines/<id>.yaml`) |
-| **Registered via** | `POST /api/companies/{companyId}/routines` on startup |
+| **Registered via** | `POST /api/companies/{companyId}/routines` on startup (registration wiring is planned — the YAMLs sit on disk; `GET /api/companies/<id>/routines` currently returns 0) |
 | **Run by** | [Paperclip](paperclip.md) (the platform layer holds the schedule) |
 | **Size** | 9 defined routines as of 2026-05-19 |
 

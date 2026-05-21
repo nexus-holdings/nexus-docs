@@ -19,7 +19,7 @@ A Paperclip plugin that bridges chat-platform events to coding-agent subprocesse
 | **Plugin SDK** | `@paperclipai/plugin-sdk` |
 | **Manifest ID** | `paperclip-plugin-acp` |
 | **Language** | TypeScript (compiled to ESM) |
-| **Test count** | ~50 covering session lifecycle, 1:N support, idle timeout, migration |
+| **Test count** | ~160 covering session lifecycle, 1:N support, idle timeout, migration |
 
 ## Supported agents
 
@@ -97,6 +97,8 @@ The plugin registers these tools so that agents (dispatched by Paperclip, not ch
 | `acp_send` | Send a prompt to an active session |
 | `acp_cancel` | Cancel the current turn (SIGINT) |
 | `acp_close` | Close a session and remove thread bindings |
+| `acp_attach` | Upload a file attachment (base64-encoded) to an issue; returns attachment metadata |
+| `acp_attachments` | List all file attachments for a given issue |
 
 ## How a chat-driven session flows
 

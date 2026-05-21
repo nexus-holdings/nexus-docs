@@ -35,9 +35,9 @@ More types are added as new failure modes get postmortems. The catalog grows mon
 ## The spec format
 
 ```yaml
-# specs/code-quality/4.2.0.yaml
+# specs/code-quality/v1.0.0.yaml
 id: code-quality
-version: 4.2.0
+version: 1.0.0
 
 target:                              # what this eval applies to
   kind: pull-request
@@ -70,10 +70,10 @@ aggregation:
   pass_threshold: 0.75
 
 changelog:
-  - "4.2.0: tightened cyclomatic threshold from 12 to 10"
-  - "4.1.0: added naming_quality LLM-graded component"
-  - "4.0.0: switched from strict-all to weighted-sum aggregation"
+  - "1.0.0: initial spec — weighted-sum aggregation, naming_quality LLM-graded"
 ```
+
+(Every eval type ships its initial spec at `specs/<eval-type>/v1.0.0.yaml`. Migration notes for future major bumps will land in `analysis/`.)
 
 The rubric (`rubrics/code-quality.md`) provides the human-readable scoring criteria — the prompt fed to the LLM grader, the test command for boolean components, examples of "naming quality" for each level.
 

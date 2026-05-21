@@ -18,7 +18,7 @@ A Python 3.11+ package providing both a CLI (`nexus`) and a set of library modul
 | **Language** | Python 3.11+ (uv-managed) |
 | **Heartbeat** | `nexus-heartbeat.timer` (5-min cadence, systemd user unit) |
 | **Entry point** | `scripts/company_heartbeat.py` |
-| **Metrics DB** | PostgreSQL (env var `NEXUS_METRICS_DB`) |
+| **Metrics DB** | PostgreSQL on the system instance (port `5432`), database `nexus_metrics`; configured via env var `NEXUS_METRICS_DB`. Separate from Paperclip's embedded Postgres on `54329`. |
 
 ## Modules
 
@@ -123,25 +123,32 @@ The Phase-1 ramp sets `NEXUS_MAX_LIVE_WORKERS=1` as a global cap, well below the
 Environment variables (set by the systemd unit or shell):
 
 ```bash
-# Metrics DB connection
-NEXUS_METRICS_DB=postgresql://localhost/nexus_metrics
+# Metrics DB connection (system Postgres on :5432, database nexus_metrics)
+NEXUS_METRICS_DB=postgresql:///nexus_metrics
+
+# Paperclip API base (used by company_heartbeat + provisioners)
+NEXUS_PAPERCLIP_API_BASE=http://127.0.0.1:3100/api
 
 # Where the agent catalog YAMLs live
-NEXUS_AGENT_CATALOG_PATH=~/Projects/nexus/agent-catalog/agents
+NEXUS_AGENT_CATALOG_PATH=/home/ian/Projects/nexus/agent-catalog/agents
+NEXUS_AGENT_CATALOG_TEAMS_PATH=/home/ian/Projects/nexus/agent-catalog/teams
 
-# Template repo for company provisioning
-NEXUS_COMPANY_TEMPLATE_REPO=nexus-holdings/company-template
+# Where the shared-skills directory lives
+NEXUS_SHARED_SKILLS_DIR=/home/ian/Projects/nexus/shared-skills
+
+# Local clone of the company-template repo (used by provisioning)
+NEXUS_COMPANY_TEMPLATE_DIR=/home/ian/Projects/nexus/company-template
 
 # Global concurrency cap (Phase-1 production: 1)
 NEXUS_MAX_LIVE_WORKERS=1
 
 # Require memory infra (MemPalace) to be reachable before dispatching
-NEXUS_REQUIRE_MEMORY_INFRA=1
+NEXUS_REQUIRE_MEMORY_INFRA=true
 
 # Disable the "idle company" escalation notification
-NEXUS_IDLE_ESCALATION_DISABLED=1
+NEXUS_IDLE_ESCALATION_DISABLED=true
 
-# GitHub token for repo + project operations
+# GitHub token for repo + project operations (consumed by provision_company.py)
 GITHUB_TOKEN=ghp_...
 ```
 

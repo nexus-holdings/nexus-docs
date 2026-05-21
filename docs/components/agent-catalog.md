@@ -18,16 +18,16 @@ A git-tracked directory of YAML files, one per agent type. [Nexus Core](nexus-co
 | **Format** | YAML (one file per agent at `agents/<id>.yaml`) |
 | **Loader** | `nexus/agents/catalog.py` in [Nexus Core](nexus-core.md) |
 | **Env var** | `NEXUS_AGENT_CATALOG_PATH` (defaults to repo path) |
-| **Size** | 45 agent definitions across 12 categories |
+| **Size** | 45 agent definitions (37 categorised across 12 categories; 8 uncategorised role-named YAMLs) |
 
 ## The schema
 
 Every agent YAML follows the same shape:
 
 ```yaml
-# agents/backend-engineer.yaml
-id: backend-engineer                 # globally unique, kebab-case
-version: 2.3.1                       # semver, see versioning rules below
+# agents/backend-code-writer.yaml
+id: backend-code-writer              # globally unique, kebab-case
+version: "1.0.0"                     # semver, see versioning rules below
 category: backend-dev                # one of: backend-dev, frontend-dev,
                                      # design, devops, security, review,
                                      # intake, ticket-creation, improvement,
@@ -38,32 +38,29 @@ base_prompt: |                       # role description used as system prompt
   Prioritize correctness, test coverage, and observability.
 
 skills:                              # capability tags for dispatch matching
+  - nodejs
   - python
-  - postgres
-  - api-design
-  - test-driven-development
+  - postgresql
+  - rest-apis
 
 tools:                               # MCP tools this agent may invoke
-  - paperclip_update_ticket
-  - mempalace_search
-  - bash_run
-  - file_edit
+  - github-mcp
+  - claude-code
 
-model_config:                        # which model + how
-  default: claude-opus-4-7
-  fallback: claude-sonnet-4-6        # used on rate-limit or escalation
-  max_age_hours: 8                   # session length cap
-  idle_timeout_minutes: 30
+model_config:                        # which model tier + escalation rules
+  default: sonnet
+  complex_tasks: opus
+  simple_tasks: haiku
 
-performance:                         # last 30 days, populated by metrics
-  success_rate: 0.91
-  median_session_minutes: 23
-  evals_passed: ["code-quality@4.2", "security-scan@1.8"]
+performance:                         # populated by metrics (currently empty;
+  metrics: {}                        # the self-improvement company is wiring
+  by_scenario: {}                    # the feedback loop)
+  by_model: {}
 
-changelog:                           # one line per version bump
-  - "2.3.1: prompt fix - tighter scope discipline on multi-file edits"
-  - "2.3.0: added postgres skill, expanded test-coverage guidance"
-  - "2.2.0: switched default to Opus 4.7 (was 4.6)"
+changelog:                           # one entry per version bump
+  - version: "1.0.0"
+    change: "Initial catalog entry"
+    justification: "Bootstrap"
 ```
 
 ## Categories
@@ -72,20 +69,20 @@ Agents are grouped into twelve categories for skill-matching and UI display. Cou
 
 | Category | Count | Examples | When used |
 |---|---|---|---|
-| **intake** | 6 | ticket-triage, requirements-clarifier | First-touch on new requests |
-| **review** | 4 | code-reviewer, design-reviewer | Adjacent to the merge agent |
-| **ticket-creation** | 4 | spec-writer, charter-engineer | Bootstrap new initiatives |
-| **backend-dev** | 3 | backend-engineer, db-migration-specialist | Server-side / data work |
-| **frontend-dev** | 3 | frontend-engineer, design-system-engineer | UI / web work |
-| **devops** | 3 | infra-engineer, sre, observability-engineer | Deploy, monitor, alert |
-| **security** | 3 | security-engineer, security-auditor | Pen test, audit, secret rotation |
-| **improvement** | 3 | refactor-engineer, performance-engineer | Cleanup / hardening |
-| **design** | 2 | ui-designer, ux-researcher | Mockups, user research |
-| **research** | 2 | auto-research, evaluator | Training-data + eval generation |
-| **leadership** | 2 | chairman, coo | C-suite & cross-company coordination |
-| **management** | 2 | project-manager, program-manager | Within-company coordination |
+| **intake** | 6 | intake-explicit, intake-implicit, intake-source-reader | First-touch on new requests |
+| **review** | 4 | review-aggregator, review-consistency-checker, review-gap-detector, review-docs-auditor | Adjacent to the merge agent |
+| **ticket-creation** | 4 | ticket-criteria-agent, ticket-dependency-agent, ticket-epic-writer, ticket-story-writer | Bootstrap new initiatives |
+| **backend-dev** | 3 | backend-code-writer, backend-code-tester, backend-acceptance-validator | Server-side / data work |
+| **frontend-dev** | 3 | frontend-component-builder, frontend-ui-designer, frontend-acceptance-validator | UI / web work |
+| **devops** | 3 | devops-pipeline-writer, devops-infra-reviewer, devops-deployment-validator | Deploy, monitor, alert |
+| **security** | 3 | security-code-auditor, security-threat-modeller, security-compliance-checker | Pen test, audit, secret rotation |
+| **improvement** | 3 | improvement-feedback-analyst, improvement-risk-assessor, improvement-writer | Cleanup / hardening |
+| **design** | 2 | design-architect, design-ux-planner | Mockups, user research |
+| **research** | 2 | autoresearch-evaluator, autoresearch-mutator | Training-data + eval generation |
+| **leadership** | 2 | company-lead, tech-lead | C-suite & cross-company coordination |
+| **management** | 2 | pm-classifier, retro-analyst | Within-company coordination |
 
-That's 37 categorized agents; a handful more sit at the top level without a `category:` field. Total catalog: **45 agent definitions**. The full set lives in `agent-catalog/agents/` — new agents go in via PR.
+That's 37 categorised agents. Another 8 YAMLs sit at the top level without a `category:` field — these are role-named entries (`backend-engineer`, `devops-engineer`, `frontend-engineer`, `fullstack-engineer`, `product-manager`, `qa-engineer`, `security-engineer`, `technical-writer`). Total catalog: **45 agent definitions**. The full set lives in `agent-catalog/agents/` — new agents go in via PR.
 
 ## Versioning rules
 
@@ -112,22 +109,33 @@ This means an agent only "exists" for a ticket if it's in the catalog AND in the
 
 ## Teams
 
-Some work needs multiple agents collaborating. The `teams/` directory defines team compositions:
+Some work needs multiple agents collaborating. The `teams/` directory defines team compositions as Markdown runbooks (one `.md` per team — `backend-dev.md`, `review.md`, `devops.md`, `frontend-dev.md`, `design.md`, `intake.md`, `improvement.md`, `retro.md`, `security-review.md`, `ticket-creation.md`):
 
-```yaml
-# teams/code-review.yaml
-id: code-review
-agents:
-  - implementer: backend-engineer
-  - reviewer:    code-reviewer
-  - merger:      merge-agent
-flow:
-  - implementer completes ticket
-  - reviewer evaluates, posts verdict
-  - merger triggers on approve verdict
+```markdown
+# Review Team
+version: 1.3.0
+last_updated: 2026-04-03
+category: review
+
+## Purpose
+Four specialist agents run in parallel — Review Aggregator (lead),
+Consistency Checker, Gap Detector, Docs Auditor — and all four must
+pass before a PR approval verdict is issued.
+
+## Composition
+| Role | Agent Type | Model Tier |
+|------|-----------|------------|
+| Review Aggregator (Lead) | review-aggregator | Haiku |
+| Consistency Checker | review-consistency-checker | Sonnet |
+| Gap Detector | review-gap-detector | Sonnet |
+| Docs Auditor | review-docs-auditor | Sonnet |
+
+## Team Lead
+Review Aggregator — spawns all four agents concurrently, collects
+findings, issues the final verdict.
 ```
 
-Teams are referenced by ticket labels (e.g., `team:code-review`) — dispatch then provisions the whole team for that ticket.
+Teams are referenced by ticket labels (e.g., `team:review`) — dispatch then provisions the whole team for that ticket.
 
 ## Where it lives in the substrate
 
