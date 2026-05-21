@@ -18,10 +18,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+
+      # Supply-chain gate — proxy PyPI through escrow with an age gate
+      # and OSV CVE scan before anything reaches the runner.
+      - name: Supply-chain gate (escrow)
+        uses: jverhoeks/escrow@v1
+        with:
+          ecosystems: pypi
+          min-days: '7'
+          osv-severity: HIGH
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v3
+        uses: astral-sh/setup-uv@v8
 
       - name: Set up Python
         run: uv python install 3.12
@@ -38,9 +47,15 @@ jobs:
         run: uv run mkdocs build --strict
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./build
+
+      # Supply-chain report — write a per-package summary to the
+      # job page showing allowed / blocked decisions.
+      - name: Supply-chain report
+        if: always()
+        run: escrow ci-report 2>&1 | tee -a "$GITHUB_STEP_SUMMARY"
 
   deploy:
     needs: build
@@ -51,4 +66,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
