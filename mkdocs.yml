@@ -35,8 +35,6 @@ theme:
     - search.suggest                # Search autocomplete
     - search.highlight              # Highlight matches in results
     - content.code.copy             # Copy button on code blocks
-    - content.code.annotate         # Inline code annotations
-    - content.tabs.link             # Linked tabs across pages
   icon:
     repo: fontawesome/brands/git-alt
 
@@ -45,33 +43,17 @@ theme:
 # ----------------------------------------------------------------------------
 markdown_extensions:
   - admonition                      # !!! note blocks
-  - attr_list                       # {.class} attributes
-  - def_list                        # definition lists
-  - footnotes
-  - md_in_html                      # markdown inside HTML
+  - md_in_html                      # markdown inside HTML (used by grid cards)
   - tables
   - toc:
       permalink: true               # ¶ links on headings
   - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
       pygments_lang_class: true
-  - pymdownx.inlinehilite           # `:::python code` inline
-  - pymdownx.snippets               # --8<-- file imports
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
-  - pymdownx.tabbed:
-      alternate_style: true         # nicer tab styling
-  - pymdownx.details                # collapsible blocks
-  - pymdownx.tasklist:
-      custom_checkbox: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.keys                   # ++ctrl+c++ → keycaps
 
 # ----------------------------------------------------------------------------
 # Plugins

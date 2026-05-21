@@ -494,8 +494,7 @@ article.md-content__inner { counter-reset: nx-section; }
 /* ============================================================
    Callouts (admonitions) — border-left only, no fills
    ============================================================ */
-.md-typeset .admonition,
-.md-typeset details {
+.md-typeset .admonition {
   background-color: transparent;
   border: 1px solid var(--nx-border);
   border-left-width: 3px;
@@ -506,8 +505,7 @@ article.md-content__inner { counter-reset: nx-section; }
   color: var(--nx-text-2);
   margin: var(--nx-s-4) 0;
 }
-.md-typeset .admonition-title,
-.md-typeset summary {
+.md-typeset .admonition-title {
   background: transparent !important;
   color: var(--nx-text);
   font-weight: 500;
@@ -515,45 +513,35 @@ article.md-content__inner { counter-reset: nx-section; }
   padding-left: 0;
   margin: 0 0 var(--nx-s-2);
 }
-.md-typeset .admonition-title::before,
-.md-typeset summary::before {
+.md-typeset .admonition-title::before {
   background-color: currentColor;
 }
 
-.md-typeset .admonition.note,    .md-typeset details.note    { border-left-color: var(--nx-hue-note); }
-.md-typeset .admonition.note > .admonition-title,
-.md-typeset details.note  > summary { color: var(--nx-hue-note); }
+.md-typeset .admonition.note    { border-left-color: var(--nx-hue-note); }
+.md-typeset .admonition.note > .admonition-title { color: var(--nx-hue-note); }
 
-.md-typeset .admonition.tip,     .md-typeset details.tip,
-.md-typeset .admonition.hint,    .md-typeset details.hint    { border-left-color: var(--nx-hue-tip); }
+.md-typeset .admonition.tip,
+.md-typeset .admonition.hint    { border-left-color: var(--nx-hue-tip); }
 .md-typeset .admonition.tip   > .admonition-title,
-.md-typeset details.tip   > summary,
-.md-typeset .admonition.hint  > .admonition-title,
-.md-typeset details.hint  > summary { color: var(--nx-hue-tip); }
+.md-typeset .admonition.hint  > .admonition-title { color: var(--nx-hue-tip); }
 
-.md-typeset .admonition.warning, .md-typeset details.warning { border-left-color: var(--nx-hue-warn); }
-.md-typeset .admonition.warning > .admonition-title,
-.md-typeset details.warning > summary { color: var(--nx-hue-warn); }
+.md-typeset .admonition.warning { border-left-color: var(--nx-hue-warn); }
+.md-typeset .admonition.warning > .admonition-title { color: var(--nx-hue-warn); }
 
-.md-typeset .admonition.danger,  .md-typeset details.danger,
-.md-typeset .admonition.failure, .md-typeset details.failure { border-left-color: var(--nx-hue-danger); }
+.md-typeset .admonition.danger,
+.md-typeset .admonition.failure { border-left-color: var(--nx-hue-danger); }
 .md-typeset .admonition.danger  > .admonition-title,
-.md-typeset details.danger  > summary,
-.md-typeset .admonition.failure > .admonition-title,
-.md-typeset details.failure > summary { color: var(--nx-hue-danger); }
+.md-typeset .admonition.failure > .admonition-title { color: var(--nx-hue-danger); }
 
-.md-typeset .admonition.info,    .md-typeset details.info    { border-left-color: var(--nx-hue-note); }
-.md-typeset .admonition.info > .admonition-title,
-.md-typeset details.info > summary { color: var(--nx-hue-note); }
+.md-typeset .admonition.info    { border-left-color: var(--nx-hue-note); }
+.md-typeset .admonition.info > .admonition-title { color: var(--nx-hue-note); }
 
 /* Deprecated — dashed left border, graphite */
-.md-typeset .admonition.deprecated,
-.md-typeset details.deprecated {
+.md-typeset .admonition.deprecated {
   border-left-color: var(--nx-hue-deprecated);
   border-left-style: dashed;
 }
-.md-typeset .admonition.deprecated > .admonition-title,
-.md-typeset details.deprecated > summary { color: var(--nx-hue-deprecated); }
+.md-typeset .admonition.deprecated > .admonition-title { color: var(--nx-hue-deprecated); }
 
 /* ============================================================
    Tables — hairline rows, no fills
@@ -649,6 +637,5 @@ article.md-content__inner { counter-reset: nx-section; }
 .md-tabs,
 .md-search__form,
 .md-typeset .admonition,
-.md-typeset details,
 .md-typeset .highlight pre,
 .md-footer { box-shadow: none !important; }

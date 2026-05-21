@@ -10,7 +10,7 @@ Lives at: **https://nexus-holdings.github.io/nexus-docs/** (once Pages is config
 
 ```bash
 uv venv                                  # one-time
-uv pip install -e .                      # or install mkdocs-material + mkdocs-d2-plugin
+uv pip install mkdocs mkdocs-material pymdown-extensions
 uv run mkdocs serve                      # live-reload on http://127.0.0.1:8000
 ```
 
