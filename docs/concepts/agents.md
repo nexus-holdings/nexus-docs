@@ -124,22 +124,33 @@ Major bumps in particular require a `changelog.justification` entry citing KPI e
 
 ## Teams — agents collaborating
 
-Some work doesn't fit a single agent. The catalog supports *teams* — declarative compositions of agents under a named flow:
+Some work doesn't fit a single agent. The catalog supports *teams* — declarative compositions of agents under a named flow. Team manifests live in `agent-catalog/teams/<name>.md` (Markdown, not YAML — the structure is meant to be readable as prose first, parseable second):
 
-```yaml
-# teams/code-review.yaml
-id: code-review
-agents:
-  - implementer: backend-engineer
-  - reviewer:    code-reviewer
-  - merger:      merge-agent
-flow:
-  - implementer completes ticket
-  - reviewer evaluates, posts verdict
-  - merger triggers on approve verdict
+```markdown
+# Review Team
+version: 1.3.0
+category: review
+
+## Purpose
+Pre-merge review by four specialist agents running in parallel —
+review-aggregator (lead), consistency-checker, gap-detector,
+docs-auditor. All four must pass before APPROVE is issued.
+
+## Composition
+| Role               | Agent Type         | Model Tier |
+|--------------------|--------------------|------------|
+| Review Aggregator  | review-aggregator  | Haiku      |
+| Consistency Checker| consistency-checker| Sonnet     |
+| Gap Detector       | gap-detector       | Sonnet     |
+| Docs Auditor       | docs-auditor       | Sonnet     |
+
+## Quorum Rules
+- All 4/4 must pass before PR approval
+- Any FAIL → verdict is FAIL
+- Independent analysis — agents don't share findings until all submitted
 ```
 
-Tickets opt into a team via a `team:code-review` label. The dispatcher then provisions the *whole team* across the ticket's lifecycle — implementer first, then reviewer when the implementer completes, then merger when the verdict lands.
+Tickets opt into a team via a `team:review` label. The dispatcher then provisions the *whole team* across the ticket's lifecycle — the team-lead agent spawns the rest and aggregates verdicts per the manifest's quorum rules.
 
 Teams are how the substrate handles work that requires distinct roles (write vs. review vs. merge) without conflating them into a single oversized agent.
 

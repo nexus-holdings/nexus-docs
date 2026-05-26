@@ -63,15 +63,26 @@ Where the runtime state lives.
 | `~/Projects/nexus/company-template/templates/.env.example*` | Templates copied into newly-provisioned companies. |
 | `~/.claude/settings.json` | Claude Code harness settings — hook config (e.g. `SessionEnd` → `memory_ingest.py`), MCP servers. |
 | `~/.claude/CLAUDE.md` | Global Claude Code preferences. |
-| `~/.config/systemd/user/*.service` + `*.timer` | systemd unit files for the Nexus services (see below). |
+| `/etc/systemd/system/*.service` | systemd **system** unit files for the always-on Nexus services (see below). |
+| `~/.config/systemd/user/*.service` + `*.timer` | systemd **user** unit files for the timer-driven Nexus services (see below). |
 
 ## systemd units
 
-All user units, under `~/.config/systemd/user/`.
+Nexus services split across two systemd scopes — pick the right verb prefix or `systemctl` will silently not find the unit.
+
+**System units** (`/etc/systemd/system/`, invoked with `sudo systemctl …`):
 
 | Unit | Drives |
 |---|---|
 | `paperclip.service` | The Paperclip server. |
+| `meridian.service` | Meridian LLM proxy on `:3456`. |
+| `chromadb.service` | ChromaDB vector store on `:8101`. |
+| `mempalace-api.service` | MemPalace REST API on `:8102`. |
+
+**User units** (`~/.config/systemd/user/`, invoked with `systemctl --user …`):
+
+| Unit | Drives |
+|---|---|
 | `nexus-heartbeat.service` + `nexus-heartbeat.timer` | `nexus-core/scripts/company_heartbeat.py` every 5 min. |
 | `mempalace-promoter.service` + `mempalace-promoter.timer` | `nexus-memory/scripts/promoter.py --incremental` every 15 min. |
 | `nexus-memory-backup.service` + `nexus-memory-backup.timer` | Daily S3 backup at 03:00. |
@@ -84,7 +95,10 @@ See [Installation](../getting-started/installation.md) for the install + enable 
 
 | Where | What | How to tail |
 |---|---|---|
-| `journalctl --user -u paperclip` | Paperclip server logs. | `journalctl --user -u paperclip -f` |
+| `journalctl -u paperclip` | Paperclip server logs (system unit). | `sudo journalctl -u paperclip -f` |
+| `journalctl -u meridian` | Meridian proxy logs (system unit). | `sudo journalctl -u meridian -f` |
+| `journalctl -u chromadb` | ChromaDB logs (system unit). | `sudo journalctl -u chromadb -f` |
+| `journalctl -u mempalace-api` | MemPalace REST API logs (system unit). | `sudo journalctl -u mempalace-api -f` |
 | `journalctl --user -u nexus-heartbeat` | Heartbeat run output. | `journalctl --user -u nexus-heartbeat -f` |
 | `journalctl --user -u mempalace-promoter` | Promoter output (also appended to `/tmp/promoter.log`). | `journalctl --user -u mempalace-promoter -n 100` |
 | `journalctl --user -u nexus-memory-backup` | Backup job output (also `/tmp/backup.log`). | `journalctl --user -u nexus-memory-backup` |

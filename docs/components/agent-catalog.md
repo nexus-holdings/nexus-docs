@@ -52,6 +52,10 @@ model_config:                        # which model tier + escalation rules
   complex_tasks: opus
   simple_tasks: haiku
 
+team_eligible: true                  # whether this agent can be composed into
+                                     # a team (per agent-catalog/teams/*.md).
+                                     # Every on-disk YAML sets this explicitly.
+
 performance:                         # populated by metrics (currently empty;
   metrics: {}                        # the self-improvement company is wiring
   by_scenario: {}                    # the feedback loop)

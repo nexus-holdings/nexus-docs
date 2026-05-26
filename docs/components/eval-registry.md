@@ -34,48 +34,45 @@ More types are added as new failure modes get postmortems. The catalog grows mon
 
 ## The spec format
 
+The currently-shipped rubric is `run-quality` — the only one with both a `specs/<eval>/v1.0.0.yaml` and a `rubrics/<eval>.md` on disk. The other four eval types listed above have specs scaffolded but rubrics still in progress; the run-quality pair is the canonical exemplar of the format.
+
 ```yaml
-# specs/code-quality/v1.0.0.yaml
-id: code-quality
-version: 1.0.0
+# specs/run-quality/v1.0.0.yaml
+id: run-quality
+version: "1.0.0"
+description: >
+  Scores the quality of a full agent run — dispatch through execution to flow-back.
 
-target:                              # what this eval applies to
-  kind: pull-request
-  filter:
-    languages: [python, typescript, go]
-    excludes: ["**/test_*", "**/*.md"]
+scoring:
+  method: weighted_sum
+  range: [0.0, 1.0]
+  passing_threshold: 0.70
 
-scoring:                             # how scores are computed
-  type: weighted-rubric              # one of: weighted-rubric | llm-graded | deterministic
-  components:
-    - name: test_coverage
-      weight: 0.3
-      threshold: 0.7                  # below this, partial credit
-    - name: type_check_passes
-      weight: 0.2
-      type: boolean
-    - name: lint_passes
-      weight: 0.2
-      type: boolean
-    - name: cyclomatic_complexity
-      weight: 0.15
-      threshold_max: 10               # avg per function
-    - name: naming_quality
-      weight: 0.15
-      type: llm-graded
-      grader_prompt_ref: rubrics/code-quality.md#naming
+dimensions:
+  task_completion:
+    weight: 0.30
+    description: Did the agent complete the ticket as specified?
+    score_guide:
+      1.0:  "All acceptance criteria met; clean flow-back to done"
+      0.75: "All criteria met with minor deviations; flow-back worked"
+      0.5:  "Partial completion — some criteria met, others missed"
+      0.25: "Minimal progress; blocked or cancelled with partial work"
+      0.0:  "No meaningful progress; agent failed to start or looped"
+    observables:
+      - "Dispatched ticket final status (done/cancelled/blocked)"
+      - "Acceptance criteria checklist in ticket comments"
+      - "Git commits on feature branch"
 
-aggregation:
-  method: weighted-sum                # one of: weighted-sum | min | strict-all
-  pass_threshold: 0.75
-
-changelog:
-  - "1.0.0: initial spec — weighted-sum aggregation, naming_quality LLM-graded"
+  code_evals:        { weight: 0.15, ... }
+  spec_quality:      { weight: 0.15, ... }
+  memory_utilization:{ weight: 0.15, ... }
+  token_efficiency:  { weight: 0.15, ... }
+  autonomy:          { weight: 0.10, ... }
 ```
 
-(Every eval type ships its initial spec at `specs/<eval-type>/v1.0.0.yaml`. Migration notes for future major bumps will land in `analysis/`.)
+Every eval type ships its initial spec at `specs/<eval-type>/v1.0.0.yaml` plus a `changelog.md` next to it. Migration notes for future major bumps will land in `analysis/`.
 
-The rubric (`rubrics/code-quality.md`) provides the human-readable scoring criteria — the prompt fed to the LLM grader, the test command for boolean components, examples of "naming quality" for each level.
+The matching rubric (`rubrics/run-quality.md`) provides the human-readable scoring criteria — the prompt fed to the LLM grader, the observable signals for each dimension, the question to ask when scoring borderline cases.
 
 ## Versioning rules (PR-gated)
 
@@ -111,25 +108,13 @@ The metrics DB records `(eval_id, eval_version, score, evidence, timestamp)` for
 
 ## Comparability across versions
 
-The `analysis/` directory holds migration notes whenever a major version ships. Example:
+The `analysis/` directory is where migration notes will land whenever a major version of any eval ships. At the moment it holds only `comparability-matrix.yaml` (a global pairwise version-compatibility table) and a `migration-notes/` subdirectory; no per-eval `analysis/<eval>-vN-to-vM.md` files exist yet because every shipped eval is still on `v1.0.0`.
 
-```markdown
-# analysis/code-quality-v3-to-v4.md
+When the first major bump happens, the analysis file should capture:
 
-## Score shift on existing corpus
-Re-ran v4.0 against the 2026-Q1 PR corpus:
-- Median: 0.78 (v3) → 0.71 (v4)
-- Pass rate (>=0.75): 64% (v3) → 51% (v4)
-
-## What changed
-- weighted-sum replaces strict-all (was failing too many on single missing
-  component)
-- naming_quality added as LLM-graded (new dimension)
-
-## Mapping for trend analysis
-For dashboards spanning the cutover (2026-04-12), use:
-  score_normalized = score_v4 * 1.10  (calibrated against shared subset)
-```
+- **Score shift on existing corpus** — median + pass-rate before and after, re-graded against a held-out subset
+- **What changed** — the concrete weights/thresholds/components that moved, with the postmortem or ADR that motivated each
+- **Mapping for trend analysis** — a calibration factor (or per-bucket mapping) so dashboards spanning the cutover can still compare scores
 
 This is what lets the substrate compare "agent performance over a year" even when evals have shifted underneath.
 

@@ -41,16 +41,15 @@ Each entity has a stable UUID, an audited state, an owner (a company), and an ev
 
 Paperclip exposes a Linear-style REST API on `http://127.0.0.1:3100/api/...`. Endpoints follow a consistent shape:
 
+!!! note "Routes say `issues`, docs say `tickets`"
+    Paperclip's REST surface uses `/api/issues` for what these docs (and the user-facing UI) call "tickets" — the term changed late in development but the routes didn't. Wherever this site says "ticket", the live endpoint is `/api/issues/...`.
+
 ```bash
 # List entities scoped to a company
-curl http://127.0.0.1:3100/api/companies/<company_id>/tickets
+curl http://127.0.0.1:3100/api/companies/<company_id>/issues
 
 # Read a specific entity
-curl http://127.0.0.1:3100/api/tickets/<ticket_id>
-
-# Transition state (atomic)
-curl -X POST http://127.0.0.1:3100/api/tickets/<ticket_id>/claim \
-     -d '{"agent_id": "<agent_id>"}'
+curl http://127.0.0.1:3100/api/issues/<issue_id>
 
 # Health check
 curl http://127.0.0.1:3100/api/health
@@ -135,14 +134,16 @@ PAPERCLIPAI_PORT=3100
 
 ```bash
 # Start
-systemctl --user start paperclip
+sudo systemctl start paperclip
 
 # Status
-systemctl --user status paperclip
+sudo systemctl status paperclip
 
 # Logs
-journalctl --user -u paperclip -f
+sudo journalctl -u paperclip -f
 ```
+
+`paperclip.service` is a **system unit** (`/etc/systemd/system/paperclip.service`), not a user unit — `systemctl --user start paperclip` will not find it.
 
 ### Manual
 

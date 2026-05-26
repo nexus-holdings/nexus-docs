@@ -15,15 +15,14 @@ Get the full Nexus stack running on a single host. This walks through bringing u
 | # | Service | Type | Port | Depends on | Purpose |
 |---|---|---|---|---|---|
 | 1 | PostgreSQL | systemd (system) | 5432 | — | `nexus_metrics` DB for performance data |
-| 2 | Ollama (or other LLM) | systemd (system) | 11434 | — | Local LLM backend |
-| 3 | Meridian | systemd (system) | 3456 | — | API proxy (e.g., Claude → local) |
-| 4 | Paperclip | systemd (system) | 3100 | Meridian | Orchestration server + UI |
-| 5 | ChromaDB | systemd (system) | 8101 | — | Vector DB (Context-1) |
-| 6 | MemPalace API | systemd (system) | 8102 | ChromaDB | Memory REST surface |
-| 7 | Cockpit *(archived; optional)* | manual (npm) | 3000 | Paperclip, Postgres | Dashboard — pending rewrite as a plugin |
-| 8 | Heartbeat | systemd timer (user) | — | Paperclip, Postgres | Ticket dispatch worker |
-| 9 | Promoter | systemd timer (user) | — | MemPalace API | MemPalace → Context-1 sync (every 15 min) |
-| 10 | Memory backup | systemd timer (user) | — | MemPalace API | Daily hot-snapshot to S3 |
+| 2 | Meridian | systemd (system) | 3456 | — | LLM proxy (OpenAI-compatible; routes Claude calls) |
+| 3 | Paperclip | systemd (system) | 3100 | Meridian | Orchestration server + UI |
+| 4 | ChromaDB | systemd (system) | 8101 | — | Vector DB (Context-1) |
+| 5 | MemPalace API | systemd (system) | 8102 | ChromaDB | Memory REST surface |
+| 6 | Cockpit *(archived; sometimes left running)* | manual (npm) | 3000 | Paperclip, Postgres | Old dashboard — no longer actively developed |
+| 7 | Heartbeat | systemd timer (user) | — | Paperclip, Postgres | Ticket dispatch worker |
+| 8 | Promoter | systemd timer (user) | — | MemPalace API | MemPalace → Context-1 sync (every 15 min) |
+| 9 | Memory backup | systemd timer (user) | — | MemPalace API | Daily hot-snapshot to S3 |
 
 All services bind to `127.0.0.1` for local-only use. Cockpit binds `0.0.0.0:3000` for browser access from other devices.
 
@@ -63,17 +62,13 @@ psql -d nexus_metrics -tAc \
 
 The query should return an integer (probably `0` on a fresh install). If it errors, the DB or role is missing — fix that first.
 
-## 2 — Ollama (or your chosen LLM backend)
+## 2 — Local LLM backend (optional)
 
-```bash
-sudo systemctl start ollama                                  # local LLM daemon
-curl -s http://127.0.0.1:11434/api/tags \
-  | python3 -m json.tool | head -20                          # list installed models
-```
+The substrate talks to whatever speaks the OpenAI-compatible `/v1/chat/completions` contract. **Today's path** is Meridian on `:3456` (covered in the next step) — it routes Claude calls through Anthropic's API via the Claude Code / Anthropic SDK. **Tomorrow's path** is a local vLLM server typically on `:8003`, serving the same contract from a self-hosted model.
 
-You should see a JSON list of installed models.
+This step is **optional**. If you want to run a local LLM you'd start vLLM here; if you're using Meridian (the default), skip ahead to step 3 — Meridian is what the heartbeat actually talks to today.
 
-## 3 — Meridian (API proxy)
+## 3 — Meridian (LLM proxy)
 
 Paperclip calls the LLM via `ANTHROPIC_BASE_URL=http://127.0.0.1:3456`. Start Meridian **before** Paperclip.
 

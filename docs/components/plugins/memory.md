@@ -149,8 +149,8 @@ curl -X POST http://127.0.0.1:3100/api/plugins/install \
 The plugin needs Nexus Memory running (or it'll fail every tool call). Start the sidecar first:
 
 ```bash
-systemctl --user start nexus-memory
-curl http://127.0.0.1:8102/v1/status                 # should return health
+sudo systemctl start mempalace-api                    # system unit, not user
+curl http://127.0.0.1:8102/v1/status                  # should return health
 ```
 
 ## See also

@@ -170,7 +170,7 @@ curl -s "http://127.0.0.1:3100/api/companies/$COMPANY_ID/agents" \
 # verification: a JSON object with the agent's name, role, adapterType, and adapterConfig
 ```
 
-If the agent does not appear, the catalog loader picks it up on the next Paperclip start. Restart with `systemctl --user restart paperclip` and re-check.
+If the agent does not appear, the catalog loader picks it up on the next Paperclip start. Restart with `sudo systemctl restart paperclip` and re-check.
 
 ## 8. Dispatch a test ticket scoped to that agent
 
@@ -206,7 +206,7 @@ When the session completes, the [Eval Registry](../components/eval-registry.md) 
 | Symptom | Cause | Fix |
 |---|---|---|
 | `nexus_deploy_cli.py agents` complains about missing skill tag | Catalog YAML references a skill not in the global skill list | Add to `agent-catalog/skills/` (or fix the typo); re-run |
-| Paperclip 200s the agent list but the new agent is absent | Catalog loader cached the previous catalog at boot | `systemctl --user restart paperclip` |
+| Paperclip 200s the agent list but the new agent is absent | Catalog loader cached the previous catalog at boot | `sudo systemctl restart paperclip` |
 | Heartbeat dispatches the wrong agent for your test ticket | Skill match scores another agent higher | Tighten the new agent's `skills` to be more specific, or add a routing label to the ticket |
 | YAML parses but agent never matches any ticket | `category` not in the canonical 12-list, or skill names aren't lowercase-kebab | Cross-check against `agents/backend-engineer.yaml` |
 | KPI metrics never populate for the new agent | No completed sessions yet (need ≥10 for stable signal) | Run more tickets; check `nexus_metrics.performance_records` directly |

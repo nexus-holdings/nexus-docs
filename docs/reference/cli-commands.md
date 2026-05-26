@@ -81,7 +81,7 @@ Python scripts under `~/Projects/nexus/nexus-memory/scripts/`. Run via the proje
 | `cold_snapshot.sh` | Full atomic snapshot to `~/.backups/<timestamp>/`. Briefly stops `mempalace-api.service` to get a consistent capture of palace + HNSW + Context-1 Chroma data. |
 | `rebuild_hnsw.py` | Rebuild HNSW indexes after a hot-snapshot restore. Re-paginates every drawer and re-embeds via BGE-M3. ~6 min for 30K drawers on CPU. |
 | `migrate_to_bgem3.py` | One-shot migration switching Context-1 collections from MiniLM to BGE-M3. Splits `bench_bgem3` into `mp-<wing>` collections, re-embeds the rest on GPU. |
-| `index_aurelius.py` | Index the Aurelius source + design memos into Context-1 (creates/updates the `aurelius-code` collection). One concrete instance of the `index_<project>.py` pattern. |
+| `index_<project>.py` | Index a project codebase + design memos into Context-1 (creates/updates the `<project>-code` collection). One script per indexed project — substitute your own project name (e.g. `index_aurelius.py`); the live script in this repo is `index_negotiagent.py`. |
 | `cleanup_session_duplicates.py` | One-shot cleanup of session-snapshot duplicate drawers (red-team finding dm-003). |
 | `bgem3_bench` | BGE-M3 benchmark harness. |
 | `vastai_quantize_context1.py` / `vastai_quantize_context1_llmc.py` | Offline quantisation jobs for the Context-1 model on vast.ai. See the adjacent `.md` for the runbook. |
@@ -92,8 +92,9 @@ cd ~/Projects/nexus/nexus-memory
 # One-shot promoter
 .venv/bin/python scripts/promoter.py --incremental
 
-# Index a new project codebase
-.venv/bin/python scripts/index_aurelius.py
+# Index a new project codebase (substitute your project name;
+# the script in this repo is index_negotiagent.py)
+.venv/bin/python scripts/index_<project>.py
 ```
 
 ## MCP server registration
@@ -140,24 +141,40 @@ The `~/Projects/nexus/shared-skills/scripts/` directory ships three shell helper
 
 ## systemd units (operator-facing)
 
-Not CLIs in the strict sense, but the operator-facing way to start and stop the core services. All units live under `~/.config/systemd/user/`.
+Not CLIs in the strict sense, but the operator-facing way to start and stop the core services. Units split across two scopes — see [File Locations → systemd units](file-locations.md#systemd-units) for the full table.
+
+**System units** (`/etc/systemd/system/`, invoked with `sudo systemctl …`):
 
 | Unit | Drives |
 |---|---|
-| `paperclip.service` | The Paperclip server (`paperclipai`). |
+| `paperclip.service` | The Paperclip server (`paperclipai`) on `:3100`. |
+| `meridian.service` | Meridian LLM proxy on `:3456`. |
+| `chromadb.service` | ChromaDB vector store on `:8101`. |
+| `mempalace-api.service` | MemPalace REST API on `:8102`. |
+
+**User units** (`~/.config/systemd/user/`, invoked with `systemctl --user …`):
+
+| Unit | Drives |
+|---|---|
 | `nexus-heartbeat.service` + `.timer` | `scripts/company_heartbeat.py`, fired every 5 minutes. |
 | `mempalace-promoter.service` + `.timer` | `scripts/promoter.py --incremental`, fired every 15 minutes. |
 | `nexus-memory-backup.service` + `.timer` | Daily hot snapshot to S3 at 03:00 via `scripts/s3_backup/backup_to_s3.sh`. |
 
 ```bash
-# Status
+# Status — system unit
+sudo systemctl status paperclip
+
+# Status — user timer
 systemctl --user status nexus-heartbeat.timer
 systemctl --user list-timers
 
-# Manual fire
+# Manual fire — user timer's underlying service
 systemctl --user start nexus-heartbeat.service
 
-# Logs
+# Logs — system unit
+sudo journalctl -u paperclip -f
+
+# Logs — user units
 journalctl --user -u nexus-heartbeat -f
 journalctl --user -u mempalace-promoter -n 100
 ```

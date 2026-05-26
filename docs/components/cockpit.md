@@ -1,6 +1,6 @@
 # Cockpit
 
-<p class="lede">Cockpit was the standalone Next.js dashboard for the Nexus platform — chairman-facing UI for company oversight, ticket flow, and live transcript viewing. <strong>It's now archived</strong>; a replacement is being built as a plugin rendered inside the governance company.</p>
+<p class="lede">Cockpit was the standalone Next.js dashboard for the Nexus platform — chairman-facing UI for company oversight, ticket flow, and live transcript viewing. <strong>It's archived</strong> — no longer actively developed, no systemd unit, no auto-start — though the old checkout is sometimes left running locally on <code>:3000</code> when an operator wants the old UI. A replacement is being built as a plugin rendered inside the governance company.</p>
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> archived</span>
@@ -9,7 +9,7 @@
 </div>
 
 !!! warning "Archived — pending rewrite"
-    The original Cockpit is no longer the canonical UI. As of 2026-04-18 the company is marked `status=archived` in the Paperclip API. The replacement is in progress as a plugin inside the governance company. This page describes what the original Cockpit was (for historical context) and where to look for its successor when it lands.
+    The original Cockpit is no longer the canonical UI. As of 2026-04-18 the company is marked `status=archived` in the Paperclip API and there's no systemd unit driving it. You may still see a local Next.js process listening on `:3000` — that's an operator running the old checkout ad-hoc, not a maintained service. The replacement is in progress as a plugin inside the governance company. This page describes what the original Cockpit was (for historical context) and where to look for its successor when it lands.
 
 ## What it was
 
@@ -20,7 +20,7 @@ A Next.js 16 / React 19 / Tailwind dashboard running at `http://localhost:3000`,
 | **Path** | `~/Projects/nexus/cockpit/` | Still on disk; not actively developed |
 | **Stack** | Next.js 16, React 19, Tailwind, Recharts | Frozen at last working commit |
 | **Port** | `3000` | Only runs if explicitly started |
-| **systemd unit** | (was) `cockpit.service` | Disabled |
+| **systemd unit** | _(never had one)_ | Not present in system or user systemd — launched ad-hoc when needed |
 | **Status in Paperclip** | (was) `active` | `archived` |
 
 ## What it surfaced

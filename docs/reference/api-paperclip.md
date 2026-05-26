@@ -8,6 +8,9 @@
   <span>Owner: Platform</span>
 </div>
 
+!!! note "Routes say `issues`, docs say `tickets`"
+    Paperclip's REST surface uses `/api/issues` for what these docs (and the user-facing UI) call "tickets" — the term changed late in development but the routes didn't. Every URL on this page uses the live `issues` spelling.
+
 ## What it owns
 
 Paperclip is the source of truth for the platform-layer entity set. Other components query Paperclip rather than holding their own copies.

@@ -34,7 +34,7 @@ Glossary of Nexus terminology, intentionally compressed. Each entry links to the
 | **[Heartbeat](../concepts/heartbeat.md)** | Cron job (5-min cadence) that picks ready tickets off backlogs and spawns agents. |
 | **Dispatch** | The act of moving a ticket from `todo` to `in_progress` by spawning an agent. |
 | **Session cap** | Two layers. Per-company cap = DB-driven via `session_allocations` (default 2). Global cap = env var `NEXUS_MAX_LIVE_WORKERS` (default 1 in current Phase-1 ramp). Effective cap = min of the two. |
-| **[Postmortem](../concepts/postmortems.md)** | Auto-generated forensic record when a ticket fails or completes oddly. Lands in `docs/postmortems/`. |
+| **[Postmortem](../concepts/postmortems.md)** | Auto-generated forensic record when a ticket fails or completes oddly. Filed as an ADR in `docs/decisions/NNN-…-postmortem.md`. |
 | **Circuit breaker** | Per-agent retry limit. After N consecutive failures, the agent is paused until manually re-enabled. |
 | **[ACP](../components/plugins/acp.md)** | Agent Client Protocol — Paperclip runtime that spawns coding-agent subprocesses (Claude Code, Codex, …). |
 | **[Craft Dispatch](../components/plugins/craft-dispatch.md)** | Cross-company ticket bridge; lets a domain company hand work to a craft company in one tool call. |
@@ -69,7 +69,7 @@ Glossary of Nexus terminology, intentionally compressed. Each entry links to the
 | Term | One-line definition |
 |---|---|
 | **Paperclip** | Control plane API + UI. Port 3100. |
-| **Cockpit** | *Pending rewrite.* Original Next.js operator dashboard at port 3000 is archived; replacement is being built as a plugin inside the governance company. |
+| **Cockpit** | *Pending rewrite.* Original Next.js operator dashboard on port 3000 is archived (no systemd unit, no auto-start) — sometimes left running locally for the old UI. Replacement is being built as a plugin inside the governance company. |
 | **ChromaDB** | Vector database backing Context-1. Port 8101. |
 | **MemPalace API** | REST surface in front of MemPalace + Context-1. Port 8102. |
 | **MCP server** | Model Context Protocol bridge into Nexus from external AI clients. |

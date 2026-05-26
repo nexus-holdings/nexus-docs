@@ -59,7 +59,7 @@ The pipeline (DFA 20 in `docs/state-machines.md`):
 4. **Write** — produce a postmortem document (often via a postmortem agent)
 5. **File** — create a follow-up ticket if the postmortem identifies a fix
 
-Postmortems live in `docs/postmortems/<id>.md` in the relevant repo. They are *never deleted* — even superseded ones are kept as history.
+Postmortems are filed as ADRs in the same numbered stream — `docs/decisions/NNN-…-postmortem.md`. They are *never deleted* — even superseded ones are kept as history.
 
 ## ADRs
 

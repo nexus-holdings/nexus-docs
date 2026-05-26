@@ -89,7 +89,7 @@ flowchart LR
     class FAIL,BUILD,SCAN,ADR,FILE step
 ```
 
-Postmortems live in the relevant repo at `docs/postmortems/<id>.md`. They're never deleted — old ones are retained as history.
+Postmortems are filed as ADRs in the same numbered stream — `docs/decisions/NNN-…-postmortem.md` (e.g. `035-tel-adapter-misconfig-postmortem.md`). They're never deleted; old ones are retained as history.
 
 See [Triage a Postmortem](../guides/triage-a-postmortem.md) for how to action one.
 

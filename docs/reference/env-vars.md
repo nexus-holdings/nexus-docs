@@ -17,6 +17,9 @@ Two canonical locations:
 
 Plugin processes inherit the environment of the Paperclip server that launched them.
 
+!!! note "Most variables are optional"
+    Every variable on this page is read **with a sensible default** — you only need to set the ones whose defaults you want to override. A fresh `.env` file with no entries works for most installations; explicit values are mainly for environment-specific overrides (different ports, custom paths, ops kill-switches). Entries marked _(required)_ or _(unset)_ are the exceptions.
+
 ## Nexus Core (heartbeat, ops monitor, scripts)
 
 Read by `~/Projects/nexus/nexus-core/scripts/company_heartbeat.py` and friends.

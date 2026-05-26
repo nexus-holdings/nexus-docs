@@ -45,7 +45,7 @@ The split between MemPalace and Context-1 is deliberate — MP is the authoritat
 |---|---|---|---|---|
 | **Sessions** | Claude Code `Stop` hook | `claude` or `<project>` | `sessions` | `session` |
 | **Memory files** | Auto-memory `.md` write | matches the project's wing | `memory_files` | `memory_file` |
-| **Project docs** | `index_aurelius.py` / project ingest scripts | `<project>` | `documentation`, `plan_docs`, `analysis` (varies) | `project_doc` |
+| **Project docs** | `index_<project>.py` ingest scripts | `<project>` | `documentation`, `plan_docs`, `analysis` (varies) | `project_doc` |
 | **Code** | Source-tree indexer | `<project>` | `code` | `code` |
 | **Diary** | `mempalace_diary_write` MCP tool | `claude` | `diary` | `diary` |
 | **External** | Any agent calling `memory_remember` or hitting `/v1/remember` directly | caller's choice | caller's choice | caller's choice |
@@ -83,7 +83,7 @@ Auto-memory `.md` notes (the kind Claude Code writes via the `auto memory` syste
 
 Long-form documentation, plan files, ADRs, design docs — everything in `docs/` directories that an agent might want to retrieve later.
 
-**Trigger**: project-specific ingest scripts. The Nexus and Aurelius codebases each have an `index_<project>.py` script (`nexus-memory/scripts/index_aurelius.py` is the live exemplar) that:
+**Trigger**: project-specific ingest scripts. Each indexed project has its own `index_<project>.py` script under `nexus-memory/scripts/` — substitute your project name (e.g. `index_aurelius.py`); the live script in this repo is `index_negotiagent.py`. The script:
 
 1. Walks the project's doc tree
 2. For each `.md` / `.txt` / `.pdf`, computes a stable `source_file` hash

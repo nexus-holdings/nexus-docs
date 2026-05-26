@@ -153,12 +153,15 @@ curl http://127.0.0.1:8102/v1/status | jq
 ### systemd (recommended)
 
 ```bash
-systemctl --user start nexus-memory                       # REST API + ChromaDB
-systemctl --user start mempalace-promoter.timer           # background sync
+sudo systemctl start mempalace-api                        # REST API (system unit)
+sudo systemctl start chromadb                             # vector store (system unit)
+systemctl --user start mempalace-promoter.timer           # background sync (user unit)
 
-journalctl --user -u nexus-memory -f                      # API logs
+sudo journalctl -u mempalace-api -f                       # API logs
 journalctl --user -u mempalace-promoter -n 50             # last 50 promoter runs
 ```
+
+The REST API unit is `mempalace-api.service` (system scope, in `/etc/systemd/system/`), not `nexus-memory.service` — there is no `nexus-memory` unit. The promoter timer is genuinely user-scope.
 
 ## What lives where
 
