@@ -132,7 +132,7 @@ Skills compose tools. Tools come from MCP servers, registered against each agent
 | GitHub | repo / PR / issue tools | external `mcp-server-github` |
 | Bash | command execution | built-in |
 
-Each server's tools are documented on its own component page — there is no single "tools catalog" repo. Skills reference these tools by their canonical MCP names (e.g., `mcp__paperclip__update_ticket`).
+Each server's tools are documented on its own component page — there is no single "tools catalog" repo. Skills reference these tools by their canonical MCP names (e.g., `mcp__paperclip__craft_dispatch_ticket`).
 
 ## See also
 

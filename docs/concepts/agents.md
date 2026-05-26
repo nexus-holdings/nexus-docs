@@ -33,7 +33,7 @@ Every agent YAML has the same five load-bearing fields:
 |---|---|---|
 | **`base_prompt`** | Role description used as system prompt | "You are a senior backend engineer working on Nexus services. Prioritize correctness, test coverage, and observability." |
 | **`skills`** | Capability tags for dispatch matching | `[python, postgres, api-design, test-driven-development]` |
-| **`tools`** | MCP tools this agent may invoke | `[paperclip_update_ticket, mempalace_search, bash_run]` |
+| **`tools`** | MCP tools this agent may invoke | `[craft_dispatch_ticket, mempalace_search, bash_run]` |
 | **`model_config`** | Default model + fallback + session caps | `{default: opus-4-7, fallback: sonnet-4-6, max_age_hours: 8}` |
 | **`performance`** | Last-30d KPIs from the metrics DB | `{success_rate: 0.91, median_session_minutes: 23}` |
 
