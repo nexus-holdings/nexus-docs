@@ -50,7 +50,7 @@ stateDiagram-v2
 | Status | Meaning |
 |---|---|
 | `draft` | Created; not yet binding |
-| `negotiating` | External counterparty is negotiating via the [Aurelius](https://aurelius.ai) backend |
+| `negotiating` | External counterparty is negotiating via the Aurelius backend |
 | `active` | Both sides have committed; work in flight |
 | `fulfilled` | All acceptance criteria verified — automatic transition |
 | `terminated` | Cancelled (chairman or backend-abandoned); terminal |

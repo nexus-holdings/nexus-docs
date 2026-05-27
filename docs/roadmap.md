@@ -122,7 +122,7 @@ Two-party agreements moved from implicit (a couple of columns on a dispatched ti
 | | |
 |---|---|
 | **Status** | 🔵 Proposed |
-| **Integrates** | [Contracts plugin](components/plugins/contracts.md) hook surface, [Aurelius](https://aurelius.ai) |
+| **Integrates** | [Contracts plugin](components/plugins/contracts.md) hook surface, Aurelius (external negotiation backend) |
 | **Source** | ADR-044 (forthcoming, companion to ADR-043) |
 | **Depends on** | Contracts primitive (shipped) |
 | **Next step** | Draft ADR-044 specifying the backend interface; replace the stub hook with the Aurelius HTTP integration |
