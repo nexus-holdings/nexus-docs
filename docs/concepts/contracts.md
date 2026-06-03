@@ -135,6 +135,10 @@ The implementation is in the [Contracts plugin](../components/plugins/contracts.
 | [Governance](../architecture/governance.md) | Contracts live in the governance layer's auditable-decisions surface |
 | [Decisions Index](decisions-index.md) | Major contracts get accompanying ADRs |
 
+## Looking ahead: goal-aware coordination
+
+Today a contract records an agreement two companies have already reached. A directional next step is **goal-aware coordination** — surfacing each company's objectives *as* the agreement forms, so the two plan with both goals in mind instead of optimising the same point in opposite directions. A genuinely paradoxical pair of objectives escalates to a human rather than looping. See the [roadmap entry](../roadmap.md#goal-aware-coordination). Exploratory — no committed design yet.
+
 ## See also
 
 - [Decisions Index](decisions-index.md) — ADR-043 (the source decision)

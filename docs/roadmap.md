@@ -25,7 +25,7 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 
 | Theme | 🟢 | 🟡 | 🔵 | ⚪ | Headline |
 |---|:--:|:--:|:--:|:--:|---|
-| [1 · Multi-company coordination](#1-multi-company-coordination) | 3 | — | 2 | 1 | Three company classes; first craft company is live; governance spawn pipeline is accepted (ADR-045) |
+| [1 · Multi-company coordination](#1-multi-company-coordination) | 3 | — | 2 | 2 | Three company classes; first craft company is live; governance spawn pipeline is accepted (ADR-045) |
 | [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
 | [3 · Execution model & quality](#3-execution-model-quality) | 1 | — | 1 | — | Ticket flags are deterministic; formalising the implicit ticket contract is the remainder |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
@@ -110,6 +110,18 @@ A cross-cutting craft company that ensures every project has instrumentation, lo
 | **Next step** | Wait for dispatch volume to justify the first additional craft, then design it |
 
 The company-class model only compounds when domains have several specialised crafts to dispatch to. QA, Research, and Editorial are the named candidates. Directional only — no design started.
+
+### Goal-aware coordination
+
+| | |
+|---|---|
+| **Status** | ⚪ Exploratory |
+| **Integrates** | [Contracts](concepts/contracts.md), cross-company dispatch, [Governance layer](architecture/governance.md) |
+| **Source** | Coordination design (directional) |
+| **Depends on** | Contracts primitive (shipped) |
+| **Next step** | Prototype objective-sharing at contract formation; define the paradox-detection and human-escalation path |
+
+When two companies form an agreement, each should be aware of the *other's* objectives — so they plan the work with both goals in mind rather than ping-ponging, each optimising the same point in opposite directions. A genuine stalemate means the objectives are *paradoxical*; those escalate to a human rather than looping forever. The aim is coordination that lets the substrate grow its rules and evals dynamically instead of descending into chaos. Directional — no committed design yet.
 
 ---
 
