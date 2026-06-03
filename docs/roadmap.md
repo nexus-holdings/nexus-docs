@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-05-27</span>
+  <span>Updated 2026-06-03</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -25,11 +25,11 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 
 | Theme | 🟢 | 🟡 | 🔵 | ⚪ | Headline |
 |---|:--:|:--:|:--:|:--:|---|
-| [1 · Multi-company coordination](#1-multi-company-coordination) | 2 | 1 | 1 | 1 | Two-class model is the load-bearing structure; first craft company is live |
+| [1 · Multi-company coordination](#1-multi-company-coordination) | 3 | — | 2 | 1 | Three company classes; first craft company is live; governance spawn pipeline is accepted (ADR-045) |
 | [2 · Contracts & negotiation](#2-contracts-negotiation) | 1 | 1 | 1 | — | Contracts are a first-class primitive; external negotiation backend is the next unlock |
-| [3 · Execution model & quality](#3-execution-model-quality) | — | — | 2 | — | Formalising the implicit ticket contract so dispatch is verifiable |
+| [3 · Execution model & quality](#3-execution-model-quality) | 1 | — | 1 | — | Ticket flags are deterministic; formalising the implicit ticket contract is the remainder |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
-| [5 · Operator tooling](#5-operator-tooling) | 1 | 1 | 2 | — | Cockpit is being rebuilt as an in-platform plugin |
+| [5 · Operator tooling](#5-operator-tooling) | 2 | 1 | 1 | — | Routine registration is live; Cockpit is being rebuilt as the agora governance plugin |
 | [6 · Scaling & resilience](#6-scaling-resilience) | 1 | 1 | 2 | 1 | Concurrency is held at a Phase-1 brake, gated on observability |
 | [7 · Learning loop & evals](#7-learning-loop-evals) | — | — | 1 | 1 | Every postmortem should mint an eval; expanding that surface |
 
@@ -37,19 +37,31 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 
 ## 1 · Multi-company coordination
 
-How the holding company decomposes into domain companies (which own a problem space) and craft companies (stateless execution), and how work crosses between them. See [Two-class companies](concepts/two-class-companies.md) for the concept.
+How the holding company decomposes into domain companies (which own a problem space), craft companies (stateless execution), and the governance company that directs them — and how work crosses between them. See [Company classes](concepts/two-class-companies.md) for the concept.
 
-### Two-class company model
+### Company-class model
 
 | | |
 |---|---|
 | **Status** | 🟢 Shipped |
-| **Integrates** | [Two-class companies](concepts/two-class-companies.md), [Companies](concepts/companies.md) |
+| **Integrates** | [Company classes](concepts/two-class-companies.md), [Companies](concepts/companies.md) |
 | **Source** | ADR-032, ADR-033 |
 | **Depends on** | — |
 | **Next step** | Finish migrating residual engineer roles out of domain companies into the Engineering craft (restructure Phases B–E) |
 
-Domain companies (Aurelius, Lighthouse) own context and decompose goals into tickets; craft companies execute statelessly. This is the organising principle the rest of the substrate rolls up to. The model is accepted and live; the physical restructuring of older companies is the in-flight remainder.
+Three classes: domain companies (Aurelius, Lighthouse) own context and decompose goals into tickets; craft companies execute statelessly; the governance company (Nexus Holdings) directs the whole. This is the organising principle the rest of the substrate rolls up to. The model is accepted and live; the physical restructuring of older companies is the in-flight remainder.
+
+### Company spawn pipeline (governance)
+
+| | |
+|---|---|
+| **Status** | 🔵 Proposed |
+| **Integrates** | Governance plugin ([agora](#governance-plugin-agora), Theme 5), [Craft Dispatch plugin](components/plugins/craft-dispatch.md), [Contracts plugin](components/plugins/contracts.md) |
+| **Source** | ADR-045 (accepted) |
+| **Depends on** | Company-class model; canonical provisioning (`provision_company.py`) |
+| **Next step** | Finish the `create_child_company` stub against canonical provisioning; wire delegation through dispatch + contracts |
+
+The codified path for the governance class to *grow the org chart*: a spec arrives, the C-suite drafts an implementation proposal, a human approves, and the governance company spawns child companies and delegates the initial work under contracts. ADR-045 is accepted; a working scaffold (agora) exists with the spec lifecycle and 21 passing tests, but the spawn step is still a stub. Sits above flat-dispatch — genesis, not routine routing.
 
 ### Cross-company dispatch
 
@@ -59,9 +71,9 @@ Domain companies (Aurelius, Lighthouse) own context and decompose goals into tic
 | **Integrates** | [Craft Dispatch plugin](components/plugins/craft-dispatch.md) |
 | **Source** | ADR-037 |
 | **Depends on** | ADR-038 (Engineering Ticket Contract) for schema validation |
-| **Next step** | Verify flow-back on final transitions; tighten the dispatched-ticket schema once ADR-038 lands |
+| **Next step** | Tighten the dispatched-ticket schema once ADR-038 lands |
 
-The `craft_dispatch_ticket` tool lets a domain company file a well-formed ticket into a craft company with full context and a reverse link (`origin_kind`/`origin_id`), and receive status flow-back on completion. The plugin and tool are live; schema validation hardens once the ticket contract is formalised.
+The `craft_dispatch_ticket` tool lets a domain company file a well-formed ticket into a craft company with full context and a reverse link (`origin_kind`/`origin_id`), and receive status flow-back on completion. The plugin, the tool, and flow-back on final transitions (`flowback.js`) are all live; the only remaining hardening is schema validation, which lands once the ticket contract (ADR-038) is formalised.
 
 ### Nexus Engineering (craft company)
 
@@ -70,7 +82,7 @@ The `craft_dispatch_ticket` tool lets a domain company file a well-formed ticket
 | **Status** | 🟢 Shipped |
 | **Integrates** | [Craft Dispatch plugin](components/plugins/craft-dispatch.md), [Agent Catalog](components/agent-catalog.md) |
 | **Source** | ADR-032, ADR-033 |
-| **Depends on** | Two-class model |
+| **Depends on** | Company-class model |
 | **Next step** | Route more domain work through it as the restructure completes |
 
 The first craft company — a stateless engineering execution engine. Receives spec or review tickets from domain companies, returns committed code. Provisioned and active.
@@ -97,7 +109,7 @@ A cross-cutting craft company that ensures every project has instrumentation, lo
 | **Depends on** | Multiple domain companies generating demand for each craft |
 | **Next step** | Wait for dispatch volume to justify the first additional craft, then design it |
 
-The two-class model only compounds when domains have several specialised crafts to dispatch to. QA, Research, and Editorial are the named candidates. Directional only — no design started.
+The company-class model only compounds when domains have several specialised crafts to dispatch to. QA, Research, and Editorial are the named candidates. Directional only — no design started.
 
 ---
 
@@ -163,13 +175,13 @@ Nexus Engineering currently relies on an *implicit* contract for what a well-for
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | Paperclip issues (`execution_workspace_settings`), [ACP plugin](components/plugins/acp.md), skills |
 | **Source** | ADR-042 |
 | **Depends on** | — |
-| **Next step** | Implement the `skill_flags` helper and read path; the inferred-flag path (`PAPERCLIP_TASK_ID`) already exists |
+| **Next step** | Broaden the set of skills that read flags as new deterministic hand-offs are needed |
 
-Structured JSON flags on a ticket make skill execution deterministic — e.g. a flag telling the inbox skill to pick up a specific ticket rather than re-running triage. The design is locked; the explicit-flag read path is the implementation gap.
+Structured JSON flags on a ticket make skill execution deterministic — e.g. a flag telling the inbox skill to pick up a specific ticket rather than re-running triage. The `skill_flags` helper, the read/write path (`nexus-core/nexus/execution/skill_flags.py`), and the inferred-flag path (`PAPERCLIP_TASK_ID`) are all live and covered by tests.
 
 ---
 
@@ -239,45 +251,45 @@ The operator surface and the recurring-task machinery that keeps companies ticki
 | **Integrates** | [Nexus Core](components/nexus-core.md), [Heartbeat](concepts/heartbeat.md) |
 | **Source** | Execution-layer DFAs |
 | **Depends on** | — |
-| **Next step** | Move from the standalone Python worker to the catalog-defined routine once registration wiring lands (below) |
+| **Next step** | Migrate the standalone Python worker onto the now-live catalog-defined routine form |
 
-The dispatch loop that wakes each company, checks its inbox, and spawns agents on backlog tickets. Live as a systemd timer; the YAML-routine form is defined and the wiring to auto-register it is the remaining gap.
+The dispatch loop that wakes each company, checks its inbox, and spawns agents on backlog tickets. Live as a systemd timer. The YAML-routine form is defined and routine registration now runs (below), so the remaining work is moving the heartbeat itself onto that path rather than the hard-coded worker.
 
-### Cockpit-as-plugin
+### Governance plugin (agora)
 
 | | |
 |---|---|
 | **Status** | 🟡 In flight |
-| **Integrates** | Paperclip plugin surface, governance company, [nexus-mcp](components/nexus-mcp.md) |
-| **Source** | ADR-033 (Cockpit → Platform merge) |
+| **Integrates** | Paperclip plugin surface, governance company, [nexus-mcp](components/nexus-mcp.md), [Contracts](components/plugins/contracts.md) + [Craft Dispatch](components/plugins/craft-dispatch.md) |
+| **Source** | ADR-033 (Cockpit → Platform merge), ADR-045 (spawn pipeline) |
 | **Depends on** | — |
-| **Next step** | Rebuild the operator surface (metrics, active companies, live transcript) as a governance-hosted plugin and retire the archived Next.js app |
+| **Next step** | Adopt the agora scaffold on Linux; conform it to canonical primitives (drop REST shim, finish spawn against `provision_company.py`, delegate via dispatch/contracts); reach Cockpit parity on the operator views |
 
-The standalone Cockpit is [archived](components/cockpit.md). Its replacement is being built as a plugin inside the governance company — same operator features, hosted in-platform, no parallel service to maintain. The live-transcript view is the operationally-visible gap until it lands.
+The standalone Cockpit is [archived](components/cockpit.md); its replacement is a plugin hosted inside the governance company. That plugin is **agora** — a working v0.2 scaffold (SDK manifest, spec lifecycle, 3 tools, 5 UI slots, 21 passing tests) that also implements the [spawn pipeline](#company-spawn-pipeline-governance) above. Same operator features, hosted in-platform, no parallel service to maintain. Two gaps remain: the operator views aren't yet at Cockpit parity (metrics, active companies, live transcript), and the `create_child_company` spawn step is still a stub.
 
 ### Cockpit contracts views
 
 | | |
 |---|---|
 | **Status** | 🔵 Proposed |
-| **Integrates** | [Contracts plugin](components/plugins/contracts.md), Cockpit-as-plugin |
+| **Integrates** | [Contracts plugin](components/plugins/contracts.md), Governance plugin (agora) |
 | **Source** | ADR-043 (Phase 1 build) |
-| **Depends on** | Cockpit-as-plugin |
+| **Depends on** | Governance plugin (agora) |
 | **Next step** | List + detail views: filter by company/status/backend; show scope, criteria, terms, linked issues, activity |
 
-The contracts primitive has no operator UI yet. These views ride on the Cockpit-as-plugin rebuild.
+The contracts primitive has no operator UI yet. These views ride on the Governance plugin (agora) operator surface.
 
 ### Routine registration wiring
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | Paperclip startup, [Routine Catalog](components/routine-catalog.md) |
 | **Source** | Routine catalog design |
 | **Depends on** | — |
-| **Next step** | On startup, read `routine-catalog/routines/*.yaml` and register each via `POST /api/companies/{id}/routines` |
+| **Next step** | Migrate the heartbeat worker onto a catalog-defined routine now that registration is live |
 
-The routine YAMLs sit on disk but aren't auto-registered — `GET /api/companies/<id>/routines` currently returns 0. A small startup hook closes the loop and lets the heartbeat (and other routines) be catalog-defined rather than hard-coded.
+`bootstrap_routines.py` reads `routine-catalog/routines/*.yaml` and registers each via `POST /api/companies/{id}/routines` — so `GET /api/companies/<id>/routines` returns the catalog-defined set rather than 0. The loop is closed; routines can now be catalog-defined rather than hard-coded.
 
 ---
 
@@ -384,5 +396,5 @@ This roadmap is curated from the ADR stream, the design docs, and the live deplo
 - [Decisions Index](concepts/decisions-index.md) — every ADR, grouped by theme; the formal record behind these entries
 - [The Flywheel](architecture/flywheel.md) — the thesis the roadmap rolls up to
 - [Layers Overview](architecture/layers-overview.md) — where each item lands across the four layers
-- [Two-class companies](concepts/two-class-companies.md) — the organising principle behind Theme 1
+- [Company classes](concepts/two-class-companies.md) — the organising principle behind Theme 1
 - [FAQ](faq.md) — answers to first-week questions
