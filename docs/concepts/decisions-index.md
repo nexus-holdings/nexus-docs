@@ -46,7 +46,6 @@ Postmortems (e.g. ADR-031, ADR-035) are filed *as ADRs* by deliberate convention
 |---|---|---|
 | **042** | [Ticket-Flag Protocol for Skill Execution](#) | Proposed — the flag protocol that makes ticket-driven skill execution legible to models that drop prose instructions |
 | **043** | [Contracts as First-Class Primitive](#) | Accepted — formal cross-company agreements with lifecycle + acceptance criteria. Implemented by [`paperclip-plugin-contracts`](../components/plugins/contracts.md). |
-| **044** | Pluggable Negotiation Backend | Forthcoming — referenced from ADR-043 but not yet drafted; the external-counterparty negotiation path |
 
 ### Cost, capacity, and quota
 

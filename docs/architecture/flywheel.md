@@ -100,49 +100,35 @@ The substrate-plus-flywheels shape solves all three:
 2. Memory, agents, and evals are shared across flywheels — vertical N reuses vertical N-1's substrate improvements.
 3. Each flywheel rotation makes the *next* one start from a higher floor.
 
-## Worked example: Aurelius
+## Example: a multi-arm flywheel
 
-Aurelius is the first flywheel built on Nexus and the canonical example. It has three arms — a synthetic simulator, a counterparty-reconstruction pipeline, and live client contracts. The rotation is what makes it a flywheel:
+A flywheel's internals are vertical-specific — what matters here is the *shape*, which generalizes. A flywheel can run several **arms** that all feed one training pool, and a rotation turns that pool into a better generation of agents:
 
 ```mermaid
 flowchart LR
-    A0[Agents<br/>gen N] --> ARM0[Contracts<br/>Reconstruction<br/>Simulator]
+    A0[Agents<br/>gen N] --> ARM0[Arms emit<br/>training signal]
     ARM0 --> A1[Agents<br/>gen N+1]
-    A1 --> ARM1[Contracts<br/>Reconstruction<br/>Simulator]
+    A1 --> ARM1[Arms emit<br/>training signal]
     ARM1 --> A2[Agents<br/>gen N+2]
-    A2 --> ARM2[Contracts<br/>Reconstruction<br/>Simulator]
-    ARM2 --> DOTS[ ... ]
+    A2 --> DOTS[ ... ]
 
     classDef agents fill:#14171A,stroke:#D4A574,color:#E6E3DC,stroke-width:1.5px
     classDef arms fill:#0D0F11,stroke:#6F7177,color:#E6E3DC,stroke-width:1px
     classDef dots fill:none,stroke:none,color:#6F7177
     class A0,A1,A2 agents
-    class ARM0,ARM1,ARM2 arms
+    class ARM0,ARM1 arms
     class DOTS dots
 ```
 
-One rotation: GRPO + Curriculum trains a new generation of agents on the combined corpus. The fresh weights are **deployed to the synthetic company models** in the simulator (Co A, Co B), which negotiate against the self-play engine to surface their behaviour. The **best-performing variants are promoted to production**, where they handle live client work through the Aurelius API. All three arms emit training signal — synthetic ground-truth pairs from the simulator, real-anchored pairs from reconstruction, live transcripts from production. GRPO consumes the combined pool and the cycle repeats.
+One rotation: a training step (for example, GRPO plus a curriculum) trains a new generation of agents on the combined corpus; the fresh weights flow back into the arms; the cycle repeats. The brass-edged agent nodes are the thing that compounds — the arms are the metabolism that turns so the agents can grow.
 
-The brass-edged agent nodes are the thing that compounds. The arms are the metabolism — they turn so the agents can grow.
+A flywheel's arms vary by vertical, but a common pattern combines three complementary sources of signal:
 
-Zoomed in, here's how a single rotation actually wires up — the three arms, the training pipeline as a fourth subsystem, and the named flows between them:
+- **A simulator arm** — synthetic, two-sided scenarios (abstractly, Company A vs Company B) run against a self-play engine. Because it controls both sides, it produces ground-truth pairs no real-world log can.
+- **A reconstruction arm** — recovers the missing side of *one-sided* real data so an existing corpus becomes usable training signal, grounded against the simulator's ground truth.
+- **A production arm** — the live deploy target: only the best-performing variants reach it, where they do real work and generate fresh transcripts that feed the next rotation.
 
-<img src="../../assets/diagrams/aurelius-flywheel.svg" alt="Aurelius flywheel — structural diagram showing the Training Pipeline at top and three arms (Production Integration, Multi-Company Simulator, Counterparty Reconstruction) below">
-
-Reading the diagram:
-
-- **Training Pipeline** (brass) is the central feedback loop — Combined Corpus → GRPO + Curriculum → Better Agents. Everything else exists to keep this pipeline fed and to receive its output.
-- **Arm 1 (Production Integration)** is the live-money path — Nexus Contract talks to Aurelius API over HTTP for real client negotiations.
-- **Arm 2 (Simulator)** is two synthetic companies (one aggressive, one patient) negotiating against a self-play engine. The companies use the new agent weights to play their counterparty roles; the engine is an MCP harness in front of the model under test (it updates on its own cadence). This arm is the source of ground-truth two-sided data the other arms can't produce.
-- **Arm 3 (Reconstruction)** unlocks the existing S3 corpus by inferring the counterparty side via a 4-stage Bayesian inference, validated against simulator ground truth.
-
-Each arm contributes something the others (and the next generation) need:
-
-- **Simulator** generates ground truth (it knows both sides) — gives reconstruction something to train on.
-- **Reconstruction** unlocks the real corpus (one-sided client logs) — grounds the simulator in real-world distributions.
-- **Contracts** is the live deploy target — only the best-performing variants from simulator evaluation make it here, where they handle real client work and generate new transcripts that feed the next rotation.
-
-After one full rotation, the substrate has more memory, better agents in the catalog, sharper evals, and a richer ADR set than before. The next flywheel that lands on Nexus inherits all of that.
+Each arm contributes something the others (and the next generation) need: the simulator generates ground truth, reconstruction grounds it in real-world distributions, and production supplies fresh real signal. After one full rotation, the substrate has more memory, better agents in the catalog, sharper evals, and a richer ADR set — and the next flywheel that lands on Nexus inherits all of it.
 
 ## Maturity stages
 

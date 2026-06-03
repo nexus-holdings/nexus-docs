@@ -36,12 +36,9 @@ A contract is a state machine with five named states. Transitions are guarded by
 ```mermaid
 stateDiagram-v2
     [*] --> draft
-    draft --> active : internal
-    draft --> negotiating : external<br/>(aurelius)
-    negotiating --> active : backend finalize
+    draft --> active : both sides commit
     active --> fulfilled : auto via<br/>criterion verification
     draft --> terminated
-    negotiating --> terminated
     active --> terminated
     fulfilled --> terminated
     terminated --> [*]
@@ -50,10 +47,9 @@ stateDiagram-v2
 | Status | Meaning |
 |---|---|
 | `draft` | Created; not yet binding |
-| `negotiating` | External counterparty is negotiating via the Aurelius backend |
 | `active` | Both sides have committed; work in flight |
 | `fulfilled` | All acceptance criteria verified — automatic transition |
-| `terminated` | Cancelled (chairman or backend-abandoned); terminal |
+| `terminated` | Cancelled (chairman); terminal |
 
 The state machine is encoded in `src/constants.ts:VALID_TRANSITIONS`. Notice that `fulfilled → terminated` is allowed (per ADR-043 "any non-terminal → terminated" rule, plus a deliberate fulfilled-can-be-rescinded exception); `terminated` is terminal.
 
@@ -89,21 +85,16 @@ The plugin registers five tools via `agent.tools.register`:
 | Tool | Purpose |
 |---|---|
 | `create_contract` | New contract between client + vendor companies, with structured acceptance criteria |
-| `list_contracts` | Query contracts by company (matches client OR vendor side), status, or negotiation backend |
+| `list_contracts` | Query contracts by company (matches client OR vendor side) or status |
 | `link_issue_to_contract` | Attach a `source` or `fulfillment` issue link |
 | `update_contract_status` | Manual transition (e.g. `active → terminated`); illegal transitions rejected |
 | `verify_acceptance_criterion` | Verify one criterion; auto-fulfills the contract when all are verified |
-
-`create_contract` takes a `negotiation_backend` parameter:
-
-- `none` (default) — internal contracts between companies in the same Nexus instance
-- `aurelius` — external contracts that route through the Aurelius handshake (pending ADR-044)
 
 ## Events emitted
 
 | Event | When |
 |---|---|
-| `contract.created` | A new contract is created (any backend) |
+| `contract.created` | A new contract is created |
 | `contract.status_changed` | Any legal status transition |
 | `contract.fulfilled` | Auto-fulfillment after final criterion verified |
 | `contract.criterion_verified` | Any criterion flips to verified |
@@ -147,5 +138,5 @@ curl -X POST http://127.0.0.1:3100/api/plugins/install \
 - [Plugins overview](index.md) — the plugin model in general
 - [Paperclip](../paperclip.md) — the host that owns contract storage
 - [Governance](../../architecture/governance.md) — the layer that makes contracts load-bearing
-- [Decisions Index](../../concepts/decisions-index.md) — ADR-043 (this plugin's design doc) and ADR-044 (negotiation backend, pending)
+- [Decisions Index](../../concepts/decisions-index.md) — ADR-043 (this plugin's design doc)
 - [Company classes](../../concepts/two-class-companies.md) — why contracts matter between domain and craft companies

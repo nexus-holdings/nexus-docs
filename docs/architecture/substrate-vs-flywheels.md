@@ -10,7 +10,7 @@
 
 ## The claim
 
-Nexus is the part of the system that **persists across products**. Any vertical (a contract-negotiation system, a trading-bot stack, a legal-advisory tool) can be built as a flywheel on top of it. Each flywheel that runs leaves the substrate stronger — more memory, more agents in the catalog, more evals in the registry, more ADRs in the decisions log.
+Nexus is the part of the system that **persists across products**. Any vertical (a research-intelligence product, a trading-bot stack, a legal-advisory tool) can be built as a flywheel on top of it. Each flywheel that runs leaves the substrate stronger — more memory, more agents in the catalog, more evals in the registry, more ADRs in the decisions log.
 
 This is not how most agentic systems are built. The default shape is "framework plus app" — a library you import, an application you build on top, and a fresh start every time you want a new product. The substrate-plus-flywheels shape is the alternative, and the rest of this page is the argument for why it wins under sustained use.
 

@@ -107,11 +107,11 @@ A contract is a structured agreement between two companies inside the substrate.
 Contracts go through a lifecycle:
 
 ```
-draft → negotiating → active → fulfilled
-                              ↘ cancelled
+draft → active → fulfilled
+              ↘ terminated
 ```
 
-The Contracts plugin (`paperclip-plugin-contracts`) implements this lifecycle. External-party contracts (with humans / other firms) route through a pluggable negotiation backend.
+The Contracts plugin (`paperclip-plugin-contracts`) implements this lifecycle: a contract is drafted between two companies, becomes active once both commit, and auto-fulfills as its acceptance criteria are verified.
 
 See [ADR-043: Contracts as first-class primitives](../concepts/decisions-index.md) for the design rationale.
 

@@ -26,7 +26,7 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 | Theme | 🟢 | 🟡 | 🔵 | ⚪ | Headline |
 |---|:--:|:--:|:--:|:--:|---|
 | [1 · Multi-company coordination](#1-multi-company-coordination) | 3 | — | 2 | 1 | Three company classes; first craft company is live; governance spawn pipeline is accepted (ADR-045) |
-| [2 · Contracts & negotiation](#2-contracts-negotiation) | 1 | 1 | 1 | — | Contracts are a first-class primitive; external negotiation backend is the next unlock |
+| [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
 | [3 · Execution model & quality](#3-execution-model-quality) | 1 | — | 1 | — | Ticket flags are deterministic; formalising the implicit ticket contract is the remainder |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
 | [5 · Operator tooling](#5-operator-tooling) | 2 | 1 | 1 | — | Routine registration is live; Cockpit is being rebuilt as the agora governance plugin |
@@ -113,9 +113,9 @@ The company-class model only compounds when domains have several specialised cra
 
 ---
 
-## 2 · Contracts & negotiation
+## 2 · Contracts
 
-Inter-company agreements as an explicit, first-class primitive — and the path to plugging external counterparties into that primitive. See [Contracts](concepts/contracts.md).
+Inter-company agreements as an explicit, first-class primitive: scope, acceptance criteria, terms, and a lifecycle, tracked between companies on the substrate. See [Contracts](concepts/contracts.md).
 
 ### Contracts primitive
 
@@ -125,33 +125,9 @@ Inter-company agreements as an explicit, first-class primitive — and the path 
 | **Integrates** | [Contracts plugin](components/plugins/contracts.md), [Contracts concept](concepts/contracts.md) |
 | **Source** | ADR-043 |
 | **Depends on** | — |
-| **Next step** | Wire the Cockpit contracts views (see Theme 5) and the external negotiation backend (below) |
+| **Next step** | Wire the Cockpit contracts views (see Theme 5) |
 
-Two-party agreements moved from implicit (a couple of columns on a dispatched ticket) to explicit: a `contracts` table with scope, acceptance criteria, terms, and a lifecycle (`draft → negotiating → active → fulfilled`). The plugin ships the five core tools (`create_contract`, `list_contracts`, `link_issue_to_contract`, `update_contract_status`, `verify_acceptance_criterion`) plus a metrics surface.
-
-### Pluggable negotiation backend
-
-| | |
-|---|---|
-| **Status** | 🔵 Proposed |
-| **Integrates** | [Contracts plugin](components/plugins/contracts.md) hook surface, Aurelius (external negotiation backend) |
-| **Source** | ADR-044 (forthcoming, companion to ADR-043) |
-| **Depends on** | Contracts primitive (shipped) |
-| **Next step** | Draft ADR-044 specifying the backend interface; replace the stub hook with the Aurelius HTTP integration |
-
-When a contract enters `negotiating` with an external counterparty, the negotiation is delegated to a pluggable backend (Aurelius is the first). The contracts plugin already exposes the hook surface as a stub; ADR-044 fills in the interface contract, and the Aurelius backend plugs in behind it.
-
-### Aurelius flywheel rotations
-
-| | |
-|---|---|
-| **Status** | 🟡 In flight |
-| **Integrates** | [The Flywheel](architecture/flywheel.md), contracts as a training-signal source |
-| **Source** | Flywheel architecture (reconstruction + simulator tracks) |
-| **Depends on** | Contracts primitive (now shipped — unblocks the real-anchored signal) |
-| **Next step** | Continue the reconstruction and self-play simulator tracks; feed live contract transcripts into the training pool |
-
-Each rotation reconstructs counterparty intent from real negotiation rounds, trains a self-play simulator on it, and promotes the best variants to production — three arms all emitting training signal into one GRPO pool. The early tracks landed; the reconstruction and simulator tracks are the active rotation, newly unblocked now that contracts give a real-anchored signal source.
+Two-party agreements moved from implicit (a couple of columns on a dispatched ticket) to explicit: a `contracts` table with scope, acceptance criteria, terms, and a lifecycle (`draft → active → fulfilled`). The plugin ships the five core tools (`create_contract`, `list_contracts`, `link_issue_to_contract`, `update_contract_status`, `verify_acceptance_criterion`) plus a metrics surface.
 
 ---
 

@@ -1,6 +1,6 @@
 # Contracts
 
-<p class="lede">A contract in Nexus is a <strong>first-class agreement between two companies</strong> — a client and a vendor, with scope, acceptance criteria, a status lifecycle, and an optional negotiation backend for external counterparties. It's what makes "company A asked company B to do X" a queryable, auditable obligation instead of a Slack message and a dispatched ticket.</p>
+<p class="lede">A contract in Nexus is a <strong>first-class agreement between two companies</strong> — a client and a vendor, with scope, acceptance criteria, and a status lifecycle. It's what makes "company A asked company B to do X" a queryable, auditable obligation instead of a Slack message and a dispatched ticket.</p>
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
@@ -16,8 +16,8 @@ That was enough for *linkage* — you could trace a dispatched ticket back to it
 
 | Pressure | What it surfaced |
 |---|---|
-| **External work** | Craft companies serving paying customers need scope, terms, deadlines, and a negotiation history. None of that fits in an issue's description field. |
-| **Training-data flywheel** | Aurelius's reconstruction + simulator tracks require a schema for "two-company agreement with evolving terms" — the schema has to exist before the tracks can build against it. |
+| **Obligation, not just linkage** | Linkage traces ticket B back to ticket A; it doesn't capture what was *agreed* — scope, terms, deadline, fulfilment criteria. None of that fits in an issue's description field. |
+| **Evolving terms** | A two-company agreement whose terms change over time needs a schema for amendments and history, not free text buried in comments. |
 | **Measurement coherence** | "How much work did Nexus Engineering do for Lighthouse last quarter" should be a direct query, not an exercise in reasoning through dispatch chains. |
 
 [ADR-043](decisions-index.md) is the source decision. It defined the schema, the lifecycle, and the contract↔issue relationship.
@@ -45,7 +45,7 @@ flowchart LR
     class CLIENT,VENDOR,SRC,FUL other
 ```
 
-**Two parties, one direction.** Every contract names a client (receives) and a vendor (delivers). The direction is fixed and load-bearing — internal hand-offs have Lighthouse as client + Nexus Engineering as vendor; external engagements would have Nexus Engineering as vendor + some external company as client.
+**Two parties, one direction.** Every contract names a client (receives) and a vendor (delivers). The direction is fixed and load-bearing — for example, Lighthouse as client and Nexus Engineering as vendor.
 
 **Issues link, but don't define.** A contract's *existence* is independent of any issue. Issues link in via the `contract_issues` join with one of two roles:
 
@@ -54,34 +54,29 @@ flowchart LR
 
 A `draft` contract has zero fulfillment issues. A contract is `fulfilled` when *both* every fulfillment issue is `done` *and* every acceptance criterion is verified.
 
-## Internal vs external contracts
-
-Same primitive, two paths through it.
-
-| | Internal | External |
-|---|---|---|
-| **Both parties** | Companies in the same Nexus instance | One internal company + one external company |
-| **Lifecycle** | `draft → active → fulfilled` (skips negotiating) | `draft → negotiating → active → fulfilled` |
-| **`negotiation_backend`** | `none` | `aurelius` (today; pluggable for future backends) |
-| **Terms** | `terms` is null — internal contracts don't need a redlined document | `terms` is a structured jsonb mirroring the backend's clause structure |
-| **Authorisation** | Chairman or agent with the contracts plugin enabled | Chairman + backend handshake |
-
-The `negotiation_backend` field is the extension point. ADR-044 (forthcoming) will define how Aurelius plugs in for external negotiations. Future backends — different legal counsel platforms, escrow services — can extend the enum without changing the contracts primitive itself.
-
 ## The lifecycle
 
-Five states, with backend-driven transitions in the middle:
+A contract moves through a small state machine:
 
-<img src="../../assets/diagrams/contracts-lifecycle.svg" alt="Contracts lifecycle state machine — draft → active → fulfilled along the top happy path. External contracts route via draft → negotiating → active (with the finalize transition). 'terminated' sits below with arrows from every non-terminal state. Accept state (fulfilled) marked brass; terminated edged in muted red.">
-
+```mermaid
+stateDiagram-v2
+    [*] --> draft
+    draft --> active : both sides commit
+    active --> fulfilled : auto via<br/>criterion verification
+    draft --> terminated
+    active --> terminated
+    fulfilled --> terminated
+    terminated --> [*]
+```
 
 | State | What it means |
 |---|---|
 | `draft` | Scope defined, not yet binding |
-| `negotiating` | Terms being worked out by the external backend |
 | `active` | Both sides committed; fulfillment issues can be linked |
 | `fulfilled` | All acceptance criteria verified — automatic transition |
 | `terminated` | Cancelled; terminal |
+
+A contract is drafted between two companies, becomes `active` once both commit, and auto-fulfills as its criteria are verified. `terms` defaults to null for routine internal hand-offs and can carry a structured document when an agreement needs one. Authorisation is by the chairman or an agent with the contracts plugin enabled.
 
 The fulfilment transition (`active → fulfilled`) is *derived*, not declared. There's no separate "mark fulfilled" action — when the last unverified acceptance criterion flips, the substrate auto-transitions the contract.
 
@@ -138,11 +133,11 @@ The implementation is in the [Contracts plugin](../components/plugins/contracts.
 | [Tickets](tickets.md) | Source and fulfillment issues are tickets; the contract holds the obligation that links them |
 | [Postmortems](postmortems.md) | A failed contract (terminated for non-delivery) is a postmortem-worthy event |
 | [Governance](../architecture/governance.md) | Contracts live in the governance layer's auditable-decisions surface |
-| [Decisions Index](decisions-index.md) | Major contracts (especially external ones) get accompanying ADRs |
+| [Decisions Index](decisions-index.md) | Major contracts get accompanying ADRs |
 
 ## See also
 
-- [Decisions Index](decisions-index.md) — ADR-043 (the source decision); ADR-044 (Aurelius backend, forthcoming)
+- [Decisions Index](decisions-index.md) — ADR-043 (the source decision)
 - [Contracts plugin](../components/plugins/contracts.md) — the implementation (data model, 5 tools, metrics)
 - [Company classes](two-class-companies.md) — the company-class split contracts span
 - [Craft Dispatch plugin](../components/plugins/craft-dispatch.md) — the *informal* sibling of this primitive
