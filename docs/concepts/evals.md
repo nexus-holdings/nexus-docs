@@ -119,7 +119,7 @@ Without the eval registry, postmortems just describe failures. With it, postmort
 
 ## Who maintains the registry
 
-The `self-improvement` domain company (see [Two-class companies](two-class-companies.md)) owns the eval registry. Its Eval Architect agent reviews PRs against the registry — no direct commits to main, every change is a PR with KPI evidence.
+The `self-improvement` domain company (see [Company classes](two-class-companies.md)) owns the eval registry. Its Eval Architect agent reviews PRs against the registry — no direct commits to main, every change is a PR with KPI evidence.
 
 This is deliberate: the substrate that does the work isn't the substrate that scores the work. Self-improvement reads from the metrics DB, identifies patterns, proposes eval changes; the other domain companies don't get to modify their own grading criteria. The split keeps the measurement layer credible.
 
@@ -149,5 +149,5 @@ The bar isn't "this would be nice to measure" — it's "without this, the substr
 - [Eval Registry](../components/eval-registry.md) — the implementation (specs, rubrics, comparability matrices)
 - [Postmortems](postmortems.md) — the failure-driven path to new evals
 - [Governance](../architecture/governance.md) — the architectural layer evals belong to
-- [Two-class companies](two-class-companies.md) — `self-improvement` is the domain company that owns the registry
+- [Company classes](two-class-companies.md) — `self-improvement` is the domain company that owns the registry
 - [Decisions Index](decisions-index.md) — major eval-design ADRs live in the same stream

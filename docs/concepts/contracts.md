@@ -134,7 +134,7 @@ The implementation is in the [Contracts plugin](../components/plugins/contracts.
 
 | Adjacent concept | Relationship |
 |---|---|
-| [Two-class companies](two-class-companies.md) | Contracts formalise the cross-class interface that craft-dispatch implements informally |
+| [Company classes](two-class-companies.md) | Contracts formalise the cross-class interface that craft-dispatch implements informally |
 | [Tickets](tickets.md) | Source and fulfillment issues are tickets; the contract holds the obligation that links them |
 | [Postmortems](postmortems.md) | A failed contract (terminated for non-delivery) is a postmortem-worthy event |
 | [Governance](../architecture/governance.md) | Contracts live in the governance layer's auditable-decisions surface |
@@ -144,6 +144,6 @@ The implementation is in the [Contracts plugin](../components/plugins/contracts.
 
 - [Decisions Index](decisions-index.md) — ADR-043 (the source decision); ADR-044 (Aurelius backend, forthcoming)
 - [Contracts plugin](../components/plugins/contracts.md) — the implementation (data model, 5 tools, metrics)
-- [Two-class companies](two-class-companies.md) — the company-class split contracts span
+- [Company classes](two-class-companies.md) — the company-class split contracts span
 - [Craft Dispatch plugin](../components/plugins/craft-dispatch.md) — the *informal* sibling of this primitive
 - [Tickets](tickets.md) — what gets linked as source and fulfillment

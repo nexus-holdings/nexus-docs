@@ -23,7 +23,7 @@ Glossary of Nexus terminology, intentionally compressed. Each entry links to the
 |---|---|
 | **[Substrate](../architecture/flywheel.md)** | Nexus itself — the persistent platform/execution/memory/governance layer that flywheels run on. |
 | **[Flywheel](../architecture/flywheel.md)** | A self-improving agentic vertical riding on the substrate (Aurelius, Lighthouse, Ledgerly, …). |
-| **[Two-class companies](../concepts/two-class-companies.md)** | Every company is either *domain* (owns context) or *craft* (stateless execution); ADR-032. |
+| **[Company classes](../concepts/two-class-companies.md)** | Every company is *domain* (owns context), *craft* (stateless execution), or *governance* (directs a scope of others); ADR-032 + ADR-045. |
 | **[Layer](../architecture/layers-overview.md)** | Pedagogical grouping of the substrate: Platform / Execution / Memory / Governance. |
 | **DFA** | Deterministic finite automaton; canonical reference for substrate state machines — see [Decisions Index](../concepts/decisions-index.md) and `docs/state-machines.md`. |
 

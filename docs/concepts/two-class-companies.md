@@ -1,6 +1,6 @@
-# Two-Class Companies
+# Company Classes
 
-<p class="lede">Every company in Nexus is either <strong>domain</strong> (owns a product or problem space) or <strong>craft</strong> (a stateless execution engine for a single capability). The split is load-bearing — it's what lets one engineering company serve many product companies instead of each product company growing its own engineering team. <a href="decisions-index.md">ADR-032</a> is the source decision.</p>
+<p class="lede">Every company in Nexus has one of <strong>three classes</strong>: <strong>domain</strong> (owns a product or problem space), <strong>craft</strong> (a stateless execution engine for a single capability), or <strong>governance</strong> (directs a scope of other companies — strategy, allocation, approvals). The domain/craft split is the load-bearing one — it's what lets one engineering company serve many product companies instead of each growing its own engineering team. Governance is the class that sits <em>above</em> the others and decides what should exist at all. <a href="decisions-index.md">ADR-032</a> is the source decision for the split; <a href="decisions-index.md">ADR-045</a> codifies the governance class's spawn pipeline.</p>
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
@@ -18,7 +18,9 @@ A traditional software company has product teams *and* an engineering department
 | **Craft** | A single execution capability | Standardized processes, repo conventions, the craft itself | Code, instrumentation, research briefs — depending on craft |
 | **Governance** | The substrate itself | Strategy, allocation, conflict resolution | Decisions and budgets — sits above both other classes |
 
-Nexus Holdings is the only governance company. Everything else is either domain or craft.
+**Governance is a behaviour, not a single company.** "Governance" names what a company *does* — directs a scope of other companies — and any company doing that is a governance-class company, named for its scope rather than for the word "governance." Nexus Holdings is the only governance instance *today*, but the class is plural by design: a future deployment can run several governance companies, each governing its own set of domain and craft companies — and, in principle, a governance company can govern *other governance companies*. The class is the behaviour; the instances are scoped.
+
+This is also why governance is a *layer*, not a daemon: see [the Governance layer](../architecture/governance.md) for the substrate of primitives (evals, postmortems, ADRs, contracts) that governance companies operate on.
 
 ## Why split at all?
 
@@ -44,9 +46,20 @@ The convention is small but load-bearing — class membership is legible at a gl
 |---|---|---|---|
 | **Craft** | `Nexus [Capability]` | `Nexus Engineering`, `Nexus Observability` | Advertises what it does — anyone can tell what to hire it for |
 | **Domain** | Evocative / branded name | `Lighthouse`, `Ledgerly` | Identity *is* the context — the name communicates *what kind of intelligence* the company holds |
-| **Governance** | Structural | `Nexus Holdings` | The one holding company that owns all others |
+| **Governance** | Scoped to what it governs | `Nexus Holdings` | The name describes the scope it directs, not the word "governance" — there can be more than one |
 
 Reading the org chart should never require checking a registry — the name carries the class.
+
+## The governance class
+
+Domain and craft are the *horizontal* split — they divide the work of running a product. Governance is the *vertical* one: it decides which companies should exist and commits resources to them. A governance company:
+
+- **Receives specs** — units of intent ("we should build X," "stand up a company for Y").
+- **Proposes** an implementation: which companies to activate or create, and how to delegate the work.
+- **Spawns** child companies once a **human approves** the proposal, reusing the canonical provisioning flow.
+- **Delegates** the initial work through the same primitives everything else uses — [craft dispatch](../components/plugins/craft-dispatch.md) and [contracts](contracts.md).
+
+The approval gate is mandatory: agents draft, a human signs off. The spawn pipeline sits *above* day-to-day dispatch — it's how the org chart **grows**, not how routine tickets route. The parent/child link a spawn creates is **lineage** (who spawned whom), not a reporting line — routing stays flat. [ADR-045](decisions-index.md) is the full decision; the [agora](../architecture/governance.md) plugin implements it.
 
 ## The interface: well-formed tickets
 
@@ -127,7 +140,7 @@ The substrate today (per `docs/company-taxonomy.md`):
 | **Lighthouse** | Domain | Podcast intelligence + research reports |
 | **Ledgerly** | Domain | AI invoice management (not yet staffed) |
 
-Adding a new product means adding a new domain company. The craft companies stay constant.
+Adding a new product means adding a new domain company. The craft companies stay constant. Nexus Holdings is the sole governance instance at this scale — when the substrate grows enough to warrant more, the governance class is what spawns and directs them ([ADR-045](decisions-index.md)).
 
 ## When the model strains
 
@@ -143,7 +156,8 @@ The pattern: the answer is almost always "keep the split clean and escalate at t
 
 ## See also
 
-- [Decisions Index](decisions-index.md) — ADR-032 (the source decision)
+- [Decisions Index](decisions-index.md) — ADR-032 (the class split) and ADR-045 (the governance spawn pipeline)
+- [Governance layer](../architecture/governance.md) — the substrate of primitives that governance-class companies operate on
 - [Companies](companies.md) — the entity primitive itself
 - [Tickets](tickets.md) — the API between classes
 - [Craft Dispatch plugin](../components/plugins/craft-dispatch.md) — the implementation of the cross-class dispatch

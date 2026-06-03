@@ -10,7 +10,7 @@
 
 ## What it is
 
-A Paperclip plugin that implements the two-class company model in practice. Domain companies do *judgment-heavy* work (research, design, customer relationships); craft companies do *engineering* (code, infra, tests). When a domain company decides "we need engineering for X," it doesn't open a Slack DM — it calls `craft_dispatch_ticket`, which creates a structured ticket in the craft company and threads the link back.
+A Paperclip plugin that implements the domain↔craft half of the company-class model in practice. Domain companies do *judgment-heavy* work (research, design, customer relationships); craft companies do *engineering* (code, infra, tests). When a domain company decides "we need engineering for X," it doesn't open a Slack DM — it calls `craft_dispatch_ticket`, which creates a structured ticket in the craft company and threads the link back.
 
 | Property | Value |
 |---|---|
@@ -149,7 +149,7 @@ curl -X POST http://127.0.0.1:3100/api/plugins/install \
 
 - [Plugins overview](index.md) — the plugin model in general
 - [Paperclip](../paperclip.md) — the host
-- [Two-class companies](../../concepts/two-class-companies.md) — the domain-vs-craft distinction this plugin enforces
+- [Company classes](../../concepts/two-class-companies.md) — the domain-vs-craft distinction this plugin enforces
 - [Contracts](contracts.md) — the *cousin* plugin (formal cross-company agreements); craft-dispatch is the *informal* one
 - [Companies](../../concepts/companies.md) — the entity that this plugin bridges between
 - [Decisions Index](../../concepts/decisions-index.md) — ADRs 037, 038, 042 that define the contract

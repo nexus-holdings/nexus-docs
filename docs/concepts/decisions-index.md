@@ -34,7 +34,7 @@ Postmortems (e.g. ADR-031, ADR-035) are filed *as ADRs* by deliberate convention
 
 | ADR | Title | Status |
 |---|---|---|
-| **032** | [Two-Class Company Model](#) | Accepted — domain vs craft companies; the load-bearing distinction at the company level. See [Two-class companies](two-class-companies.md). |
+| **032** | [Two-Class Company Model](#) | Accepted — domain vs craft companies; the load-bearing distinction at the company level. See [Company classes](two-class-companies.md). |
 | **033** | [Company Restructuring Plan](#) | Accepted — the multi-phase rollout to bring the substrate onto the two-class model |
 | **036** | Domain-Company Pause + Per-Ticket Audit | Accepted — Phase A of the cross-company restructure; the operational pause + audit that preceded the dispatch rewrite |
 | **037** | [Cross-Company Ticket Dispatch Mechanism](#) | Accepted — the dispatch protocol. Implemented by [`paperclip-plugin-craft-dispatch`](../components/plugins/craft-dispatch.md). |
@@ -98,6 +98,6 @@ If you're unsure, lean towards writing one. ADR-031 looks routine — it's a pos
 
 - [Postmortems](postmortems.md) — the failure-driven branch of ADR creation
 - [Governance](../architecture/governance.md) — the architectural layer that owns the ADR stream
-- [Two-class companies](two-class-companies.md) — the concept built on top of ADR-032
+- [Company classes](two-class-companies.md) — the concept built on top of ADR-032
 - [Contracts plugin](../components/plugins/contracts.md) — implementation of ADR-043
 - [Craft Dispatch plugin](../components/plugins/craft-dispatch.md) — implementation of ADR-037

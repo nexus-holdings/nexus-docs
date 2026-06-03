@@ -102,7 +102,7 @@ nav:
       - AAAK Encoding: concepts/aaak.md
       - Wings & Rooms: concepts/wings-and-rooms.md
       - Companies: concepts/companies.md
-      - Two-class Companies: concepts/two-class-companies.md
+      - Company Classes: concepts/two-class-companies.md
       - Tickets: concepts/tickets.md
       - Sessions vs Tickets: concepts/sessions-vs-tickets.md
       - Agents: concepts/agents.md

@@ -191,4 +191,4 @@ Avoid creating a new agent just to tweak a prompt — that's what minor/patch bu
 - [Heartbeat](heartbeat.md) — the dispatch loop that turns agents into running sessions
 - [Skills Catalog](../components/skills-catalog.md) — workflows that agents follow
 - [ACP plugin](../components/plugins/acp.md) — the runtime that hosts sessions
-- [Two-class companies](two-class-companies.md) — domain agents vs craft agents differ in role, not in this model
+- [Company classes](two-class-companies.md) — domain agents vs craft agents differ in role, not in this model

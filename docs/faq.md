@@ -46,7 +46,7 @@ Because heartbeats are *failure-tolerant*: if the previous cycle crashed, the ne
 
 ### What are domain vs craft companies?
 
-[Two-class companies](concepts/two-class-companies.md) is the load-bearing organising principle. A *domain* company owns a product or problem space and dispatches well-formed tickets; a *craft* company is a stateless execution engine for one capability (e.g., Nexus Engineering for code). One engineering craft serves many product domains, the same way one engineering department serves many product teams in a traditional company. ADR-032 is the source decision.
+[Company classes](concepts/two-class-companies.md) is the load-bearing organising principle. A *domain* company owns a product or problem space and dispatches well-formed tickets; a *craft* company is a stateless execution engine for one capability (e.g., Nexus Engineering for code). One engineering craft serves many product domains, the same way one engineering department serves many product teams in a traditional company. ADR-032 is the source decision.
 
 ## Operations
 

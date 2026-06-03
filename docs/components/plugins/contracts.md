@@ -148,4 +148,4 @@ curl -X POST http://127.0.0.1:3100/api/plugins/install \
 - [Paperclip](../paperclip.md) — the host that owns contract storage
 - [Governance](../../architecture/governance.md) — the layer that makes contracts load-bearing
 - [Decisions Index](../../concepts/decisions-index.md) — ADR-043 (this plugin's design doc) and ADR-044 (negotiation backend, pending)
-- [Two-class companies](../../concepts/two-class-companies.md) — why contracts matter between domain and craft companies
+- [Company classes](../../concepts/two-class-companies.md) — why contracts matter between domain and craft companies

@@ -2,9 +2,9 @@
 
 A **company** is Nexus's primary unit of work scope. Everything Nexus does — every ticket, every agent spawn, every memory write — is keyed to a company.
 
-## The two-class model
+## The company-class model
 
-Nexus splits the traditional company structure in two:
+The load-bearing split is between two execution classes — and a third class sits above them. Nexus splits the traditional company structure in two:
 
 ```
 Traditional company = domain teams + engineering department
@@ -14,6 +14,8 @@ Nexus = domain companies (context, strategy, decomposition)
 ```
 
 The rationale: when you scale to many products, you don't want N redundant engineering departments. You want N domain teams plus **one** engineering craft company that serves them all.
+
+Above both sits the **governance** class — the holding company (Nexus Holdings today) that owns the others, allocates resources, and decides what should exist. Domain and craft are *what runs*; governance is *what directs*. See [Company classes](two-class-companies.md) for all three.
 
 ### Domain companies
 
@@ -88,7 +90,7 @@ flowchart TD
 
 Holdings doesn't dispatch tickets — it owns the children. Children dispatch independently. The dotted arrows show the typical flow: domain companies (left side) dispatch tickets to the shared craft companies (bottom).
 
-See [Two-class companies](two-class-companies.md) for the load-bearing split between domain and craft, and the rationale.
+See [Company classes](two-class-companies.md) for the load-bearing split between domain and craft, and the rationale.
 
 ## Lifecycle
 
@@ -103,7 +105,7 @@ See [Two-class companies](two-class-companies.md) for the load-bearing split bet
 
 - [Tickets](tickets.md) — what gets executed
 - [Heartbeat](heartbeat.md) — the dispatch mechanism
-- [Two-class companies](two-class-companies.md) — the domain/craft split, in depth
+- [Company classes](two-class-companies.md) — the domain/craft split, in depth
 - [Agent Catalog](../components/agent-catalog.md) — the roster a company can spawn from
 - [Nexus Core](../components/nexus-core.md) — the runtime that backs company state
 - [Create a Company](../guides/create-a-company.md) — operational guide

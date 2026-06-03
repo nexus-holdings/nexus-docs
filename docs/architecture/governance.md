@@ -8,6 +8,9 @@
   <span>Owner: Platform</span>
 </div>
 
+!!! note "Two senses of one word"
+    **Governance** names a *behaviour* — directing and judging work — and it shows up in two places. This page is the **governance layer**: the substrate of primitives (evals, postmortems, ADRs, contracts) that answers *"was the work good?"*, distributed across components with no central daemon. A **governance-class company** (e.g. Nexus Holdings) is an *instance* that operates at this layer and additionally does strategy, allocation, approvals, and company spawning — see [Company classes](../concepts/two-class-companies.md) and [ADR-045](../concepts/decisions-index.md). The layer is the behaviour; a governance company is an actor that performs it.
+
 ## What it does
 
 The governance layer turns observed work into structured judgments. Four primitives:

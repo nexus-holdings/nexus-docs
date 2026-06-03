@@ -175,7 +175,7 @@ The provisioning script does not yet have a first-class `--type craft` flag — 
 
 ## See also
 
-- [Two-Class Companies](../concepts/two-class-companies.md) — the domain/craft distinction in depth
+- [Company classes](../concepts/two-class-companies.md) — the domain/craft distinction in depth
 - [Companies](../concepts/companies.md) — the concept page
 - [Paperclip API — Companies](../reference/api-paperclip.md#companies) — endpoint reference
 - [Create an Agent](create-an-agent.md) — staffing a new role on top of the roster
