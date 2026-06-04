@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-05-19</span>
+  <span>Updated 2026-06-04</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -18,7 +18,7 @@ A Python MCP server that wraps Nexus's other components (Paperclip, MemPalace, t
 | **Language** | Python 3.11+ (uv-managed) |
 | **Entry point** | `nexus_mcp/server.py` |
 | **Install** | `claude mcp add nexus -- ~/Projects/nexus/nexus-mcp/.venv/bin/python -m nexus_mcp.server` |
-| **Tool count** | 12 (as of 2026-05-19) |
+| **Tool count** | 14 (as of 2026-06-04) |
 
 ## Design philosophy: compound tools, not thin wrappers
 
@@ -28,7 +28,7 @@ This is the rule that shapes everything in the server:
 
 Why: token efficiency. A single `nexus_status` tool call replaces ~12 individual API fetches, condensing them into one result the agent can scan in a single prompt cycle. The compound operations also enforce a consistent shape — agents don't have to remember which combination of Paperclip queries adds up to "all stuck work."
 
-## The 12 tools
+## The 14 tools
 
 | Tool | Purpose | Side effects |
 |---|---|---|
@@ -44,6 +44,8 @@ Why: token efficiency. A single `nexus_status` tool call replaces ~12 individual
 | `performance_report` | Aggregated metrics — performance records from PostgreSQL | None |
 | `trigger_routine` | Manually trigger a routine by name across all companies | Runs routine |
 | `manage_company` | Company lifecycle — archive, activate, list archived | Updates Paperclip |
+| `plugin_tools` | List every agent tool registered by installed Paperclip plugins — names, descriptions, parameter schemas | None (read) |
+| `call_plugin_tool` | Execute a namespaced plugin tool (governance pipeline, craft dispatch, contracts, memory) with a host-validated run context | Whatever the tool does |
 
 Roughly half are read-only audit tools; the other half mutate state (create issues, dispatch work, store decisions, trigger routines, archive companies).
 

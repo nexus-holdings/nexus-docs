@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-05-19</span>
+  <span>Updated 2026-06-04</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -119,11 +119,12 @@ Counters written to the metrics DB on every operation:
 
 ```json
 {
-  "paperclipDbPort": 54329
+  "paperclipDbPort": 54329,
+  "enabled": true
 }
 ```
 
-A single setting: the embedded Postgres port. Defaults to `54329` (Paperclip's standard) — override only if running multiple Paperclip instances on the same host.
+Two settings: the embedded Postgres port (defaults to `54329`, Paperclip's standard — override only when running multiple instances), and the **`enabled` feature flag**. The plugin loads either way, but only creates its tables and registers its tools when enabled — via this config or the `PAPERCLIP_CONTRACTS_ENABLED` env var. Both switches work; instance config is preferred (no process-environment edit needed).
 
 ## Install
 

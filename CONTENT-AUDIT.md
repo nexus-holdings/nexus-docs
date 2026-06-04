@@ -104,3 +104,8 @@ Fix items 1–4 immediately (small targeted edits, ~15 min). The unverified item
 | `tickets-flow.svg` | `concepts/tickets.md` | Mermaid with overlapping `escalate` self-loop + `reject` backward arrow | Hand-routed state diagram; happy path along top; blocked off-path; reject + unblock route through margins; escalate dropped (prose says it's manual-convention only) |
 
 Build status: clean except for a forward link to `architecture/substrate-vs-flywheels.md` (Chunk 3 of Phase A — expected).
+| components/plugins/agora.md | NEW 2026-06-04 | paperclip-plugin-agora source (manifest, tools, UI) + ADR-045/046 | rewritten | verified against live install |
+| roadmap.md | 2026-06-04 | spawn pipeline + agora + cockpit-contracts-views statuses vs live platform state | status updates | verified (live E2E runs 2026-06-03/04) |
+| components/plugins/contracts.md | 2026-06-04 | contracts plugin src (enabled flag, worker.ts) | config section update | verified against live config |
+| components/nexus-mcp.md | 2026-06-04 | nexus_mcp/server.py (14 tools) | tool table update | verified against source |
+| components/plugins/index.md | 2026-06-04 | live plugin inventory (5 ready) | added agora row | verified against /api/plugins |

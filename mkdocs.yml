@@ -95,6 +95,7 @@ nav:
       - Plugins:
           - Overview: components/plugins/index.md
           - ACP: components/plugins/acp.md
+          - Agora: components/plugins/agora.md
           - Contracts: components/plugins/contracts.md
           - Craft Dispatch: components/plugins/craft-dispatch.md
           - Memory: components/plugins/memory.md

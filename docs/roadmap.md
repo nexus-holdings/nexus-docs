@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-06-03</span>
+  <span>Updated 2026-06-04</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -25,11 +25,11 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 
 | Theme | 🟢 | 🟡 | 🔵 | ⚪ | Headline |
 |---|:--:|:--:|:--:|:--:|---|
-| [1 · Multi-company coordination](#1-multi-company-coordination) | 3 | — | 2 | 2 | Three company classes; first craft company is live; governance spawn pipeline is accepted (ADR-045) |
+| [1 · Multi-company coordination](#1-multi-company-coordination) | 4 | — | 1 | 2 | Three company classes with a shared class register; the governance spawn pipeline is live end-to-end (ADR-045/046) |
 | [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
 | [3 · Execution model & quality](#3-execution-model-quality) | 1 | — | 1 | — | Ticket flags are deterministic; formalising the implicit ticket contract is the remainder |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
-| [5 · Operator tooling](#5-operator-tooling) | 2 | 1 | 1 | — | Routine registration is live; Cockpit is being rebuilt as the agora governance plugin |
+| [5 · Operator tooling](#5-operator-tooling) | 3 | 1 | — | — | The agora governance console is installed (specs, children, contracts); operator-view parity with the old Cockpit is the remainder |
 | [6 · Scaling & resilience](#6-scaling-resilience) | 1 | 1 | 2 | 1 | Concurrency is held at a Phase-1 brake, gated on observability |
 | [7 · Learning loop & evals](#7-learning-loop-evals) | — | — | 1 | 1 | Every postmortem should mint an eval; expanding that surface |
 
@@ -45,23 +45,23 @@ How the holding company decomposes into domain companies (which own a problem sp
 |---|---|
 | **Status** | 🟢 Shipped |
 | **Integrates** | [Company classes](concepts/two-class-companies.md), [Companies](concepts/companies.md) |
-| **Source** | ADR-032, ADR-033 |
+| **Source** | ADR-032, ADR-033, ADR-046 |
 | **Depends on** | — |
 | **Next step** | Finish migrating residual engineer roles out of domain companies into the Engineering craft (restructure Phases B–E) |
 
-Three classes: domain companies (Aurelius, Lighthouse) own context and decompose goals into tickets; craft companies execute statelessly; the governance company (Nexus Holdings) directs the whole. This is the organising principle the rest of the substrate rolls up to. The model is accepted and live; the physical restructuring of older companies is the in-flight remainder.
+Three classes: domain companies (Aurelius, Lighthouse) own context and decompose goals into tickets; craft companies execute statelessly; the governance company (Nexus Holdings) directs the whole. This is the organising principle the rest of the substrate rolls up to. Class and lineage are recorded in a shared [class register](concepts/two-class-companies.md#where-class-lives) (ADR-046) written at company birth and readable platform-wide. The model is accepted and live; the physical restructuring of older companies is the in-flight remainder.
 
 ### Company spawn pipeline (governance)
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | Governance plugin ([agora](#governance-plugin-agora), Theme 5), [Craft Dispatch plugin](components/plugins/craft-dispatch.md), [Contracts plugin](components/plugins/contracts.md) |
-| **Source** | ADR-045 (accepted) |
+| **Source** | ADR-045, ADR-046 |
 | **Depends on** | Company-class model; canonical provisioning (`provision_company.py`) |
-| **Next step** | Finish the `create_child_company` stub against canonical provisioning; wire delegation through dispatch + contracts |
+| **Next step** | Governance oversight of descendants' contracts; guardrails (budgets, sprawl monitoring) before any autonomous operation |
 
-The codified path for the governance class to *grow the org chart*: a spec arrives, the C-suite drafts an implementation proposal, a human approves, and the governance company spawns child companies and delegates the initial work under contracts. ADR-045 is accepted; a working scaffold (agora) exists with the spec lifecycle and 21 passing tests, but the spawn step is still a stub. Sits above flat-dispatch — genesis, not routine routing.
+The codified path for the governance class to *grow the org chart*, now live end-to-end: a spec arrives, the C-suite drafts an implementation proposal, a **human approves** (the gate is mandatory), and the governance company spawns the child through canonical provisioning and delegates the initial work under contracts. The spawn is idempotent on the spec — replays can never double-create — and the spec that justified the company also defines it: its class and lineage land in the class register, its **agents carry the spec as their mandate**, and its **first project is the spec's work**, with the repo bound as the workspace. Sits above flat-dispatch — genesis, not routine routing.
 
 ### Cross-company dispatch
 
@@ -249,23 +249,23 @@ The dispatch loop that wakes each company, checks its inbox, and spawns agents o
 |---|---|
 | **Status** | 🟡 In flight |
 | **Integrates** | Paperclip plugin surface, governance company, [nexus-mcp](components/nexus-mcp.md), [Contracts](components/plugins/contracts.md) + [Craft Dispatch](components/plugins/craft-dispatch.md) |
-| **Source** | ADR-033 (Cockpit → Platform merge), ADR-045 (spawn pipeline) |
+| **Source** | ADR-033 (Cockpit → Platform merge), ADR-045 (spawn pipeline), ADR-046 (class register) |
 | **Depends on** | — |
-| **Next step** | Adopt the agora scaffold on Linux; conform it to canonical primitives (drop REST shim, finish spawn against `provision_company.py`, delegate via dispatch/contracts); reach Cockpit parity on the operator views |
+| **Next step** | Reach Cockpit parity on the operator views (metrics, active companies, live transcript); governance oversight of descendants' contracts |
 
-The standalone Cockpit is [archived](components/cockpit.md); its replacement is a plugin hosted inside the governance company. That plugin is **agora** — a working v0.2 scaffold (SDK manifest, spec lifecycle, 3 tools, 5 UI slots, 21 passing tests) that also implements the [spawn pipeline](#company-spawn-pipeline-governance) above. Same operator features, hosted in-platform, no parallel service to maintain. Two gaps remain: the operator views aren't yet at Cockpit parity (metrics, active companies, live transcript), and the `create_child_company` spawn step is still a stub.
+The standalone Cockpit is [archived](components/cockpit.md); its replacement is **[agora](components/plugins/agora.md)** — installed and live in the governance company. It implements the full [spawn pipeline](#company-spawn-pipeline-governance): four agent tools (`list_specs`, `propose_implementation`, `create_child_company`, `delegate_spec`), the spec lifecycle with audit trail, and a governance console (specs with approve/reject, children with class + lineage detail, contracts with criteria checklists). Class and lineage read from the shared class register; contracts compose through the Contracts plugin's own tools rather than reimplementing them. The remaining gap is operator-view parity with the old Cockpit.
 
 ### Cockpit contracts views
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
-| **Integrates** | [Contracts plugin](components/plugins/contracts.md), Governance plugin (agora) |
+| **Status** | 🟢 Shipped |
+| **Integrates** | [Contracts plugin](components/plugins/contracts.md), Governance plugin ([agora](components/plugins/agora.md)) |
 | **Source** | ADR-043 (Phase 1 build) |
 | **Depends on** | Governance plugin (agora) |
-| **Next step** | List + detail views: filter by company/status/backend; show scope, criteria, terms, linked issues, activity |
+| **Next step** | Governance oversight: surface *descendants'* contracts in the governance console (today each console lists only contracts where the viewing company is a party) |
 
-The contracts primitive has no operator UI yet. These views ride on the Governance plugin (agora) operator surface.
+The agora governance console lists a company's contracts with expandable detail: parties, scope, acceptance criteria as a checklist with verification timestamps, linked issues with their roles, and lifecycle dates. The known gap is visibility of contracts *between* child companies — the governance company is not a party to those, so they don't appear in its view yet.
 
 ### Routine registration wiring
 

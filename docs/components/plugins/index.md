@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-05-19</span>
+  <span>Updated 2026-06-04</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -39,13 +39,14 @@ Plugins declare capabilities up-front in their manifest. The host enforces these
 
 This is the substrate's way of making plugins *legible to operators* — a glance at the manifest tells you what surface area a plugin touches.
 
-## The four canonical plugins
+## The five canonical plugins
 
 These ship with Nexus and implement most of the operational surface:
 
 | Plugin | Page | What it does |
 |---|---|---|
 | **ACP Runtime** | [acp](acp.md) | Spawn coding agents (Claude Code, Codex, Gemini, OpenCode) as subprocesses over stdio; manage 1:N thread-bound sessions for chat platforms |
+| **Agora** | [agora](agora.md) | The governance console + spawn pipeline — specs, human-gated approval, company spawning, delegation under contracts. Implements [ADR-045/046](../../concepts/decisions-index.md). |
 | **Contracts** | [contracts](contracts.md) | First-class inter-company contract primitive — lifecycle, acceptance criteria verification, issue linkage. Implements [ADR-043](../../concepts/decisions-index.md). |
 | **Craft Dispatch** | [craft-dispatch](craft-dispatch.md) | Cross-company ticket bridge — domain companies dispatch engineering work to craft companies (e.g. Nexus Engineering); flow-back updates source ticket on completion |
 | **Memory** | [memory](memory.md) | Agent-facing tools for reading and writing [Nexus Memory](../nexus-memory.md) — `memory_retrieve`, `memory_search`, `memory_remember`, `memory_wake_up`, `memory_status` |
