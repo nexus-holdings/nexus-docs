@@ -29,10 +29,11 @@ The walked example below provisions a **domain** company (template `product`). D
 ## 1. Pick name + mission
 
 ```bash
-# what this is — pick a slug-safe name and a one-line mission
+# what this is — pick a slug-safe name, a one-line mission, and the taxonomy class
 export COMPANY_NAME="Acme Demo"
 export COMPANY_MISSION="A throwaway domain company used to validate the provisioning flow"
-export COMPANY_TYPE=product   # product | internal | strategic
+export COMPANY_TYPE=product   # product | internal | strategic — the staffing/feature template
+export COMPANY_CLASS=domain   # governance | domain | craft — the taxonomy (required, never defaulted)
 
 # verification: confirm the slugify outcome
 python3 -c "import re; n='$COMPANY_NAME'.lower(); print(re.sub(r'^-|-$','', re.sub(r'[^a-z0-9]+','-', n)))"
@@ -51,9 +52,10 @@ uv run python scripts/provision_company.py \
     --name "$COMPANY_NAME" \
     --mission "$COMPANY_MISSION" \
     --type "$COMPANY_TYPE" \
+    --class "$COMPANY_CLASS" \
     --dry-run
 
-# verification: output should contain "*** DRY RUN ***" and seven numbered step lines
+# verification: output should contain "*** DRY RUN ***" and nine numbered step lines
 ```
 
 If anything in the dry-run looks wrong (slug, mission, template type, MCP servers, staff roles), fix it before running for real.
@@ -61,24 +63,27 @@ If anything in the dry-run looks wrong (slug, mission, template type, MCP server
 ## 3. Run it for real
 
 ```bash
-# what this is — actually create the repo, Paperclip company, CLAUDE.md, and staff agents
+# what this is — actually create the repo, Paperclip company, class record, CLAUDE.md, and staff agents
 uv run python scripts/provision_company.py \
     --name "$COMPANY_NAME" \
     --mission "$COMPANY_MISSION" \
-    --type "$COMPANY_TYPE"
+    --type "$COMPANY_TYPE" \
+    --class "$COMPANY_CLASS"
 
-# verification: final block prints "Company provisioned: <name>", a repo URL, and a Paperclip URL
+# verification: final block prints "Company provisioned: <name>", the class, a repo URL, and a Paperclip URL
 ```
 
-The seven steps the script runs:
+The nine steps the script runs:
 
 1. Create the GitHub repo from `nexus-holdings/company-template` and clone to `~/Projects/nexus-holdings/<slug>/`
 2. Customize wiki + write `wiki/decisions/001-company-charter.md`
 3. Populate `CLAUDE.md` from the template-type config
 4. Register the company in Paperclip (`POST /api/companies`)
-5. Auto-staff persistent agents (Company Lead, Tech Lead — depending on type)
-6. Write `.mcp.json` with `github`, `filesystem`, and optionally `paperclip` MCP servers
-7. Validate MCP server commands resolve in `PATH`
+5. Record the company's class in the [class register](../concepts/two-class-companies.md#where-class-lives) — the taxonomy is chosen at birth, never inferred later
+6. Auto-staff persistent agents (Company Lead, Tech Lead — depending on type)
+7. Bootstrap the per-company heartbeat routine
+8. Write `.mcp.json` with `github`, `filesystem`, and optionally `paperclip` MCP servers
+9. Validate MCP server commands resolve in `PATH`
 
 ## 4. Verify the company appears in Paperclip
 
@@ -161,7 +166,7 @@ If you pick `--type strategic` (the closest current proxy for "craft" in the pro
 | MCP servers | github + filesystem + paperclip | github + filesystem + paperclip |
 | Issue origin | Files its own work | Receives dispatched work from domain companies via [craft-dispatch](../components/plugins/craft-dispatch.md) |
 
-The provisioning script does not yet have a first-class `--type craft` flag — track its addition in the catalog. For now, use `strategic` and rely on the craft-dispatch plugin to route work in.
+The taxonomy and the template are **orthogonal flags**: `--class craft` declares what the company *is* (recorded in the class register at birth), while `--type` picks the staffing/feature template (`strategic` remains the closest template for a craft company's persistent-leads-only shape). The craft-dispatch plugin routes work in based on the class.
 
 ## Troubleshooting
 

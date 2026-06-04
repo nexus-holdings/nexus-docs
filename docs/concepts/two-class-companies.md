@@ -61,6 +61,16 @@ Domain and craft are the *horizontal* split — they divide the work of running 
 
 The approval gate is mandatory: agents draft, a human signs off. The spawn pipeline sits *above* day-to-day dispatch — it's how the org chart **grows**, not how routine tickets route. The parent/child link a spawn creates is **lineage** (who spawned whom), not a reporting line — routing stays flat. [ADR-045](decisions-index.md) is the full decision; the [agora](../architecture/governance.md) plugin implements it.
 
+## Where class lives
+
+A class is only useful if every part of the substrate can *read* it. Class and lineage are therefore **substrate primitives** with exactly one home: a shared **class register** — a single table next to the control plane's own company records, following the same blessed-primitive pattern as [contracts](contracts.md). Three writers, one truth:
+
+- **Provisioning** records the class at company birth (the `--class` flag is required — the taxonomy is a decision, never an inference).
+- The **spawn pipeline** records a child's class and its parent edge in the same register.
+- **Governance self-registration** marks a company as governance-class.
+
+Everything else — dispatch validation ("is this target really a craft company?"), taxonomy views, class-aware routing if it ever comes — *reads* the register. Charters describe a company in prose; the register is the queryable fact. One fact, one home: company identity and status stay with the control plane, class and lineage live in the register, and nothing keeps a private copy of either ([ADR-046](decisions-index.md)).
+
 ## The interface: well-formed tickets
 
 <img src="../../assets/diagrams/two-class-interface.svg" alt="Two-class company interface — Domain company on the left, Craft company on the right, with a brass Well-formed Ticket node (the schema-enforced interface) between them. Domain decomposes into ticket, dispatched to craft, craft executes producing Output. A dashed flow-back arrow returns from Output to Domain.">
