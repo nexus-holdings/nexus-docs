@@ -115,13 +115,13 @@ The company-class model only compounds when domains have several specialised cra
 
 | | |
 |---|---|
-| **Status** | 🔵 v1 live |
+| **Status** | 🟢 Shipped |
 | **Integrates** | [Contracts](concepts/contracts.md), cross-company dispatch, [Governance layer](architecture/governance.md) |
 | **Source** | ADR-047 (accepted) |
 | **Depends on** | Contracts primitive (shipped), goal-weight register (shipped) |
-| **Next step** | v2: governance goal-pair review + weight-distribution audit on the oversight surface |
+| **Next step** | Live use: watch the paradox-watch and inflation flags as contracts accumulate; weight_revision approval flow when first needed |
 
-When two companies work under a contract, each plans with the *other's* objectives in view — instead of ping-ponging, each optimising the same point in opposite directions. v1 shipped: every company is born with spec-derived **weighted goals** (1–5 ordinal leeway rubric: lower flexes first, weights set by the human-gated spec, extremes governance-gated thereafter); contracts bind both sides' goals; a `get_coordination_context` tool gives agents the read-before-you-act planning view. A conflict between two weight-5 goals with no trade-off space is a *paradox* — never agent-resolved, always escalated to the governance ancestor as a logged issue. Recurring escalations on one goal flag the goal itself for refinement.
+When two companies work under a contract, each plans with the *other's* objectives in view — instead of ping-ponging, each optimising the same point in opposite directions. v1 shipped: every company is born with spec-derived **weighted goals** (1–5 ordinal leeway rubric: lower flexes first, weights set by the human-gated spec, extremes governance-gated thereafter); contracts bind both sides' goals; a `get_coordination_context` tool gives agents the read-before-you-act planning view. A conflict between two weight-5 goals with no trade-off space is a *paradox* — never agent-resolved, always escalated to the governance ancestor as a logged issue. Recurring escalations on one goal flag the goal itself for refinement. v2 shipped too: the governance console's **Goal Review** tab audits weight distributions across the org (inflation, unweighted, goalless flags) and reviews every open contract's goal pair, flagging 5-vs-5 pairs as paradox watch.
 
 ---
 
@@ -151,11 +151,11 @@ Making ticket-driven execution legible and verifiable, so dispatched work succee
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | [Craft Dispatch plugin](components/plugins/craft-dispatch.md), Nexus Engineering |
 | **Source** | ADR-038 (referenced from ADR-037, not yet written) |
 | **Depends on** | — |
-| **Next step** | Draft ADR-038 to codify the acceptance-criteria format, context shape, and priority enum a craft company can rely on |
+| **Next step** | Hold the shape: changes are ADR-level acts (ADR-038, accepted) |
 
 Nexus Engineering currently relies on an *implicit* contract for what a well-formed inbound ticket looks like. ADR-038 will make that explicit so dispatched tickets can be schema-validated — which in turn unblocks downstream evals against a known shape. The schema is implicit in the dispatch tool's `spec` parameter today; the standalone record is missing.
 
@@ -251,7 +251,7 @@ The dispatch loop that wakes each company, checks its inbox, and spawns agents o
 | **Integrates** | Paperclip plugin surface, governance company, [nexus-mcp](components/nexus-mcp.md), [Contracts](components/plugins/contracts.md) + [Craft Dispatch](components/plugins/craft-dispatch.md) |
 | **Source** | ADR-033 (Cockpit → Platform merge), ADR-045 (spawn pipeline), ADR-046 (class register) |
 | **Depends on** | — |
-| **Next step** | Reach Cockpit parity on the operator views (metrics, active companies, live transcript); governance oversight of descendants' contracts |
+| **Next step** | Reach Cockpit parity on the operator views (metrics, active companies, live transcript) — descendants'-contracts oversight and the Goal Review audit are live |
 
 The standalone Cockpit is [archived](components/cockpit.md); its replacement is **[agora](components/plugins/agora.md)** — installed and live in the governance company. It implements the full [spawn pipeline](#company-spawn-pipeline-governance): four agent tools (`list_specs`, `propose_implementation`, `create_child_company`, `delegate_spec`), the spec lifecycle with audit trail, and a governance console (specs with approve/reject, children with class + lineage detail, contracts with criteria checklists). Class and lineage read from the shared class register; contracts compose through the Contracts plugin's own tools rather than reimplementing them. The remaining gap is operator-view parity with the old Cockpit.
 

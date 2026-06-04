@@ -117,3 +117,5 @@ Build status: clean except for a forward link to `architecture/substrate-vs-flyw
 | concepts/decisions-index.md | 2026-06-04 | ADR-047 | +047 row | verified against docs repo |
 | index.md | 2026-06-04 | live platform capabilities | lede made concrete, card blurbs sharpened, diagram caption fixed (said left/right, diagram is bottom/top), primitives list extended (contracts, goals, spawn pipeline) | verified against live platform |
 | architecture/substrate-vs-framework.md | 2026-06-04 | (renamed from substrate-vs-flywheels.md) | title now matches the page's actual argument — substrate vs FRAMEWORK; flywheels reframed as the complement, not the contrast; all internal refs updated | verified, build clean |
+| roadmap.md | 2026-06-05 | goal-aware v2 ship (agora PR #13), ADR-038 acceptance, agora card next-step | status updates | verified against live plugin + docs repo |
+| concepts/decisions-index.md | 2026-06-05 | ADR-038 | +038 row | verified against docs repo |
