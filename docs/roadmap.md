@@ -115,13 +115,13 @@ The company-class model only compounds when domains have several specialised cra
 
 | | |
 |---|---|
-| **Status** | ⚪ Exploratory |
+| **Status** | 🔵 v1 live |
 | **Integrates** | [Contracts](concepts/contracts.md), cross-company dispatch, [Governance layer](architecture/governance.md) |
-| **Source** | Coordination design (directional) |
-| **Depends on** | Contracts primitive (shipped) |
-| **Next step** | Prototype objective-sharing at contract formation; define the paradox-detection and human-escalation path |
+| **Source** | ADR-047 (accepted) |
+| **Depends on** | Contracts primitive (shipped), goal-weight register (shipped) |
+| **Next step** | v2: governance goal-pair review + weight-distribution audit on the oversight surface |
 
-When two companies form an agreement, each should be aware of the *other's* objectives — so they plan the work with both goals in mind rather than ping-ponging, each optimising the same point in opposite directions. A genuine stalemate means the objectives are *paradoxical*; those escalate to a human rather than looping forever. The aim is coordination that lets the substrate grow its rules and evals dynamically instead of descending into chaos. Directional — no committed design yet.
+When two companies work under a contract, each plans with the *other's* objectives in view — instead of ping-ponging, each optimising the same point in opposite directions. v1 shipped: every company is born with spec-derived **weighted goals** (1–5 ordinal leeway rubric: lower flexes first, weights set by the human-gated spec, extremes governance-gated thereafter); contracts bind both sides' goals; a `get_coordination_context` tool gives agents the read-before-you-act planning view. A conflict between two weight-5 goals with no trade-off space is a *paradox* — never agent-resolved, always escalated to the governance ancestor as a logged issue. Recurring escalations on one goal flag the goal itself for refinement.
 
 ---
 

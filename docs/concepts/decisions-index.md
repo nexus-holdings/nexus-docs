@@ -53,6 +53,7 @@ Postmortems (e.g. ADR-031, ADR-035) are filed *as ADRs* by deliberate convention
 |---|---|---|
 | **045** | [Company Spawn Pipeline (Governance Class)](#) | Accepted — spec → proposal → mandatory human approval → spawn → delegate; idempotent on the spec; lineage ≠ routing. Implemented by the governance plugin. |
 | **046** | [Company Class & Lineage as Substrate Primitives](#) | Accepted — class + parent lineage live in a single shared [class register](two-class-companies.md#where-class-lives), written at birth/spawn/registration, readable platform-wide. Amends ADR-045 §6. |
+| **047** | [Goal-Aware Coordination](#) | Accepted — companies plan with both parties' objectives in view: spec-derived weighted goals (1–5 leeway rubric) join the company definition, contracts bind goals on both sides, a coordination-context read precedes any contract action, and goal paradoxes escalate to the governance ancestor instead of looping. |
 
 ### Cost, capacity, and quota
 

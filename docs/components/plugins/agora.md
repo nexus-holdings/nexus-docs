@@ -53,7 +53,7 @@ The spec that justifies a company also *defines* it. Approval and spawn yield, i
 | `list_specs` | Read the spec queue for a governance company (filterable by status) |
 | `propose_implementation` | Attach an implementation proposal — which companies to create or reuse, and the delegation plan |
 | `create_child_company` | Spawn an approved spec's child: company record, class + lineage, provisioning hand-off. Idempotent on the spec. |
-| `delegate_spec` | Execute the delegation: contract per child (via the Contracts plugin), initial work issue, fulfillment link, spec → `delegated`. Idempotent at two levels. |
+| `delegate_spec` | Execute the delegation: contract per child (via the Contracts plugin) — binding the governance company's goals on the client side and the child's spec-derived goals on the vendor side — initial work issue, fulfillment link, spec → `delegated`. Idempotent at two levels. |
 
 Cross-plugin composition (delegation creating contracts) forwards the **caller's own runContext**, so downstream authorization — contracts' "the caller must be client or vendor" rule — always sees the real principal.
 

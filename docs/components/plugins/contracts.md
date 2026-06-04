@@ -80,15 +80,16 @@ This is what makes "what's blocking contract X?" answerable — query the fulfil
 
 ## Tools exposed to agents
 
-The plugin registers five tools via `agent.tools.register`:
+The plugin registers six tools via `agent.tools.register`:
 
 | Tool | Purpose |
 |---|---|
-| `create_contract` | New contract between client + vendor companies, with structured acceptance criteria |
+| `create_contract` | New contract between client + vendor companies, with structured acceptance criteria; optionally binds each side's **goals** (references only — ownership validated per side) |
 | `list_contracts` | Query contracts by company (matches client OR vendor side) or status |
 | `link_issue_to_contract` | Attach a `source` or `fulfillment` issue link |
 | `update_contract_status` | Manual transition (e.g. `active → terminated`); illegal transitions rejected |
 | `verify_acceptance_criterion` | Verify one criterion; auto-fulfills the contract when all are verified |
+| `get_coordination_context` | The goal-aware planning read: both parties' goals with live weights + rationales, alongside the criteria. Agents call this **before** filing, accepting, or amending work under a contract; only the two parties (or the chairman) may read it |
 
 ## Events emitted
 
