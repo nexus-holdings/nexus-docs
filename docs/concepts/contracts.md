@@ -54,6 +54,10 @@ flowchart LR
 
 A `draft` contract has zero fulfillment issues. A contract is `fulfilled` when *both* every fulfillment issue is `done` *and* every acceptance criterion is verified.
 
+## Contracts bind goals
+
+Since [ADR-047](decisions-index.md), a contract also records *which [goals](goal-aware-coordination.md) it serves on each side* — goal references in its terms, validated so a contract can only bind goals its parties own. This gives the acceptance criteria a sharper reading: they are the **agreed equilibrium**, the point where both parties' objectives were balanced at signing. Before acting under a contract, an agent reads the coordination context — both parties' goals with their live weights — and plans within both sets. See [Goal-Aware Coordination](goal-aware-coordination.md) for the full model (weight rubric, tension vs paradox, escalation).
+
 ## The lifecycle
 
 A contract moves through a small state machine:

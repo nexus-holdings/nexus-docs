@@ -109,3 +109,9 @@ Build status: clean except for a forward link to `architecture/substrate-vs-flyw
 | components/plugins/contracts.md | 2026-06-04 | contracts plugin src (enabled flag, worker.ts) | config section update | verified against live config |
 | components/nexus-mcp.md | 2026-06-04 | nexus_mcp/server.py (14 tools) | tool table update | verified against source |
 | components/plugins/index.md | 2026-06-04 | live plugin inventory (5 ready) | added agora row | verified against /api/plugins |
+| concepts/goal-aware-coordination.md | NEW 2026-06-04 | ADR-047 (accepted) + docs/conventions/goal-aware-coordination.md + live E2E (9 goals, 4 bound contracts, 3-principal tool exercise) | rewritten for site voice, example companies sanitized | verified against ADR + live platform |
+| concepts/contracts.md | 2026-06-04 | ADR-047 §4 (terms.goals, agreed-equilibrium reading) | added "Contracts bind goals" section | verified against contracts plugin v0.2.0 source |
+| guides/create-a-company.md | 2026-06-04 | provision_company.py (11 steps, --goals-json) | step list 10→11 | verified against nexus-core main |
+| architecture/governance.md | 2026-06-04 | ADR-047 §§6-8 (paradox escalation, weight gate, refinement loop) | extended Contracts section | verified against ADR |
+| getting-started/cheat-sheet.md | 2026-06-04 | ADR-047 terms | +4 glossary rows (goal weight, coordination context, tension, paradox) | verified against concept page |
+| concepts/decisions-index.md | 2026-06-04 | ADR-047 | +047 row | verified against docs repo |

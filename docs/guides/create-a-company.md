@@ -73,7 +73,7 @@ uv run python scripts/provision_company.py \
 # verification: final block prints "Company provisioned: <name>", the class, a repo URL, and a Paperclip URL
 ```
 
-The ten steps the script runs:
+The eleven steps the script runs:
 
 1. Create the GitHub repo from `nexus-holdings/company-template` and clone to `~/Projects/nexus-holdings/<slug>/`
 2. Customize wiki + write `wiki/decisions/001-company-charter.md`
@@ -82,9 +82,10 @@ The ten steps the script runs:
 5. Record the company's class in the [class register](../concepts/two-class-companies.md#where-class-lives) — the taxonomy is chosen at birth, never inferred later
 6. Auto-staff persistent agents (Company Lead, Tech Lead — depending on type); when the company was spawned from a spec, `--mandate` threads the spec's content into every agent's capabilities
 7. Create the company's first project — the reason the company exists (`--project-name`, the spec title for spawned companies), with the cloned repo bound as its primary workspace
-8. Bootstrap the per-company heartbeat routine
-9. Write `.mcp.json` with `github`, `filesystem`, and optionally `paperclip` MCP servers
-10. Validate MCP server commands resolve in `PATH`
+8. Create the company's spec-derived [weighted goals](../concepts/goal-aware-coordination.md) — a single primary goal at weight 5 by default, or the spec's declared goals via `--goals-json`; weights + rationales land in the goal-weight register
+9. Bootstrap the per-company heartbeat routine
+10. Write `.mcp.json` with `github`, `filesystem`, and optionally `paperclip` MCP servers
+11. Validate MCP server commands resolve in `PATH`
 
 ## 4. Verify the company appears in Paperclip
 

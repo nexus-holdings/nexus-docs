@@ -63,6 +63,10 @@ Glossary of Nexus terminology, intentionally compressed. Each entry links to the
 | **[Postmortem](../concepts/postmortems.md)** | Forensic record of a ticket failure or odd completion; feeds the gap-scan. |
 | **[Gap-scan](../concepts/postmortems.md)** | Keyword-match a postmortem's root cause against eval dimensions; surfaces missing evals. |
 | **[Self-improvement](../concepts/two-class-companies.md)** | The domain company that owns evals and cross-company metrics analysis. |
+| **[Goal weight](../concepts/goal-aware-coordination.md)** | Ordinal 1–5 leeway rubric on a company goal: 5 inviolable … 1 nice-to-have. Lower flexes first; no cross-party arithmetic. |
+| **[Coordination context](../concepts/goal-aware-coordination.md)** | The read an agent performs before acting under a contract: both parties' weighted goals plus the acceptance criteria. |
+| **[Tension](../concepts/goal-aware-coordination.md)** | Goal conflict with trade-off space — agents resolve it inside the criteria, lower weight first, amendments visible. |
+| **[Paradox](../concepts/goal-aware-coordination.md)** | Goal conflict with no trade-off space (canonically 5-vs-5). Never agent-resolved; escalates as a `goal_paradox` issue to the governance ancestor. |
 
 ## Infrastructure
 

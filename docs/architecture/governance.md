@@ -113,7 +113,9 @@ draft → active → fulfilled
 
 The Contracts plugin (`paperclip-plugin-contracts`) implements this lifecycle: a contract is drafted between two companies, becomes active once both commit, and auto-fulfills as its acceptance criteria are verified.
 
-See [ADR-043: Contracts as first-class primitives](../concepts/decisions-index.md) for the design rationale.
+Contracts are also where [goal-aware coordination](../concepts/goal-aware-coordination.md) attaches: each side's weighted goals are bound to the contract, agents read both sets before acting, and conflicts split into *tensions* (agents resolve inside the criteria — lower weight flexes first) and *paradoxes* (two inviolable goals, no trade-off space — **never agent-resolved**). Paradoxes land here, in the governance layer: an issue in the lowest common governance ancestor, tagged `goal_paradox`, resolved by the same designated human role that approves company spawns. Extreme goal-weight changes (to or from 1 or 5) pass through the same gate — and recurring escalations on one goal flag the *goal itself* for refinement, the postmortem discipline applied to objectives.
+
+See [ADR-043: Contracts as first-class primitives](../concepts/decisions-index.md) and ADR-047 (goal-aware coordination) for the design rationale.
 
 ## Why governance has to live at the substrate level
 
