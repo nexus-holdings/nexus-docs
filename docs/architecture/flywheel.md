@@ -157,7 +157,7 @@ The substrate gives you the observability to spot these (every transition is log
 
 ## See also
 
-- [Substrate vs. flywheels](substrate-vs-flywheels.md) — positioning vs. point-solution stacks
+- [Substrate vs. flywheels](substrate-vs-framework.md) — positioning vs. point-solution stacks
 - [Platform Layer](platform-layer.md) — what tracks state
 - [Execution Layer](execution-layer.md) — what runs the agents
 - [Memory Layer](memory-layer.md) — what persists between rotations

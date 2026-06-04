@@ -1,4 +1,4 @@
-# Substrate vs. Flywheels
+# Substrate vs. Framework
 
 <p class="lede">Nexus is a <strong>substrate</strong>, not a framework. This is a positioning claim, but it's also an architectural one — substrates and frameworks behave differently under sustained use, and the difference is what determines whether the system compounds or plateaus.</p>
 
@@ -14,7 +14,7 @@ Nexus is the part of the system that **persists across products**. Any vertical 
 
 This is not how most agentic systems are built. The default shape is "framework plus app" — a library you import, an application you build on top, and a fresh start every time you want a new product. The substrate-plus-flywheels shape is the alternative, and the rest of this page is the argument for why it wins under sustained use.
 
-## Substrate vs. framework
+## Side by side
 
 | Property | Framework | Substrate |
 |---|---|---|
@@ -28,9 +28,9 @@ The framework lives in your dependency graph. The substrate lives in your runtim
 
 Frameworks are *libraries* — you pull them in, you call their functions, you build on top, you own the app. Substrates are *systems* — they run, they have state, you build *into* them, and the system itself is what improves.
 
-## Pipeline vs. flywheel (recap)
+## Where flywheels fit (they're the complement, not the contrast)
 
-This page assumes you've read [The Flywheel](flywheel.md). The short version:
+Flywheels aren't the thing Nexus is *instead of* — they're what the substrate exists to carry. This page assumes you've read [The Flywheel](flywheel.md); the short version:
 
 - A **pipeline** turns input into output. It doesn't learn from running.
 - A **flywheel** turns input into output *and also turns itself into a better pipeline*. It compounds.

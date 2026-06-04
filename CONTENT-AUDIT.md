@@ -115,3 +115,5 @@ Build status: clean except for a forward link to `architecture/substrate-vs-flyw
 | architecture/governance.md | 2026-06-04 | ADR-047 §§6-8 (paradox escalation, weight gate, refinement loop) | extended Contracts section | verified against ADR |
 | getting-started/cheat-sheet.md | 2026-06-04 | ADR-047 terms | +4 glossary rows (goal weight, coordination context, tension, paradox) | verified against concept page |
 | concepts/decisions-index.md | 2026-06-04 | ADR-047 | +047 row | verified against docs repo |
+| index.md | 2026-06-04 | live platform capabilities | lede made concrete, card blurbs sharpened, diagram caption fixed (said left/right, diagram is bottom/top), primitives list extended (contracts, goals, spawn pipeline) | verified against live platform |
+| architecture/substrate-vs-framework.md | 2026-06-04 | (renamed from substrate-vs-flywheels.md) | title now matches the page's actual argument — substrate vs FRAMEWORK; flywheels reframed as the complement, not the contrast; all internal refs updated | verified, build clean |

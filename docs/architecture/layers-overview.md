@@ -56,7 +56,7 @@ If you find a code path where a lower layer reads from a higher layer, that's a 
 ## Where to dive next
 
 - Read [The Flywheel](flywheel.md) first if you want the *why* — the load-bearing thesis the four layers exist to support
-- Read [Substrate vs Flywheels](substrate-vs-flywheels.md) for the positioning — why Nexus is shaped as a substrate, not a framework
+- Read [Substrate vs Framework](substrate-vs-framework.md) for the positioning — why Nexus is shaped as a substrate, not a framework
 - Then drill into individual layers in any order:
   - [Platform Layer](platform-layer.md)
   - [Execution Layer](execution-layer.md)
@@ -68,5 +68,5 @@ If you're operationally minded and want to see what each layer *looks like* as c
 ## See also
 
 - [The Flywheel](flywheel.md) — the substrate-plus-flywheels thesis
-- [Substrate vs Flywheels](substrate-vs-flywheels.md) — why this shape vs alternatives
+- [Substrate vs Framework](substrate-vs-framework.md) — why this shape vs alternatives
 - [Components index](../components/paperclip.md) — what implements each layer

@@ -76,7 +76,7 @@ nav:
       - Cheat Sheet: getting-started/cheat-sheet.md
   - Architecture:
       - Layers Overview: architecture/layers-overview.md
-      - Substrate vs Flywheels: architecture/substrate-vs-flywheels.md
+      - Substrate vs Framework: architecture/substrate-vs-framework.md
       - The Flywheel: architecture/flywheel.md
       - Platform Layer: architecture/platform-layer.md
       - Execution Layer: architecture/execution-layer.md

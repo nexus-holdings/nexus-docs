@@ -16,7 +16,7 @@ Nexus is the persistent substrate that agents run on — a platform/execution/me
 
 ### Is Nexus a framework, a platform, or a service?
 
-A platform. The thesis is set out in [Substrate vs. Flywheels](architecture/substrate-vs-flywheels.md): Nexus is the part that persists, gets stronger every time a flywheel turns, and is reused across verticals. Frameworks are libraries you call into; Nexus is a substrate your work happens *on top of*, with state machines, a control plane, and an opinionated memory architecture.
+A platform. The thesis is set out in [Substrate vs. Framework](architecture/substrate-vs-framework.md): Nexus is the part that persists, gets stronger every time a flywheel turns, and is reused across verticals. Frameworks are libraries you call into; Nexus is a substrate your work happens *on top of*, with state machines, a control plane, and an opinionated memory architecture.
 
 ### How is Nexus different from LangChain / LlamaIndex / CrewAI?
 
