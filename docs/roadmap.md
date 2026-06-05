@@ -91,13 +91,15 @@ The first craft company — a stateless engineering execution engine. Receives s
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | Holdings governance, cross-company dispatch |
 | **Source** | ADR-033 (Phase 1b) |
 | **Depends on** | Nexus Engineering pattern proven |
-| **Next step** | Provision from the company template once the Engineering craft validates the dispatch loop |
+| **Next step** | First dispatched build: session & spend dashboard + runaway-execution alert (initial issue filed under NEXHOL-NEXOBS-0001) |
 
 A cross-cutting craft company that ensures every project has instrumentation, logging, alerting, and dashboards — working for the platform and all domain companies rather than being scoped to one. Specced, not yet provisioned.
+
+Provisioned 2026-06-05 through the live spawn pipeline — the first company born with a spec-declared weighted goals section (w5 observability, w4 runaway alerts, w2 minimal overhead). Delegation contract NEXHOL-NEXOBS-0001 is goal-bound on both sides.
 
 ### More craft companies (QA, Research, Editorial)
 
@@ -289,13 +291,15 @@ Capacity, cost, and the safety brakes around running more agents concurrently. S
 
 | | |
 |---|---|
-| **Status** | 🟡 In flight |
+| **Status** | 🟢 Shipped |
 | **Integrates** | Agent dispatch, Meridian (`:3456`) |
 | **Source** | ADR-028 |
 | **Depends on** | — |
-| **Next step** | Move from measurement to enforcement — switch multi-turn sessions to the 1-hour cache TTL by default |
+| **Next step** | Verify hit-rate improvement from performance records once execution re-enables |
 
 Measurement infrastructure for prompt-cache hit rates is built. Turning the findings into a default (1-hour TTL on multi-turn sessions) is the remaining step.
+
+Enforcement landed 2026-06-05: both spawn paths (nexus-core team spawner, ACP sessions) inject the extended-cache-ttl beta via ANTHROPIC_CUSTOM_HEADERS; default strategy is now 1hr per the ADR-028 break-even analysis.
 
 ### Session-limit mitigations
 
@@ -355,13 +359,15 @@ Turning failures into durable, reusable checks — the governance loop that make
 
 | | |
 |---|---|
-| **Status** | 🔵 Proposed |
+| **Status** | 🟢 Shipped |
 | **Integrates** | [Eval Registry](components/eval-registry.md), postmortem → ADR → eval loop |
 | **Source** | Governance loop |
 | **Depends on** | — |
-| **Next step** | Add eval dimensions for each newly-postmortemed failure class so the gap-scan has more to match against |
+| **Next step** | Keep minting dimensions per postmortem; calibrate the three new dimensions on the first scored runs |
 
 The `run-quality` eval exists; the work is broadening it. Every uncovered failure class is a missed learning loop, so each postmortem should mint a matching eval. This is the concrete expansion of that principle.
+
+v1.1.0 shipped 2026-06-05 — three dimensions minted from the cascade postmortems: coordination_adherence (ADR-047 protocol), loop_discipline (one ticket, one execution arc), config_health (valid tested config).
 
 ### Verification-skill family
 

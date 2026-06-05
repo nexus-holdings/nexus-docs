@@ -119,3 +119,4 @@ Build status: clean except for a forward link to `architecture/substrate-vs-flyw
 | architecture/substrate-vs-framework.md | 2026-06-04 | (renamed from substrate-vs-flywheels.md) | title now matches the page's actual argument — substrate vs FRAMEWORK; flywheels reframed as the complement, not the contrast; all internal refs updated | verified, build clean |
 | roadmap.md | 2026-06-05 | goal-aware v2 ship (agora PR #13), ADR-038 acceptance, agora card next-step | status updates | verified against live plugin + docs repo |
 | concepts/decisions-index.md | 2026-06-05 | ADR-038 | +038 row | verified against docs repo |
+| roadmap.md | 2026-06-05 night | obs spawn (live pipeline), ADR-028 enforcement (nexus-core PR24/25, acp PR6), run-quality v1.1.0 | 3 cards → 🟢 | verified against live platform + merged PRs |
