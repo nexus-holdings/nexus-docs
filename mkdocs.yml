@@ -112,6 +112,7 @@ nav:
       - Memory Protocol: concepts/memory-protocol.md
       - Contracts: concepts/contracts.md
       - Goal-Aware Coordination: concepts/goal-aware-coordination.md
+      - Execution Guardrails: concepts/execution-guardrails.md
       - Evals: concepts/evals.md
       - Postmortems: concepts/postmortems.md
       - Decisions Index: concepts/decisions-index.md

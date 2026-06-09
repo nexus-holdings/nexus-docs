@@ -120,3 +120,4 @@ Build status: clean except for a forward link to `architecture/substrate-vs-flyw
 | roadmap.md | 2026-06-05 | goal-aware v2 ship (agora PR #13), ADR-038 acceptance, agora card next-step | status updates | verified against live plugin + docs repo |
 | concepts/decisions-index.md | 2026-06-05 | ADR-038 | +038 row | verified against docs repo |
 | roadmap.md | 2026-06-05 night | obs spawn (live pipeline), ADR-028 enforcement (nexus-core PR24/25, acp PR6), run-quality v1.1.0 | 3 cards → 🟢 | verified against live platform + merged PRs |
+| concepts/execution-guardrails.md | ADR-048/049, ADR-038 §5, acp plugin src (volume-counters, native-run-guard, merged-registry, merge-agent), Day-0 incident log (mileage plan) | rewrite | verified 2026-06-09 — five-layer model matches shipped code at acp v0.5.2; incident description sanitized (no testbed company names) |

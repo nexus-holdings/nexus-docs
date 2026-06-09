@@ -27,10 +27,10 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 |---|:--:|:--:|:--:|:--:|---|
 | [1 · Multi-company coordination](#1-multi-company-coordination) | 4 | — | 1 | 2 | Three company classes with a shared class register; the governance spawn pipeline is live end-to-end (ADR-045/046) |
 | [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
-| [3 · Execution model & quality](#3-execution-model-quality) | 1 | — | 1 | — | Ticket flags are deterministic; formalising the implicit ticket contract is the remainder |
+| [3 · Execution model & quality](#3-execution-model-quality) | 2 | — | — | — | The ticket contract is written (ADR-038) and completion is mechanically verified at the merge HEAD |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
 | [5 · Operator tooling](#5-operator-tooling) | 3 | 1 | — | — | The agora governance console is installed (specs, children, contracts); operator-view parity with the old Cockpit is the remainder |
-| [6 · Scaling & resilience](#6-scaling-resilience) | 1 | 1 | 2 | 1 | Concurrency is held at a Phase-1 brake, gated on observability |
+| [6 · Scaling & resilience](#6-scaling-resilience) | 2 | 1 | 2 | 1 | Guardrails are live and battle-tested; the first autonomous ticket merged verified on pilot night |
 | [7 · Learning loop & evals](#7-learning-loop-evals) | — | — | 1 | 1 | Every postmortem should mint an eval; expanding that surface |
 
 ---
@@ -155,11 +155,11 @@ Making ticket-driven execution legible and verifiable, so dispatched work succee
 |---|---|
 | **Status** | 🟢 Shipped |
 | **Integrates** | [Craft Dispatch plugin](components/plugins/craft-dispatch.md), Nexus Engineering |
-| **Source** | ADR-038 (referenced from ADR-037, not yet written) |
+| **Source** | ADR-038 (Accepted; §5 amended 2026-06-09 with the verify gate) |
 | **Depends on** | — |
-| **Next step** | Hold the shape: changes are ADR-level acts (ADR-038, accepted) |
+| **Next step** | Hold the shape: changes are ADR-level acts |
 
-Nexus Engineering currently relies on an *implicit* contract for what a well-formed inbound ticket looks like. ADR-038 will make that explicit so dispatched tickets can be schema-validated — which in turn unblocks downstream evals against a known shape. The schema is implicit in the dispatch tool's `spec` parameter today; the standalone record is missing.
+The five-section ticket shape is the written contract every dispatch conforms to. Its completion protocol now ends in a mechanical **verify gate**: the merge-agent runs the ticket's test command (or one discovered from the repo's shape) at the merge HEAD before any merge stands — tests fail and the merge is undone, the ticket rolled back. Completion is verified, not claimed. See [Execution Guardrails](concepts/execution-guardrails.md).
 
 ### Ticket-flag protocol
 
@@ -312,6 +312,18 @@ Enforcement landed 2026-06-05: both spawn paths (nexus-core team spawner, ACP se
 | **Next step** | Maintain mitigations and weekly tracking until the upstream limit behaviour is fixed |
 
 Mitigations for upstream session-limit behaviour are in place and tracked. Ongoing maintenance rather than new build.
+
+### Execution guardrails + first unsupervised pilot
+
+| | |
+|---|---|
+| **Status** | 🟢 Shipped (battle-tested) |
+| **Integrates** | [ACP plugin](components/plugins/acp.md), native run path, [Nexus Core](components/nexus-core.md) heartbeat |
+| **Source** | ADR-048, ADR-049 (conditions discharged 2026-06-09) |
+| **Depends on** | — |
+| **Next step** | The bounded ramp: overnight windows → 24h → a full unsupervised week, postmortems driving fixes |
+
+Five layered brakes between a spawn attempt and a runaway loop: a finished-work check anchored in a platform-owned merged registry, dedup/cooldown, a per-company circuit breaker, durable daily volume caps shared by every execution path, and the verify gate at completion. Proven the hard way on the first unsupervised pilot night (2026-06-09): a novel host-side retry loop created ~20 runs against a completed ticket and the guards cancelled every one before execution — the postmortem fixes (merged anchor, adapter defaults, two upstream bug reports) shipped the same evening. See [Execution Guardrails](concepts/execution-guardrails.md).
 
 ### Worker-concurrency ramp (Phase 1 → 2)
 
