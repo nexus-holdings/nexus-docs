@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-06-04</span>
+  <span>Updated 2026-07-07</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -29,9 +29,9 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 | [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
 | [3 · Execution model & quality](#3-execution-model-quality) | 2 | — | — | — | The ticket contract is written (ADR-038) and completion is mechanically verified at the merge HEAD |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
-| [5 · Operator tooling](#5-operator-tooling) | 3 | 1 | — | — | The agora governance console is installed (specs, children, contracts); operator-view parity with the old Cockpit is the remainder |
+| [5 · Operator tooling](#5-operator-tooling) | 3 | 1 | 1 | — | The agora governance console is installed (specs, children, contracts); operator-view parity with the old Cockpit is the remainder |
 | [6 · Scaling & resilience](#6-scaling-resilience) | 2 | 1 | 2 | 1 | Guardrails are live and battle-tested; the first autonomous ticket merged verified on pilot night |
-| [7 · Learning loop & evals](#7-learning-loop-evals) | — | — | 1 | 1 | Every postmortem should mint an eval; expanding that surface |
+| [7 · Learning loop & evals](#7-learning-loop-evals) | 1 | — | 1 | — | Every postmortem should mint an eval; expanding that surface |
 
 ---
 
@@ -283,6 +283,20 @@ The agora governance console lists a company's contracts with expandable detail:
 
 ---
 
+### Attention budget & review queue
+
+| | |
+|---|---|
+| **Status** | 🔵 Proposed |
+| **Integrates** | [Operator Attention](concepts/operator-attention.md), [Cockpit](components/cockpit.md) / agora console |
+| **Source** | [Operator Attention](concepts/operator-attention.md) (design page, 2026-07-07) |
+| **Depends on** | Agora governance console |
+| **Next step** | Classify every existing human-facing escalation into Page / Window / Digest / Archive; add queue-depth, item-age, and reversal-rate metrics to the console |
+
+Operator attention is the only execution resource the substrate does not meter. This entry makes it one: interrupt classes with latency contracts, batched review windows, decision SLAs with fail-closed defaults, and recurrence-as-signal applied to checkpoints themselves. See the concept page for the full design.
+
+---
+
 ## 6 · Scaling & resilience
 
 Capacity, cost, and the safety brakes around running more agents concurrently. Several items here are operational ADRs rather than user-facing features.
@@ -385,13 +399,13 @@ v1.1.0 shipped 2026-06-05 — three dimensions minted from the cascade postmorte
 
 | | |
 |---|---|
-| **Status** | ⚪ Exploratory |
+| **Status** | 🔵 Proposed |
 | **Integrates** | [Skills Catalog](components/skills-catalog.md), Eval Registry |
-| **Source** | Platform design research |
+| **Source** | Platform design research (4–40 pt rubric-vs-instruction finding); ADR to be written as the first step |
 | **Depends on** | Run-quality eval expansion |
-| **Next step** | Add `verify-*` skills as failure modes get postmortems, replacing instruction-only prompts with explicit rubric checks |
+| **Next step** | Write the ADR, then seed the family from the three v1.1.0 dimensions — `verify-coordination`, `verify-loop-discipline`, `verify-config` — replacing their instruction-only prompts with explicit rubric checks |
 
-Research finding: explicit verification skills outperform instruction-only prompts by 4–40 points on quality metrics. The catalog should grow a `verify-*` family as the eval surface expands. Directional, paced by postmortem volume.
+Research finding: explicit verification skills outperform instruction-only prompts by 4–40 points on quality metrics. Promoted from exploratory 2026-07-07: the eval layer is the acknowledged weak point of the governance loop, and this family is its highest-leverage expansion. Each new postmortem-minted eval dimension should ship with its `verify-*` skill rather than trailing it.
 
 ---
 

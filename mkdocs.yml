@@ -113,6 +113,7 @@ nav:
       - Contracts: concepts/contracts.md
       - Goal-Aware Coordination: concepts/goal-aware-coordination.md
       - Execution Guardrails: concepts/execution-guardrails.md
+      - Operator Attention: concepts/operator-attention.md
       - Evals: concepts/evals.md
       - Postmortems: concepts/postmortems.md
       - Decisions Index: concepts/decisions-index.md
