@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-06-09</span>
+  <span>Updated 2026-07-08</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -39,6 +39,7 @@ Postmortems (e.g. ADR-031, ADR-035) are filed *as ADRs* by deliberate convention
 | **036** | Domain-Company Pause + Per-Ticket Audit | Accepted — Phase A of the cross-company restructure; the operational pause + audit that preceded the dispatch rewrite |
 | **037** | [Cross-Company Ticket Dispatch Mechanism](#) | Accepted — the dispatch protocol. Implemented by [`paperclip-plugin-craft-dispatch`](../components/plugins/craft-dispatch.md). |
 | **038** | [Engineering Ticket Contract](#) | Accepted — the five-section ticket shape (header, description, mechanically-parsed acceptance criteria, codebase context, completion protocol). Amended 2026-06-09 with the **verify gate**: tests run platform-side at the merge HEAD, unverified merges are flagged and counted, and a ticket whose branch fails at HEAD rolls back from done — completion is verified, not claimed. |
+| **051** | [Intent Chains — "Why First" Dispatch](#) | Proposed — every dispatch carries a 2–5 link intent chain that must terminate at a **registered goal** (validated against the goal registry: the spend authority). Advisory-first, drafted-not-elicited for humans, challengeable by the receiving agent; routine work auto-chained. Toyoda's 5 Whys inverted: walk *up* from a request to its purpose before tokens are committed. |
 
 ### Inter-company agreements
 
@@ -54,7 +55,7 @@ Postmortems (e.g. ADR-031, ADR-035) are filed *as ADRs* by deliberate convention
 | **045** | [Company Spawn Pipeline (Governance Class)](#) | Accepted — spec → proposal → mandatory human approval → spawn → delegate; idempotent on the spec; lineage ≠ routing. Implemented by the governance plugin. |
 | **046** | [Company Class & Lineage as Substrate Primitives](#) | Accepted — class + parent lineage live in a single shared [class register](two-class-companies.md#where-class-lives), written at birth/spawn/registration, readable platform-wide. Amends ADR-045 §6. |
 | **047** | [Goal-Aware Coordination](#) | Accepted — companies plan with both parties' objectives in view: spec-derived weighted goals (1–5 leeway rubric) join the company definition, contracts bind goals on both sides, a coordination-context read precedes any contract action, and goal paradoxes escalate to the governance ancestor instead of looping. |
-| **048** | [Execution Guardrails](#) | Accepted — one execution path at a time, volume caps on top of concurrency caps, one-shot automatic fallbacks (a human cancel is a veto), default-deny budgets, and a one-call kill switch with OFF as the default posture. Born from a live runaway-loop incident the same day the first supervised work cycle succeeded. |
+| **048** | [Execution Guardrails](#) | Accepted — one execution path at a time, volume caps on top of concurrency caps, one-shot automatic fallbacks (a human cancel is a veto), default-deny budgets, and a one-call kill switch with OFF as the default posture. Born from a live runaway-loop incident the same day the first supervised work cycle succeeded. Amended 2026-07-08 with the **escalation ladder**: repeated guard cancels for one company auto-quarantine it — flag first, agents paused second, the triggering cancel only after — validated live the same evening. |
 | **049** | [Native Claude Execution Path](#) | Accepted — host-native agent runs (subscription-backed) adopted as an execution path, gated on two conditions: volume caps ported to native runs and a finished-work spawn guard. Both conditions discharged 2026-06-09 — implemented, unit-replayed, and proven in a live drill where the guard cancelled every over-cap run of a real retry loop. |
 | **050** | [Company Decommission & Merge](#) | Proposed — the lifecycle's death half: archive-by-default (the FK graph as enforcer), a human-gated 8-step teardown mirroring the spawn pipeline, and merge as absorb-then-decommission with contract novation. Deletion is for scaffolding only. |
 

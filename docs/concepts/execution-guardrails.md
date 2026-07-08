@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> battle-tested</span>
-  <span>Updated 2026-06-09</span>
+  <span>Updated 2026-07-08</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -12,10 +12,11 @@
 
 The failure mode that matters in agent platforms is not the bad merge — the verify gate catches that — it is the **tight unattended loop**: a ticket that re-spawns a session every cycle, forever, doing nothing useful and spending real money. Nexus has now seen this class twice in production:
 
-- A completed ticket whose stale state kept re-dispatching work (2026-06-04), and
-- A *novel variant* on the first unsupervised night (2026-06-09): the host's run-cancellation machinery queued retry wakes **and regressed the completed ticket's status**, so every cancellation fed the next attempt. Twenty runs were created and killed in fifteen minutes — and zero of them executed, because the brakes held.
+- A completed ticket whose stale state kept re-dispatching work (2026-06-04),
+- A *novel variant* on the first unsupervised night (2026-06-09): the host's run-cancellation machinery queued retry wakes **and regressed the completed ticket's status**, so every cancellation fed the next attempt. Twenty runs were created and killed in fifteen minutes — and zero of them executed, because the brakes held. But a human still had to step in and freeze the company — the guards were pedalling, not braking.
+- The same loop shape on the day execution resumed (2026-07-08) — and this time **nobody stepped in**: five guard cancels inside the window tripped the new escalation ladder, the company quarantined itself, and every run that leaked past the pause was refused. Contained at 5 cancels instead of 20, with no human involved. The same evening, a real ticket traversed the full pipeline — implement → branch → review → verified merge → registry — autonomously in four minutes.
 
-That second incident is the design's proof: the loop was *new*, no guard had been written for it specifically, and the system still contained it at trivial cost.
+The second incident proved the brakes hold; the third proved the system now *acts on its own recurrence signal*.
 
 ## The five layers
 
@@ -50,7 +51,22 @@ flowchart TB
 
 **4 — Volume caps.** Daily budgets per company and per ticket, stored durably in Postgres so they survive restarts and are shared by **every** execution path — webhook-spawned sessions and host-native runs draw down the same budget. Native runs the host starts before any guard can refuse are *counted then cancelled* within seconds. Concurrency caps bound how much runs at once; volume caps bound how much runs **per day** — the 2026-06-04 incident ran one session at a time, forever, and only a volume cap stops that shape.
 
-**5 — The verify gate.** Completion claims are agent-attested; merges are not. The merge-agent runs the ticket's test command (or one discovered from the repo's shape) *at the merge HEAD* before the merge stands. Tests fail → merge undone, ticket rolled back to review. No test available → the merge proceeds but is loudly flagged and counted — never silent. Successful merges are recorded in the registry, which feeds layer 1: the system's definition of "finished" is *verified and merged*, not "an agent said so."
+**5 — The verify gate.** Completion claims are agent-attested; merges are not. The merge-agent runs the ticket's test command (or one discovered from the repo's shape — chaining the repo's linter ahead of the tests when one is configured, which catches the shadowed-test class the test runner itself is silent on) *at the merge HEAD* before the merge stands. Tests fail → merge undone, ticket rolled back to review. No test available → the merge proceeds but is loudly flagged and counted — never silent. Successful merges are recorded in the registry, which feeds layer 1: the system's definition of "finished" is *verified and merged*, not "an agent said so."
+
+## The escalation ladder
+
+The layers above act per event — each offending spawn is individually refused or cancelled. The 2026-06-09 incident exposed the gap in that design: on some hosts, **a cancellation is itself a trigger** (it queues a retry, it can regress a ticket's status), so a guard that only cancels converts one runaway into an endless cancel/retry ping-pong. It contains the damage but never ends the loop.
+
+The ladder is the answer: when guard cancels for one company cross a threshold within a window (default: 5 in 30 minutes), the company is **auto-quarantined** for the rest of the UTC day —
+
+1. the quarantine flag is set *first* (in-memory **and** durable, so a mid-incident restart cannot forget it),
+2. the company's agents are paused *second*,
+3. only then does the triggering cancel proceed — **pause-before-cancel**, so the cancel's retry wake lands on paused agents and dies harmlessly,
+4. and an escalation comment is posted for the human last (after pausing, so the comment's own wake also dies).
+
+Pause alone is deliberately not trusted as the stop — paused state does not reliably reach every spawn path on the host — so the flag is the brake: every platform path refuses a quarantined company outright, and any run that leaks past the pause is cancelled unconditionally. Un-quarantine is a human decision or the next UTC day, whichever comes first; a still-looping company re-trips the threshold within minutes of the new day, which is itself a loud signal.
+
+The design rule this encodes: **a guard that fires once prevented a bug; a guard that fires N times in a window is *inside* a feedback loop, and its next action must be to step outside the loop — freeze the company — not to keep firing.** Guards must never feed the loop they guard.
 
 ## The posture rules
 
@@ -58,7 +74,7 @@ Three rules sit above the layers:
 
 - **OFF is the default.** Execution is enabled deliberately, per company, for a bounded window. Paused agents refuse runs outright — pausing every agent is a hard stop that needs no plugin at all.
 - **One call kills everything.** Disable the execution plugin and pause agents: in-flight native runs cancel gracefully; nothing new starts.
-- **Recurrence is a signal, not noise.** Every refusal increments a metric. A guard that fires once prevented a bug; a guard that fires twenty times in fifteen minutes *is finding you a design flaw* — that is how the 2026-06-09 loop class was discovered, diagnosed, and fixed the same evening.
+- **Recurrence is a signal, not noise.** Every refusal increments a metric. A guard that fires once prevented a bug; a guard that fires twenty times in fifteen minutes *is finding you a design flaw* — that is how the 2026-06-09 loop class was discovered, diagnosed, and fixed the same evening. Since 2026-07-08 the system acts on that signal itself: recurrence past the threshold triggers the escalation ladder without waiting for a human to read the metric.
 
 ## What this is not
 

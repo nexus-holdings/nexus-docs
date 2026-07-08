@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> living document</span>
-  <span>Updated 2026-07-07</span>
+  <span>Updated 2026-07-08</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -27,10 +27,10 @@ Every feature carries a status. The cut between stages is deliberate — anythin
 |---|:--:|:--:|:--:|:--:|---|
 | [1 · Multi-company coordination](#1-multi-company-coordination) | 4 | — | 1 | 2 | Three company classes with a shared class register; the governance spawn pipeline is live end-to-end (ADR-045/046) |
 | [2 · Contracts](#2-contracts) | 1 | — | — | — | Inter-company agreements are a first-class, lifecycle-tracked primitive |
-| [3 · Execution model & quality](#3-execution-model-quality) | 2 | — | — | — | The ticket contract is written (ADR-038) and completion is mechanically verified at the merge HEAD |
+| [3 · Execution model & quality](#3-execution-model-quality) | 2 | — | 1 | — | Completion is mechanically verified at the merge HEAD; intent chains (ADR-051) proposed so every dispatch justifies its goal before tokens are spent |
 | [4 · Memory & retrieval](#4-memory-retrieval) | 1 | — | 3 | — | Promoter is live; retrieval quality is the active research frontier |
 | [5 · Operator tooling](#5-operator-tooling) | 3 | 1 | 1 | — | The agora governance console is installed (specs, children, contracts); operator-view parity with the old Cockpit is the remainder |
-| [6 · Scaling & resilience](#6-scaling-resilience) | 2 | 1 | 2 | 1 | Guardrails are live and battle-tested; the first autonomous ticket merged verified on pilot night |
+| [6 · Scaling & resilience](#6-scaling-resilience) | 2 | 1 | 2 | 1 | Execution resumed 2026-07-08: a ticket ran the full pipeline autonomously in four minutes, and the new escalation ladder self-quarantined a loop the same evening |
 | [7 · Learning loop & evals](#7-learning-loop-evals) | 1 | — | 1 | — | Every postmortem should mint an eval; expanding that surface |
 
 ---
@@ -172,6 +172,18 @@ The five-section ticket shape is the written contract every dispatch conforms to
 | **Next step** | Broaden the set of skills that read flags as new deterministic hand-offs are needed |
 
 Structured JSON flags on a ticket make skill execution deterministic — e.g. a flag telling the inbox skill to pick up a specific ticket rather than re-running triage. The `skill_flags` helper, the read/write path (`nexus-core/nexus/execution/skill_flags.py`), and the inferred-flag path (`PAPERCLIP_TASK_ID`) are all live and covered by tests.
+
+### Intent chains ("Why First" dispatch)
+
+| | |
+|---|---|
+| **Status** | 🔵 Proposed |
+| **Integrates** | [Craft Dispatch plugin](components/plugins/craft-dispatch.md), [Goal-aware coordination](concepts/goal-aware-coordination.md), [Contracts](concepts/contracts.md) |
+| **Source** | ADR-051 (Proposed 2026-07-08) |
+| **Depends on** | Goal-aware coordination (shipped — the goal registry is the chain's terminus) |
+| **Next step** | Craft-dispatch v0.3.0: optional `intent_chain` parameter, goal-ID validation, `## Intent` ticket section, advisory metrics — tighten cross-company first |
+
+Toyoda's 5 Whys, inverted: instead of walking *down* from a failure to its cause, every dispatch walks *up* from the request to its purpose — a 2–5 link chain that must terminate at a **registered goal**, validated at dispatch time. The goal registry becomes the spend authority: work that cannot state the goal it serves doesn't get tokens. Advisory first (warn + metric), never interrogative for humans (the dispatcher drafts the chain; the human confirms the top link), and challengeable by the receiving agent — a chain is checkable evidence, not decoration. Kills the intent-free ticket class (recovery spam, symptom-level requests) at the cheapest possible point: before anything runs.
 
 ---
 
@@ -333,11 +345,11 @@ Mitigations for upstream session-limit behaviour are in place and tracked. Ongoi
 |---|---|
 | **Status** | 🟢 Shipped (battle-tested) |
 | **Integrates** | [ACP plugin](components/plugins/acp.md), native run path, [Nexus Core](components/nexus-core.md) heartbeat |
-| **Source** | ADR-048, ADR-049 (conditions discharged 2026-06-09) |
+| **Source** | ADR-048 (amended 2026-07-08: escalation ladder), ADR-049 (conditions discharged 2026-06-09) |
 | **Depends on** | — |
-| **Next step** | The bounded ramp: overnight windows → 24h → a full unsupervised week, postmortems driving fixes |
+| **Next step** | The unsupervised-week clock is running (first clean window 2026-07-08): overnight → 24h windows, postmortems driving fixes |
 
-Five layered brakes between a spawn attempt and a runaway loop: a finished-work check anchored in a platform-owned merged registry, dedup/cooldown, a per-company circuit breaker, durable daily volume caps shared by every execution path, and the verify gate at completion. Proven the hard way on the first unsupervised pilot night (2026-06-09): a novel host-side retry loop created ~20 runs against a completed ticket and the guards cancelled every one before execution — the postmortem fixes (merged anchor, adapter defaults, two upstream bug reports) shipped the same evening. See [Execution Guardrails](concepts/execution-guardrails.md).
+Five layered brakes between a spawn attempt and a runaway loop — a finished-work check anchored in a platform-owned merged registry, dedup/cooldown, a per-company circuit breaker, durable daily volume caps shared by every execution path, and the verify gate at completion — plus an **escalation ladder** on top: repeated guard cancels for one company auto-quarantine it (flag first, agents paused second, the triggering cancel only after). Proven the hard way twice. On the first unsupervised pilot night (2026-06-09) a novel host-side retry loop created ~20 runs against a completed ticket and the guards cancelled every one before execution — but a human had to end the loop. When execution resumed (2026-07-08) the same loop shape re-appeared and the ladder ended it *itself* at 5 cancels — and that same evening a real ticket traversed implement → branch → review → verified merge (linter + tests at the merge HEAD) → registry autonomously in four minutes. See [Execution Guardrails](concepts/execution-guardrails.md).
 
 ### Worker-concurrency ramp (Phase 1 → 2)
 
