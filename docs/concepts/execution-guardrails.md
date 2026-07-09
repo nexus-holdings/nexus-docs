@@ -4,7 +4,7 @@
 
 <div class="page-meta">
   <span class="badge"><span class="dot"></span> battle-tested</span>
-  <span>Updated 2026-07-08</span>
+  <span>Updated 2026-07-09</span>
   <span>Owner: Platform</span>
 </div>
 
@@ -49,7 +49,7 @@ flowchart TB
 
 **3 — Circuit breaker.** Repeated spawn failures for a company open its circuit; further spawns are refused until the cooldown lapses.
 
-**4 — Volume caps.** Daily budgets per company and per ticket, stored durably in Postgres so they survive restarts and are shared by **every** execution path — webhook-spawned sessions and host-native runs draw down the same budget. Native runs the host starts before any guard can refuse are *counted then cancelled* within seconds. Concurrency caps bound how much runs at once; volume caps bound how much runs **per day** — the 2026-06-04 incident ran one session at a time, forever, and only a volume cap stops that shape.
+**4 — Volume caps.** Daily budgets per company and per ticket, stored durably in Postgres so they survive restarts and are shared by **every** execution path — a claim now proven live: when the host machine rebooted mid-window (2026-07-09), the boot-time wake catch-up burst was cancelled with the per-ticket counter *continuing from where it left off*, not reset to zero, and an active quarantine kept enforcing across the reboot — webhook-spawned sessions and host-native runs draw down the same budget. Native runs the host starts before any guard can refuse are *counted then cancelled* within seconds. Concurrency caps bound how much runs at once; volume caps bound how much runs **per day** — the 2026-06-04 incident ran one session at a time, forever, and only a volume cap stops that shape.
 
 **5 — The verify gate.** Completion claims are agent-attested; merges are not. The merge-agent runs the ticket's test command (or one discovered from the repo's shape — chaining the repo's linter ahead of the tests when one is configured, which catches the shadowed-test class the test runner itself is silent on) *at the merge HEAD* before the merge stands. Tests fail → merge undone, ticket rolled back to review. No test available → the merge proceeds but is loudly flagged and counted — never silent. Successful merges are recorded in the registry, which feeds layer 1: the system's definition of "finished" is *verified and merged*, not "an agent said so."
 
