@@ -18,7 +18,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       # Supply-chain gate — proxy PyPI through escrow with an age gate
       # and OSV CVE scan before anything reaches the runner.
